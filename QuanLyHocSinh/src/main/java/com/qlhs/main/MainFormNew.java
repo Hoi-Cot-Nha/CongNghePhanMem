@@ -69,6 +69,7 @@ public class MainFormNew extends JFrame {
         setSize(1400, 800); 
         setLocationRelativeTo(null); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
         setLayout(new BorderLayout());
 
         // ✅ Panel WEST chứa toggle button + sidebar
@@ -286,41 +287,41 @@ public class MainFormNew extends JFrame {
 
         // -- HỆ THỐNG --
         addSideHeader(sidebar, "Hệ thống");
-        addSideButton(sidebar, "Đăng Xuất", "DangXuat", "logout.png");
+        addSideButton(sidebar, "Đăng xuất", "DangXuat", "logout.png");
         sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
 
         // -- HỒ SƠ & CƠ CẤU (Đạt) --
         addSideHeader(sidebar, "Hồ sơ & cơ cấu");
-        addSideButton(sidebar, "Quản lý Lớp học", "FormLopHoc", "class.png");
-        addSideButton(sidebar, "Quản lý Giáo viên", "FormGiaoVien", "teacher.png");
-        addSideButton(sidebar, "Quản lý Tổ bộ môn", "FormToBoMon", "group.png");
+        addSideButton(sidebar, "Quản lý lớp học", "FormLopHoc", "class.png");
+        addSideButton(sidebar, "Quản lý giáo viên", "FormGiaoVien", "teacher.png");
+        addSideButton(sidebar, "Quản lý tổ bộ môn", "FormToBoMon", "group.png");
         sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
 
         // -- ĐÀO TẠO (Thu Trang) --
         addSideHeader(sidebar, "Đào tạo");
-        addSideButton(sidebar, "Quản lý Môn học", "FormMonHoc", "subject.png");
+        addSideButton(sidebar, "Quản lý môn học", "FormMonHoc", "subject.png");
         addSideButton(sidebar, "Thời khóa biểu / Lịch dạy", "FormTKB", "schedule.png");
         addSideButton(sidebar, "Phòng học & Thiết bị", "FormPhongHoc", "room.png");
         sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
 
         // -- KHẢO THÍ & KẾT QUẢ (Tiến) --
         addSideHeader(sidebar, "Khảo thí & kết quả");
-        addSideButton(sidebar, "Quản lý Điểm số", "FormDiemSo", "score.png");
+        addSideButton(sidebar, "Quản lý điểm số", "FormDiemSo", "score.png");
         addSideButton(sidebar, "Hạnh kiểm / Rèn luyện", "FormHanhKiem", "conduct.png");
         addSideButton(sidebar, "Lịch thi", "FormLichThi", "exam.png");
         sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
 
         // -- HÀNH CHÍNH & TÀI VỤ (Hà Trang) --
         addSideHeader(sidebar, "Hành chính & tài vụ");
-        addSideButton(sidebar, "Quản lý Học phí", "FormHocPhi", "fee.png");
-        addSideButton(sidebar, "Quản lý Thông báo", "FormThongBao", "notification.png");
-        addSideButton(sidebar, "Quản lý Phúc khảo", "FormPhucKhao", "review.png");
+        addSideButton(sidebar, "Quản lý học phí", "FormHocPhi", "fee.png");
+        addSideButton(sidebar, "Quản lý thông báo", "FormThongBao", "notification.png");
+        addSideButton(sidebar, "Quản lý phúc khảo", "FormPhucKhao", "review.png");
         sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
 
         // -- HỆ THỐNG & CHÍNH SÁCH (Đại) --
         addSideHeader(sidebar, "Hệ thống & chính sách");
-        addSideButton(sidebar, "Hồ sơ Học sinh (Chi tiết)", "FormHocSinh", "student.png");
-        addSideButton(sidebar, "Quản lý Tài khoản User", "FormTaiKhoan", "user.png");
+        addSideButton(sidebar, "Hồ sơ học sinh (Chi tiết)", "FormHocSinh", "student.png");
+        addSideButton(sidebar, "Quản lý tài khoản user", "FormTaiKhoan", "user.png");
         addSideButton(sidebar, "Đối tượng chính sách", "FormChinhSach", "policy.png");
 
         return sidebar;
@@ -329,10 +330,10 @@ public class MainFormNew extends JFrame {
     private void addSideHeader(JPanel panel, String title) {
         JLabel lblHeader = new JLabel(title);
         lblHeader.setForeground(HEADER_COLOR);
-        lblHeader.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        lblHeader.setFont(new Font("Segoe UI", Font.BOLD, 14));
         lblHeader.setBorder(new EmptyBorder(5, 15, 5, 10)); 
         lblHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
-        lblHeader.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30)); // ✅ Set max width
+        lblHeader.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35)); // ✅ Set max width
         panel.add(lblHeader);
     }
 
@@ -344,11 +345,11 @@ public class MainFormNew extends JFrame {
         btn.setIcon(icon);
         btn.setText(" " + title);
         
-        btn.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        btn.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         btn.setForeground(TEXT_COLOR);
         btn.setBackground(SIDEBAR_BG);
         btn.setHorizontalAlignment(SwingConstants.LEFT);
-        btn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40)); 
+        btn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45)); 
         btn.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         btn.setFocusPainted(false);

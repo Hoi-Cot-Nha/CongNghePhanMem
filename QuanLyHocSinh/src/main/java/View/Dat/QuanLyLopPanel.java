@@ -38,7 +38,7 @@ public class QuanLyLopPanel extends JPanel {
 
         // -- Tiêu đề --
         JLabel lblTitle = new JLabel("QUẢN LÝ LỚP HỌC", JLabel.CENTER);
-        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 26));
         lblTitle.setForeground(new Color(0, 102, 204));
         lblTitle.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0)); // Tạo khoảng hở
         
@@ -69,12 +69,9 @@ public class QuanLyLopPanel extends JPanel {
         String[] cols = {"Mã Lớp", "Tên Lớp", "Niên Khóa", "GVCN"};
         tableModel = new DefaultTableModel(cols, 0);
         tableLop = new JTable(tableModel);
+        tableLop.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         tableLop.setRowHeight(25);
-        javax.swing.table.DefaultTableCellRenderer headerRenderer = (javax.swing.table.DefaultTableCellRenderer) tableLop.getTableHeader().getDefaultRenderer();
-        headerRenderer.setBackground(new Color(100, 150, 200));
-        headerRenderer.setForeground(Color.WHITE);
-        headerRenderer.setOpaque(true);
-        tableLop.getTableHeader().setDefaultRenderer(headerRenderer);
+        tableLop.getTableHeader().setDefaultRenderer(new TienIch.CustomTableHeaderRenderer());
         add(new JScrollPane(tableLop), BorderLayout.CENTER);
 
 

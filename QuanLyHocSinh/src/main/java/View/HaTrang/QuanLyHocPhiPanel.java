@@ -43,7 +43,7 @@ public class QuanLyHocPhiPanel extends JPanel {
         pnlNorth.setOpaque(false);
 
         JLabel lblTitle = new JLabel("HỆ THỐNG QUẢN LÝ HỌC PHÍ", JLabel.CENTER);
-        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 28));
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 26));
         lblTitle.setForeground(new Color(41, 128, 185));
         pnlNorth.add(lblTitle, BorderLayout.NORTH);
 
@@ -59,6 +59,14 @@ public class QuanLyHocPhiPanel extends JPanel {
             System.out.println("⚠️ Lỗi tải lớp: " + e.getMessage());
             e.printStackTrace();
         }
+        cboMaLop.addItemListener(e -> {
+            if (e.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
+                Object selected = cboMaLop.getSelectedItem();
+                if (selected != null && !selected.toString().equals("(Không có dữ liệu)")) {
+                    loadNamHocByMaLop(selected.toString());
+                }
+            }
+        });
         pnlFilter.add(cboMaLop);
 
         pnlFilter.add(new JLabel("Học Kỳ:"));
@@ -87,19 +95,16 @@ public class QuanLyHocPhiPanel extends JPanel {
         add(pnlNorth, BorderLayout.NORTH);
 
         // --- TABLE ---
-        String[] cols = {"ID", "Mã HS", "Kỳ", "Năm học", "Tổng tiền", "Miễn giảm", "Phải đóng", "Trạng thái"};
+        String[] cols = {"ID", "Mã HS", "Mã Lớp", "Kỳ", "Năm học", "Tổng tiền", "Miễn giảm", "Phải đóng", "Trạng thái"};
         tableModel = new DefaultTableModel(cols, 0) {
             @Override
             public boolean isCellEditable(int row, int column) { return false; }
         };
         tableHocPhi = new JTable(tableModel);
+        tableHocPhi.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         tableHocPhi.setRowHeight(30);
-        tableHocPhi.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
-        javax.swing.table.DefaultTableCellRenderer headerRenderer = (javax.swing.table.DefaultTableCellRenderer) tableHocPhi.getTableHeader().getDefaultRenderer();
-        headerRenderer.setBackground(new Color(100, 150, 200));
-        headerRenderer.setForeground(Color.WHITE);
-        headerRenderer.setOpaque(true);
-        tableHocPhi.getTableHeader().setDefaultRenderer(headerRenderer);
+        tableHocPhi.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+        tableHocPhi.getTableHeader().setDefaultRenderer(new TienIch.CustomTableHeaderRenderer());
         
         // Căn giữa dữ liệu bảng
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -177,10 +182,10 @@ public class QuanLyHocPhiPanel extends JPanel {
                 if (r >= 0) {
                     txtMaHS.setText(tableModel.getValueAt(r, 1).toString());
                     txtMaHS.setEditable(false);
-                    txtTongTien.setText(tableModel.getValueAt(r, 4).toString());
-                    txtMienGiam.setText(tableModel.getValueAt(r, 5).toString());
-                    txtPhaiDong.setText(tableModel.getValueAt(r, 6).toString());
-                    txtTrangThai.setText(tableModel.getValueAt(r, 7).toString());
+                    txtTongTien.setText(tableModel.getValueAt(r, 5).toString());
+                    txtMienGiam.setText(tableModel.getValueAt(r, 6).toString());
+                    txtPhaiDong.setText(tableModel.getValueAt(r, 7).toString());
+                    txtTrangThai.setText(tableModel.getValueAt(r, 8).toString());
                 }
             }
         });
@@ -277,8 +282,10 @@ public class QuanLyHocPhiPanel extends JPanel {
             
             System.out.println("✓ Đã thêm " + sortedNamHoc.length + " năm học vào combo box");
             
-            cboNamHoc.setSelectedIndex(sortedNamHoc.length - 1);
-            System.out.println("✓ Chọn năm học mặc định: " + cboNamHoc.getSelectedItem());
+            if (sortedNamHoc.length > 0) {
+                cboNamHoc.setSelectedIndex(0);
+                System.out.println("✓ Chọn năm học mặc định: " + cboNamHoc.getSelectedItem());
+            }
             
             System.out.println("=== Kết thúc loadNamHocComboBox thành công ===\n");
             
@@ -290,6 +297,39 @@ public class QuanLyHocPhiPanel extends JPanel {
         }
     }
 
+    private void loadNamHocByMaLop(String maLop) {
+        System.out.println("\n=== Bắt đầu loadNamHocByMaLop: " + maLop + " ===");
+        try {
+            Dao.HocphiDAO hocphiDAO = new Dao.HocphiDAO();
+            var namHocList = hocphiDAO.getNamHocByMaLop(maLop);
+            
+            cboNamHoc.removeAllItems();
+            System.out.println("✓ Tìm được " + namHocList.size() + " năm học cho lớp " + maLop);
+            
+            if (namHocList.isEmpty()) {
+                System.out.println("⚠️ CẢNH BÁO: Không có dữ liệu học phí cho lớp " + maLop);
+                cboNamHoc.addItem("(Không có dữ liệu)");
+                return;
+            }
+            
+            for (String nh : namHocList) {
+                cboNamHoc.addItem(nh);
+            }
+            
+            if (cboNamHoc.getItemCount() > 0) {
+                cboNamHoc.setSelectedIndex(0);
+                System.out.println("✓ Chọn năm học mặc định: " + cboNamHoc.getSelectedItem());
+            }
+            
+            System.out.println("=== Kết thúc loadNamHocByMaLop thành công ===\n");
+            
+        } catch (Exception e) {
+            System.out.println("❌ EXCEPTION trong loadNamHocByMaLop: " + e.getClass().getName());
+            System.out.println("❌ Message: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     // Hàm loadTable được Controller gọi để đổ dữ liệu vào
     public void loadTable(List<Hocphi> list) {
         tableModel.setRowCount(0);
@@ -298,6 +338,7 @@ public class QuanLyHocPhiPanel extends JPanel {
             tableModel.addRow(new Object[]{
                 stt++, // ID hiển thị là STT
                 hp.getMaHS(), 
+                hp.getMaLop(),
                 hp.getHocKy(), 
                 hp.getNamHoc(),
                 hp.getTongTien(), 

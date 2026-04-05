@@ -38,7 +38,7 @@ public class QuanLyPhucKhaoPanel extends JPanel{
         JPanel pnlNorth = new JPanel(new BorderLayout(10, 10));
         pnlNorth.setOpaque(false);
         JLabel lblTitle = new JLabel("HỆ THỐNG QUẢN LÝ PHÚC KHẢO", JLabel.CENTER);
-        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 28));
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 26));
         lblTitle.setForeground(new Color(41, 128, 185));
         
         JPanel pnlFilter = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));
@@ -57,12 +57,9 @@ public class QuanLyPhucKhaoPanel extends JPanel{
         String[] cols = {"STT", "Mã HS", "Mã MH", "Ngày gửi", "Trạng thái", "Lý do"};
         model = new DefaultTableModel(cols, 0) { @Override public boolean isCellEditable(int r, int c) { return false; } };
         table = new JTable(model);
+        table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         table.setRowHeight(30);
-        javax.swing.table.DefaultTableCellRenderer headerRenderer = (javax.swing.table.DefaultTableCellRenderer) table.getTableHeader().getDefaultRenderer();
-        headerRenderer.setBackground(new Color(100, 150, 200));
-        headerRenderer.setForeground(Color.WHITE);
-        headerRenderer.setOpaque(true);
-        table.getTableHeader().setDefaultRenderer(headerRenderer);
+        table.getTableHeader().setDefaultRenderer(new TienIch.CustomTableHeaderRenderer());
         add(new JScrollPane(table), BorderLayout.CENTER);
 
 

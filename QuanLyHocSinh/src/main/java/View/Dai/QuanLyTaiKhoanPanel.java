@@ -47,7 +47,7 @@ public class QuanLyTaiKhoanPanel extends JPanel {
         JPanel pnlNorth = new JPanel(new GridLayout(2, 1, 5, 5));
 
         JLabel lblTitle = new JLabel("QUẢN LÝ TÀI KHOẢN", JLabel.CENTER);
-        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 26));
         lblTitle.setForeground(new Color(0, 102, 204));
         pnlNorth.add(lblTitle);
 
@@ -73,12 +73,9 @@ public class QuanLyTaiKhoanPanel extends JPanel {
         String[] columns = {"Tên đăng nhập", "Mật khẩu", "Quyền", "Mã người dùng"};
         tableModel = new DefaultTableModel(columns, 0);
         tableTK = new JTable(tableModel);
+        tableTK.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         tableTK.setRowHeight(25);
-        javax.swing.table.DefaultTableCellRenderer headerRenderer = (javax.swing.table.DefaultTableCellRenderer) tableTK.getTableHeader().getDefaultRenderer();
-        headerRenderer.setBackground(new Color(100, 150, 200));
-        headerRenderer.setForeground(Color.WHITE);
-        headerRenderer.setOpaque(true);
-        tableTK.getTableHeader().setDefaultRenderer(headerRenderer);
+        tableTK.getTableHeader().setDefaultRenderer(new TienIch.CustomTableHeaderRenderer());
 
         tableTK.addMouseListener(new MouseAdapter() {
             @Override

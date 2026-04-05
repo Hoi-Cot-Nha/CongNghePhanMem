@@ -39,7 +39,7 @@ public class FrmMonHoc extends JPanel {
 
         // -- Món 1: Tiêu đề (Đặt ở NORTH) --
         JLabel title = new JLabel("QUẢN LÝ MÔN HỌC", JLabel.CENTER);
-        title.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        title.setFont(new Font("Segoe UI", Font.BOLD, 26));
         title.setForeground(new Color(0, 102, 204));
         title.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0)); // Tạo khoảng hở dưới chữ
         pnlNorth.add(title, BorderLayout.NORTH);
@@ -70,12 +70,9 @@ public class FrmMonHoc extends JPanel {
         // ===== 2. TABLE (CENTER) =====
         model = new DefaultTableModel(new String[]{"Mã MH", "Tên môn"}, 0);
         table = new JTable(model);
+        table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         table.setRowHeight(25);
-        javax.swing.table.DefaultTableCellRenderer headerRenderer = (javax.swing.table.DefaultTableCellRenderer) table.getTableHeader().getDefaultRenderer();
-        headerRenderer.setBackground(new Color(100, 150, 200));
-        headerRenderer.setForeground(Color.WHITE);
-        headerRenderer.setOpaque(true);
-        table.getTableHeader().setDefaultRenderer(headerRenderer);
+        table.getTableHeader().setDefaultRenderer(new TienIch.CustomTableHeaderRenderer());
         add(new JScrollPane(table), BorderLayout.CENTER);
 
 

@@ -75,6 +75,7 @@ public class GiaoVienController {
         view.getTxtHoTen().setText(view.getTableGV().getValueAt(r, 1).toString());
         
         try {
+            // Dữ liệu từ DB ở dạng "yyyy-MM-dd", parse để set vào JSpinner
             Date date = new SimpleDateFormat("yyyy-MM-dd").parse(view.getTableGV().getValueAt(r, 2).toString());
             view.getSpNgaySinh().setValue(date);
         } catch (Exception e) {}
@@ -136,6 +137,7 @@ public class GiaoVienController {
         gv.setMaGV(view.getTxtMaGV().getText());
         gv.setHoTen(view.getTxtHoTen().getText());
         gv.setSdt(view.getTxtSDT().getText());
+        // Lấy ngày từ JSpinner và format thành "yyyy-MM-dd" để lưu vào DB
         gv.setNgaysinh(new SimpleDateFormat("yyyy-MM-dd").format(view.getSpNgaySinh().getValue()));
 
         ToBoMon tbm = (ToBoMon) view.getCboMaToHop().getSelectedItem();

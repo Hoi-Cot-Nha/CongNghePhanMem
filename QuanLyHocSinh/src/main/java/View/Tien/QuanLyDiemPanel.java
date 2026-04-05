@@ -44,7 +44,7 @@ public class QuanLyDiemPanel extends JPanel {
 
         // Tiêu đề to đậm
         JLabel lblTitle = new JLabel("QUẢN LÝ ĐIỂM HỌC SINH", JLabel.CENTER);
-        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 26));
         lblTitle.setForeground(new Color(0, 102, 204));
         pnlNorth.add(lblTitle, BorderLayout.NORTH);
 
@@ -93,12 +93,9 @@ public class QuanLyDiemPanel extends JPanel {
         String[] columnNames = {"Mã HS", "Họ Tên", "Môn", "HK", "Điểm 15p", "1 Tiết", "Giữa Kỳ", "Cuối Kỳ", "Tổng Kết"};
         tableModel = new DefaultTableModel(columnNames, 0);
         tableDiem = new JTable(tableModel);
+        tableDiem.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         tableDiem.setRowHeight(25);
-        javax.swing.table.DefaultTableCellRenderer headerRenderer = (javax.swing.table.DefaultTableCellRenderer) tableDiem.getTableHeader().getDefaultRenderer();
-        headerRenderer.setBackground(new Color(100, 150, 200));
-        headerRenderer.setForeground(Color.WHITE);
-        headerRenderer.setOpaque(true);
-        tableDiem.getTableHeader().setDefaultRenderer(headerRenderer);
+        tableDiem.getTableHeader().setDefaultRenderer(new TienIch.CustomTableHeaderRenderer());
         this.add(new JScrollPane(tableDiem), BorderLayout.CENTER);
 
         // 3. PHẦN DƯỚI (SOUTH): Form Cập Nhật + Nút Bấm

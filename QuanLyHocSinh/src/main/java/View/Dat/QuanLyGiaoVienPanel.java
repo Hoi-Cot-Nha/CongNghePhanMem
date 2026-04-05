@@ -4,7 +4,9 @@ import Model.ToBoMon;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
+import java.text.SimpleDateFormat;
 import TienIch.ButtonStyleHelper;
 
 public class QuanLyGiaoVienPanel extends JPanel {
@@ -32,7 +34,7 @@ public class QuanLyGiaoVienPanel extends JPanel {
 
         // -- Tiêu đề --
         JLabel lblTitle = new JLabel("QUẢN LÝ GIÁO VIÊN", JLabel.CENTER);
-        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 26));
         lblTitle.setForeground(new Color(0, 102, 204));
         lblTitle.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0)); // Tạo khoảng hở
 
@@ -63,12 +65,34 @@ public class QuanLyGiaoVienPanel extends JPanel {
         String[] cols = {"Mã GV", "Họ Tên", "Ngày Sinh", "SĐT", "Tổ Bộ Môn"};
         tableModel = new DefaultTableModel(cols, 0);
         tableGV = new JTable(tableModel);
+        tableGV.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         tableGV.setRowHeight(25);
-        javax.swing.table.DefaultTableCellRenderer headerRenderer = (javax.swing.table.DefaultTableCellRenderer) tableGV.getTableHeader().getDefaultRenderer();
-        headerRenderer.setBackground(new Color(100, 150, 200));
-        headerRenderer.setForeground(Color.WHITE);
-        headerRenderer.setOpaque(true);
-        tableGV.getTableHeader().setDefaultRenderer(headerRenderer);
+        tableGV.getTableHeader().setDefaultRenderer(new TienIch.CustomTableHeaderRenderer());
+        
+        // Format cột "Ngày Sinh" (cột index 2) thành dd/MM/yyyy
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        DefaultTableCellRenderer dateRenderer = new DefaultTableCellRenderer() {
+            @Override
+            public java.awt.Component getTableCellRendererComponent(JTable table, Object value, 
+                    boolean isSelected, boolean hasFocus, int row, int column) {
+                if (value != null) {
+                    if (value instanceof java.util.Date) {
+                        value = sdf.format((java.util.Date) value);
+                    } else if (value instanceof String) {
+                        try {
+                            java.util.Date date = new java.text.SimpleDateFormat("yyyy-MM-dd").parse(value.toString());
+                            value = sdf.format(date);
+                        } catch (Exception e) {
+                            // Nếu không parse được, giữ nguyên giá trị
+                        }
+                    }
+                }
+                return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            }
+        };
+        dateRenderer.setHorizontalAlignment(JLabel.CENTER);
+        tableGV.getColumnModel().getColumn(2).setCellRenderer(dateRenderer);
+        
         add(new JScrollPane(tableGV), BorderLayout.CENTER);
 
 
@@ -97,7 +121,7 @@ public class QuanLyGiaoVienPanel extends JPanel {
         pnlInput.add(new JLabel("Ngày Sinh:"), gbc);
         gbc.gridx = 1;
         spNgaySinh = new JSpinner(new SpinnerDateModel());
-        spNgaySinh.setEditor(new JSpinner.DateEditor(spNgaySinh, "yyyy-MM-dd"));
+        spNgaySinh.setEditor(new JSpinner.DateEditor(spNgaySinh, "dd/MM/yyyy"));
         pnlInput.add(spNgaySinh, gbc);
 
         gbc.gridx = 2;

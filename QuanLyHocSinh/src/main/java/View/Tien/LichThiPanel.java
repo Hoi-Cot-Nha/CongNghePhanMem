@@ -45,7 +45,7 @@ public class LichThiPanel extends JPanel {
         
         // Tiêu đề to đậm
         JLabel lblTitle = new JLabel("QUẢN LÝ LỊCH THI", JLabel.CENTER);
-        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 26));
         lblTitle.setForeground(new Color(0, 102, 204));
         pnlNorth.add(lblTitle, BorderLayout.NORTH);
 
@@ -68,12 +68,9 @@ public class LichThiPanel extends JPanel {
         String[] cols = {"Mã LT", "Kỳ Thi", "Mã Môn", "Ngày Thi", "Bắt Đầu", "Kết Thúc", "Phòng"};
         model = new DefaultTableModel(cols, 0);
         table = new JTable(model);
+        table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         table.setRowHeight(25);
-        javax.swing.table.DefaultTableCellRenderer headerRenderer = (javax.swing.table.DefaultTableCellRenderer) table.getTableHeader().getDefaultRenderer();
-        headerRenderer.setBackground(new Color(100, 150, 200));
-        headerRenderer.setForeground(Color.WHITE);
-        headerRenderer.setOpaque(true);
-        table.getTableHeader().setDefaultRenderer(headerRenderer);
+        table.getTableHeader().setDefaultRenderer(new TienIch.CustomTableHeaderRenderer());
         add(new JScrollPane(table), BorderLayout.CENTER);
 
         // 3. PHẦN DƯỚI (SOUTH): Form nhập liệu + Nút bấm

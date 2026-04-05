@@ -51,7 +51,7 @@ public class QuanLyHocSinhPanel extends JPanel {
         JPanel pnlNorth = new JPanel(new GridLayout(2, 1, 5, 5));
 
         JLabel lblTitle = new JLabel("QUẢN LÝ HỌC SINH", JLabel.CENTER);
-        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 26));
         lblTitle.setForeground(new Color(0, 102, 204));
         pnlNorth.add(lblTitle);
 
@@ -80,12 +80,9 @@ public class QuanLyHocSinhPanel extends JPanel {
 
         tableModel = new DefaultTableModel(cols, 0);
         tableHS = new JTable(tableModel);
+        tableHS.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         tableHS.setRowHeight(25);
-        javax.swing.table.DefaultTableCellRenderer headerRenderer = (javax.swing.table.DefaultTableCellRenderer) tableHS.getTableHeader().getDefaultRenderer();
-        headerRenderer.setBackground(new Color(100, 150, 200));
-        headerRenderer.setForeground(Color.WHITE);
-        headerRenderer.setOpaque(true);
-        tableHS.getTableHeader().setDefaultRenderer(headerRenderer);
+        tableHS.getTableHeader().setDefaultRenderer(new TienIch.CustomTableHeaderRenderer());
 
         tableHS.addMouseListener(new MouseAdapter() {
             @Override

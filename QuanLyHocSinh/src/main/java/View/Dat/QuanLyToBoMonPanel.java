@@ -42,7 +42,7 @@ public class QuanLyToBoMonPanel extends JPanel {
         // ===== 1. PANEL NORTH: CHỨA TIÊU ĐỀ =====
         JPanel pnlNorth = new JPanel(new BorderLayout(0, 10));
         JLabel lblTitle = new JLabel("QUẢN LÝ TỔ BỘ MÔN", JLabel.CENTER);
-        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 26));
         lblTitle.setForeground(new Color(0, 102, 204));
         lblTitle.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
         pnlNorth.add(lblTitle, BorderLayout.NORTH);
@@ -57,11 +57,7 @@ public class QuanLyToBoMonPanel extends JPanel {
         tableTBM = new JTable(tableModel);
         tableTBM.setRowHeight(25);
         tableTBM.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        javax.swing.table.DefaultTableCellRenderer headerRenderer = (javax.swing.table.DefaultTableCellRenderer) tableTBM.getTableHeader().getDefaultRenderer();
-        headerRenderer.setBackground(new Color(100, 150, 200));
-        headerRenderer.setForeground(Color.WHITE);
-        headerRenderer.setOpaque(true);
-        tableTBM.getTableHeader().setDefaultRenderer(headerRenderer);
+        tableTBM.getTableHeader().setDefaultRenderer(new TienIch.CustomTableHeaderRenderer());
 
         add(new JScrollPane(tableTBM), BorderLayout.CENTER);
 

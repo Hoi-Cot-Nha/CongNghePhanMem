@@ -2,7 +2,7 @@ package Controller.Dai;
 
 import view.LoginView;
 import Dao.TaiKhoanDAO; 
-import com.qlhs.main.MainForm; 
+import com.qlhs.main.MainFormNew;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -37,7 +37,7 @@ public class LoginController {
                 view.showMessage("Đăng nhập thành công! Quyền: " + role);
                 view.dispose(); 
 
-                MainForm main = new MainForm();
+                MainFormNew main = new MainFormNew();
                 main.setVisible(true);
             } else {
                 view.showMessage("Sai tên đăng nhập hoặc mật khẩu!");

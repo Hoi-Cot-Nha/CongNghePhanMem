@@ -48,7 +48,7 @@ public class QuanLyDoiTuongUuTienPanel extends JPanel {
         JPanel pnlNorth = new JPanel(new GridLayout(2, 1, 5, 5));
 
         JLabel lblTitle = new JLabel("QUẢN LÝ ĐỐI TƯỢNG ƯU TIÊN", JLabel.CENTER);
-        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 26));
         lblTitle.setForeground(new Color(0, 102, 204));
         pnlNorth.add(lblTitle);
 
@@ -76,11 +76,7 @@ public class QuanLyDoiTuongUuTienPanel extends JPanel {
         tableDT = new JTable(tableModel);
         tableDT.setRowHeight(25);
         tableDT.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        javax.swing.table.DefaultTableCellRenderer headerRenderer = (javax.swing.table.DefaultTableCellRenderer) tableDT.getTableHeader().getDefaultRenderer();
-        headerRenderer.setBackground(new Color(100, 150, 200));
-        headerRenderer.setForeground(Color.WHITE);
-        headerRenderer.setOpaque(true);
-        tableDT.getTableHeader().setDefaultRenderer(headerRenderer);
+        tableDT.getTableHeader().setDefaultRenderer(new TienIch.CustomTableHeaderRenderer());
 
         tableDT.addMouseListener(new MouseAdapter() {
             @Override
@@ -268,7 +264,11 @@ public class QuanLyDoiTuongUuTienPanel extends JPanel {
         if (row >= 0) {
             txtMaDT.setText(tableModel.getValueAt(row, 0).toString());
             txtTenDT.setText(tableModel.getValueAt(row, 1).toString());
-            txtTiLeGiam.setText(tableModel.getValueAt(row, 2).toString());
+            Object tiLeValue = tableModel.getValueAt(row, 2);
+            if (tiLeValue != null) {
+                double tiLeDisplay = Double.parseDouble(tiLeValue.toString());
+                txtTiLeGiam.setText(String.valueOf(tiLeDisplay / 100));
+            }
         }
     }
 

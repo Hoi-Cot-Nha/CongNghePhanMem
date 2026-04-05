@@ -48,7 +48,7 @@ public class FrmPhongHoc extends JPanel {
 
         // -- Tiêu đề --
         JLabel lblTitle = new JLabel("QUẢN LÝ PHÒNG HỌC", JLabel.CENTER);
-        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 26));
         lblTitle.setForeground(new Color(0, 102, 204));
         lblTitle.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0)); // Tạo khoảng cách nhỏ
         
@@ -103,12 +103,9 @@ public class FrmPhongHoc extends JPanel {
                 new String[]{"Mã phòng", "Tên phòng", "Sức chứa", "Loại", "Tình trạng"}, 0
         );
         table = new JTable(model);
+        table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         table.setRowHeight(25);
-        javax.swing.table.DefaultTableCellRenderer headerRenderer = (javax.swing.table.DefaultTableCellRenderer) table.getTableHeader().getDefaultRenderer();
-        headerRenderer.setBackground(new Color(100, 150, 200));
-        headerRenderer.setForeground(Color.WHITE);
-        headerRenderer.setOpaque(true);
-        table.getTableHeader().setDefaultRenderer(headerRenderer);
+        table.getTableHeader().setDefaultRenderer(new TienIch.CustomTableHeaderRenderer());
         add(new JScrollPane(table), BorderLayout.CENTER);
 
 
@@ -122,7 +119,7 @@ public class FrmPhongHoc extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         txtMaPhong = new JTextField(15);
-        txtTenPhong = new JTextField(15);
+        txtTenPhong = new JTextField(35);
         txtSucChua = new JTextField(15);
 
         cboLoaiPhong = new JComboBox<>(new String[]{
@@ -225,7 +222,15 @@ public class FrmPhongHoc extends JPanel {
         txtTenPhong.setText(model.getValueAt(row, 1).toString());
         txtSucChua.setText(model.getValueAt(row, 2).toString());
         cboLoaiPhong.setSelectedItem(model.getValueAt(row, 3).toString());
-        cboTinhTrang.setSelectedItem(model.getValueAt(row, 4).toString());
+        
+        String tinhTrang = model.getValueAt(row, 4).toString();
+        if (tinhTrang.equals("Trống")) {
+            cboTinhTrang.setSelectedIndex(0);
+        } else if (tinhTrang.equals("Đang học")) {
+            cboTinhTrang.setSelectedIndex(1);
+        } else if (tinhTrang.equals("Bảo trì")) {
+            cboTinhTrang.setSelectedIndex(2);
+        }
     }
 
     public void clearForm() {

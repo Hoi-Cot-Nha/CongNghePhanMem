@@ -19,7 +19,7 @@ public class HocphiDAO {
         System.out.println("\n=== HocphiDAO.getHocPhiByLop ===");
         System.out.println("Tham số: maLop=" + maLop + ", hocKy=" + hocKy + ", namHoc=" + namHoc);
 
-        String sql = "SELECT hp.* FROM HocPhi hp " +
+        String sql = "SELECT hp.*, hs.MaLop FROM HocPhi hp " +
                      "JOIN HocSinh hs ON hp.MaHS = hs.MaHS " +
                      "WHERE hs.MaLop = ? AND hp.HocKy = ? AND hp.NamHoc = ?";
 
@@ -46,6 +46,7 @@ public class HocphiDAO {
                 Hocphi hp = new Hocphi();
                 hp.setMaHP(rs.getInt("MaHP"));
                 hp.setMaHS(rs.getString("MaHS"));
+                hp.setMaLop(rs.getString("MaLop"));
                 hp.setHocKy(rs.getInt("HocKy"));
                 hp.setNamHoc(rs.getString("NamHoc"));
                 hp.setTongTien(rs.getLong("TongTien"));
@@ -72,7 +73,9 @@ public class HocphiDAO {
 
     public List<Hocphi> getAllHocPhi() {
         List<Hocphi> list = new ArrayList<>();
-        String sql = "SELECT * FROM HocPhi ORDER BY MaHS, HocKy, NamHoc";
+        String sql = "SELECT hp.*, hs.MaLop FROM HocPhi hp " +
+                     "JOIN HocSinh hs ON hp.MaHS = hs.MaHS " +
+                     "ORDER BY hs.MaLop, hp.HocKy, hp.NamHoc";
 
         try (Connection cons = ConnectDB.getConnection();
              PreparedStatement ps = cons.prepareStatement(sql)) {
@@ -83,6 +86,7 @@ public class HocphiDAO {
                 Hocphi hp = new Hocphi();
                 hp.setMaHP(rs.getInt("MaHP"));
                 hp.setMaHS(rs.getString("MaHS"));
+                hp.setMaLop(rs.getString("MaLop"));
                 hp.setHocKy(rs.getInt("HocKy"));
                 hp.setNamHoc(rs.getString("NamHoc"));
                 hp.setTongTien(rs.getLong("TongTien"));
@@ -92,6 +96,44 @@ public class HocphiDAO {
                 list.add(hp);
             }
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<String> getNamHocByMaLop(String maLop) {
+        List<String> list = new ArrayList<>();
+        String sql = "SELECT DISTINCT hp.NamHoc FROM HocPhi hp " +
+                     "JOIN HocSinh hs ON hp.MaHS = hs.MaHS " +
+                     "WHERE hs.MaLop = ? " +
+                     "ORDER BY hp.NamHoc DESC";
+
+        try {
+            Connection cons = ConnectDB.getConnection();
+            if (cons == null) {
+                System.out.println("❌ HocphiDAO.getNamHocByMaLop: Kết nối database là null!");
+                return list;
+            }
+
+            PreparedStatement ps = cons.prepareStatement(sql);
+            ps.setString(1, maLop);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                String namHoc = rs.getString("NamHoc");
+                if (namHoc != null && !namHoc.isEmpty()) {
+                    list.add(namHoc);
+                }
+            }
+
+            System.out.println("✓ NamHoc cho " + maLop + ": " + list.size() + " năm");
+
+            rs.close();
+            ps.close();
+            cons.close();
+
+        } catch (Exception e) {
+            System.out.println("❌ Exception trong getNamHocByMaLop: " + e.getMessage());
             e.printStackTrace();
         }
         return list;

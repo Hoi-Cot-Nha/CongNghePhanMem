@@ -18,7 +18,7 @@ public class DoiTuongUuTienController {
             model.addRow(new Object[]{
                     dt.getMaDT(),
                     dt.getTenDT(),
-                    dt.getTiLeGiam()
+                    dt.getTiLeGiam() * 100
             });
         }
     }
@@ -45,7 +45,7 @@ public class DoiTuongUuTienController {
             model.addRow(new Object[]{
                     dt.getMaDT(),
                     dt.getTenDT(),
-                    dt.getTiLeGiam()
+                    dt.getTiLeGiam() * 100
             });
         }
     }

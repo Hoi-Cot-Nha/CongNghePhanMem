@@ -186,6 +186,7 @@ public void updateTinhTrang(String maPhong, String tinhTrang) {
         String sql = """
             SELECT p.MaPhong, p.TenPhong, p.SucChua, p.LoaiPhong,
                    CASE
+                       WHEN p.TinhTrang = 'Bảo trì' THEN 'Bảo trì'
                        WHEN p.MaPhong IN (SELECT DISTINCT MaPhong FROM ThoiKhoaBieu)
                        THEN 'Đang học'
                        ELSE 'Trống'

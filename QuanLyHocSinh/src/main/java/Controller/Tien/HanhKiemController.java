@@ -1,11 +1,14 @@
 package Controller.Tien;
 
 import Dao.HanhKiemDAO;
+import Dao.LopDAO;
 import Model.HanhKiem;
+import Model.LopGVCN;
 import TienIch.XuatExcel;
 import View.Tien.HanhKiemPanel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 public class HanhKiemController {
@@ -17,11 +20,29 @@ public class HanhKiemController {
         this.view = view;
         this.dao = new HanhKiemDAO();
         
+        loadComboBoxData();
+        
         // Gán action cho các nút bấm ngay khi khởi tạo
         initEvents();
         
         // Load dữ liệu mặc định lên bảng ngay khi vào form
         loadData(); 
+    }
+
+    private void loadComboBoxData() {
+        LopDAO lopDAO = new LopDAO();
+        List<LopGVCN> lops = lopDAO.getAllLop();
+        List<String> maLops = new ArrayList<>();
+        for (LopGVCN l : lops) {
+            maLops.add(l.getMaLop());
+        }
+        view.setMaLopData(maLops);
+
+        List<String> namHocs = dao.getDistinctNamHoc();
+        if (namHocs.isEmpty()) {
+            namHocs.add("2024-2025");
+        }
+        view.setNamHocData(namHocs);
     }
 
     private void initEvents() {

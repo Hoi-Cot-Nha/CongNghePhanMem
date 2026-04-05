@@ -24,10 +24,7 @@ public class HocSinhController {
                 hs.getGioiTinh(),
                 hs.getDiaChi(),
                 hs.getMaLop(),
-                hs.getMaDT(),
-                hs.getSdt(),
-                hs.getTenPhuHuynh(),
-                hs.getCccd()
+                hs.getMaDT()
             });
         }
     }
@@ -74,10 +71,7 @@ public class HocSinhController {
                 hs.getGioiTinh(),
                 hs.getDiaChi(),
                 hs.getMaLop(),
-                hs.getMaDT(),
-                hs.getSdt(),
-                hs.getTenPhuHuynh(),
-                hs.getCccd()
+                hs.getMaDT()
             });
         }
     }

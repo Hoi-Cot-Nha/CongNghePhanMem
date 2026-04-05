@@ -1,67 +1,71 @@
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\com\qlhs\main\MainForm.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\com\qlhs\main\QuanLyHocSinh.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Connection\ConnectDB.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Controller\Dai\DoiTuongUuTienController.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Controller\Dai\HocSinhController.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Controller\Dai\LoginController.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Controller\Dai\TaiKhoanController.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Controller\Dat\GiaoVienController.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Controller\Dat\LopController.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Controller\Dat\ToBoMonController.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Controller\HaTrang\Hocphicontroller.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Controller\HaTrang\Phuckhaocontroller.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Controller\HaTrang\Thongbaocontroller.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Controller\ThuTrang\MonHocController.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Controller\ThuTrang\PhongHocController.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Controller\ThuTrang\TKBController.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Controller\Tien\DiemController.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Controller\Tien\HanhKiemController.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Controller\Tien\LichThiController.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Dao\DiemDAO.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Dao\DoiTuongUuTienDAO.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Dao\GiaovienDAO.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Dao\HanhKiemDAO.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Dao\HocphiDAO.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Dao\HocSinhDAO.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Dao\LichThiDAO.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Dao\LopDAO.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Dao\MonHocDAO.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Dao\PhongHocDAO.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Dao\PhuckhaoDAO.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Dao\TaiKhoanDAO.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Dao\ThongbaoDAO.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Dao\TKBDAO.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Dao\ToBoMonDAO.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Model\Diem.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Model\DoiTuongUuTien.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Model\Giaovien.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Model\HanhKiem.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Model\Hocphi.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Model\HocSinh.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Model\LichThi.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Model\Lop.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Model\LopGVCN.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Model\MonHoc.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Model\PhongHoc.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Model\Phuckhao.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Model\TaiKhoan.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Model\Thongbao.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Model\TKB.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\Model\ToBoMon.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\TienIch\XuatExcel.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\View\Dai\QuanLyDoiTuongUuTienPanel.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\View\Dai\QuanLyHocSinhPanel.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\View\Dai\QuanLyTaiKhoanPanel.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\View\Dat\QuanLyGiaoVienPanel.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\View\Dat\QuanLyLopPanel.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\View\Dat\QuanLyToBoMonPanel.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\View\HaTrang\QuanLyHocPhiPanel.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\View\HaTrang\QuanLyPhucKhaoPanel.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\View\HaTrang\QuanlyThongbaoPanel.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\View\LoginView.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\View\ThuTrang\FrmMonHoc.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\View\ThuTrang\FrmPhongHoc.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\View\ThuTrang\FrmTKB.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\View\Tien\HanhKiemPanel.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\View\Tien\LichThiPanel.java
-E:\Downloads\QuanLyHocSinh_Final07\QuanLyHocSinh\src\main\java\View\Tien\QuanLyDiemPanel.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\com\qlhs\main\MainForm.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\com\qlhs\main\QuanLyHocSinh.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Connection\ConnectDB.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Controller\Dai\DoiTuongUuTienController.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Controller\Dai\HocSinhController.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Controller\Dai\LoginController.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Controller\Dai\TaiKhoanController.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Controller\Dat\GiaoVienController.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Controller\Dat\LopController.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Controller\Dat\ToBoMonController.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Controller\HaTrang\Hocphicontroller.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Controller\HaTrang\Phuckhaocontroller.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Controller\HaTrang\Thongbaocontroller.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Controller\ThuTrang\MonHocController.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Controller\ThuTrang\PhongHocController.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Controller\ThuTrang\TKBController.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Controller\Tien\DiemController.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Controller\Tien\HanhKiemController.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Controller\Tien\LichThiController.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Dao\DiemDAO.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Dao\DoiTuongUuTienDAO.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Dao\GiaovienDAO.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Dao\HanhKiemDAO.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Dao\HocphiDAO.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Dao\HocSinhDAO.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Dao\LichThiDAO.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Dao\LopDAO.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Dao\MonHocDAO.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Dao\PhongHocDAO.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Dao\PhuckhaoDAO.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Dao\TaiKhoanDAO.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Dao\TestHocphiDAO.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Dao\ThongbaoDAO.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Dao\TKBDAO.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Dao\ToBoMonDAO.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\GetColumns.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Model\Diem.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Model\DoiTuongUuTien.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Model\Giaovien.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Model\HanhKiem.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Model\Hocphi.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Model\HocSinh.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Model\LichThi.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Model\Lop.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Model\LopGVCN.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Model\MonHoc.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Model\PhongHoc.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Model\Phuckhao.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Model\TaiKhoan.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Model\Thongbao.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Model\TKB.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\Model\ToBoMon.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\TienIch\ButtonStyleHelper.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\TienIch\CustomButton.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\TienIch\XuatExcel.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\View\Dai\QuanLyDoiTuongUuTienPanel.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\View\Dai\QuanLyHocSinhPanel.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\View\Dai\QuanLyTaiKhoanPanel.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\View\Dat\QuanLyGiaoVienPanel.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\View\Dat\QuanLyLopPanel.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\View\Dat\QuanLyToBoMonPanel.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\View\HaTrang\QuanLyHocPhiPanel.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\View\HaTrang\QuanLyPhucKhaoPanel.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\View\HaTrang\QuanlyThongbaoPanel.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\View\LoginView.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\View\ThuTrang\FrmMonHoc.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\View\ThuTrang\FrmPhongHoc.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\View\ThuTrang\FrmTKB.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\View\Tien\HanhKiemPanel.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\View\Tien\LichThiPanel.java
+D:\Documents\Nam 3 Ki 2\CongNghePhanMem\QuanLyHocSinh\src\main\java\View\Tien\QuanLyDiemPanel.java

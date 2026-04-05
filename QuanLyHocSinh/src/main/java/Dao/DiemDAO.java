@@ -13,7 +13,7 @@ public class DiemDAO {
  
         String sql = "SELECT d.*, hs.HoTen FROM Diem d " +
                      "JOIN HocSinh hs ON d.MaHS = hs.MaHS " +
-                     "WHERE hs.MaLop = ? AND d.MaMH = ? AND d.Hocky = ?";
+                     "WHERE hs.MaLop = ? AND d.MaMH = ? AND d.HocKy = ?";
         
         try (Connection conn = ConnectDB.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -31,10 +31,10 @@ public class DiemDAO {
                 d.setHocKy(rs.getInt("HocKy")); 
                 
      
-                d.setDiemMieng(rs.getDouble("DiemMieng"));
                 d.setDiem15p(rs.getDouble("Diem15p"));
                 d.setDiem1Tiet(rs.getDouble("Diem1Tiet"));
-                d.setDiemThi(rs.getDouble("DiemThi")); 
+                d.setDiemGiuaKy(rs.getDouble("DiemGiuaKy"));
+                d.setDiemCuoiKy(rs.getDouble("DiemCuoiKy")); 
                 
                 list.add(d);
             }
@@ -46,16 +46,16 @@ public class DiemDAO {
 
     public boolean updateDiem(Diem d) {
      
-        String sql = "UPDATE Diem SET DiemMieng=?, Diem15p=?, Diem1Tiet=?, DiemThi=?, DiemTB=? " +
-                     "WHERE MaHS=? AND MaMH=? AND Hocky=?";
+        String sql = "UPDATE Diem SET Diem15p=?, Diem1Tiet=?, DiemGiuaKy=?, DiemCuoiKy=?, DiemTongKet=? " +
+                     "WHERE MaHS=? AND MaMH=? AND HocKy=?";
         try (Connection conn = ConnectDB.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
              
-            ps.setDouble(1, d.getDiemMieng());
-            ps.setDouble(2, d.getDiem15p());
-            ps.setDouble(3, d.getDiem1Tiet());
-            ps.setDouble(4, d.getDiemThi());
-            ps.setDouble(5, d.getDiemTB()); 
+            ps.setDouble(1, d.getDiem15p());
+            ps.setDouble(2, d.getDiem1Tiet());
+            ps.setDouble(3, d.getDiemGiuaKy());
+            ps.setDouble(4, d.getDiemCuoiKy());
+            ps.setDouble(5, d.getDiemTongKet()); 
             
             ps.setString(6, d.getMaHS());
             ps.setString(7, d.getMaMH());
@@ -89,12 +89,27 @@ public class DiemDAO {
                 d.setMaMH(rs.getString("MaMH"));
                 d.setHocKy(rs.getInt("HocKy"));
                 
-                d.setDiemMieng(rs.getDouble("DiemMieng"));
                 d.setDiem15p(rs.getDouble("Diem15p"));
                 d.setDiem1Tiet(rs.getDouble("Diem1Tiet"));
-                d.setDiemThi(rs.getDouble("DiemThi"));
+                d.setDiemGiuaKy(rs.getDouble("DiemGiuaKy"));
+                d.setDiemCuoiKy(rs.getDouble("DiemCuoiKy"));
                 
                 list.add(d);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<Integer> getDistinctHocKy() {
+        List<Integer> list = new ArrayList<>();
+        String sql = "SELECT DISTINCT HocKy FROM Diem ORDER BY HocKy";
+        try (Connection conn = ConnectDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                list.add(rs.getInt("HocKy"));
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,7 +1,5 @@
 package Model;
 
-import java.util.Date;
-
 public class HocSinh {
     private String maHS;
     private String hoTen;
@@ -10,13 +8,10 @@ public class HocSinh {
     private String diaChi;
     private String maLop;
     private String maDT;
-    private String sdt;
-    private String tenPhuHuynh;
-    private String cccd;
 
     public HocSinh() {}
 
-    public HocSinh(String maHS, String hoTen, String ngaySinh, String gioiTinh, String diaChi, String maLop, String maDT, String sdt, String tenPhuHuynh, String cccd) {
+    public HocSinh(String maHS, String hoTen, String ngaySinh, String gioiTinh, String diaChi, String maLop, String maDT) {
         this.maHS = maHS;
         this.hoTen = hoTen;
         this.ngaySinh = ngaySinh;
@@ -24,9 +19,6 @@ public class HocSinh {
         this.diaChi = diaChi;
         this.maLop = maLop;
         this.maDT = maDT;
-        this.sdt = sdt;
-        this.tenPhuHuynh = tenPhuHuynh;
-        this.cccd = cccd;
     }
 
     public String getMaHS() {
@@ -84,30 +76,4 @@ public class HocSinh {
     public void setMaDT(String maDT) {
         this.maDT = maDT;
     }
-
-    public String getSdt() {
-        return sdt;
-    }
-
-    public void setSdt(String sdt) {
-        this.sdt = sdt;
-    }
-
-    public String getTenPhuHuynh() {
-        return tenPhuHuynh;
-    }
-
-    public void setTenPhuHuynh(String tenPhuHuynh) {
-        this.tenPhuHuynh = tenPhuHuynh;
-    }
-
-    public String getCccd() {
-        return cccd;
-    }
-
-    public void setCccd(String cccd) {
-        this.cccd = cccd;
-    }
-
-    
 }

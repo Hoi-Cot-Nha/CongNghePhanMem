@@ -11,6 +11,7 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import TienIch.ButtonStyleHelper;
 /**
  *
  * @author ADMIN
@@ -44,6 +45,7 @@ public class QuanlyThongbaoPanel extends JPanel{
         pnlFilter.add(new JLabel("Tìm kiếm:"));
         txtLocKeyword = new JTextField(20);
         btnLoc = new JButton("Tìm Kiếm");
+        ButtonStyleHelper.styleButtonSearch(btnLoc);
         pnlFilter.add(txtLocKeyword); pnlFilter.add(btnLoc);
 
         pnlNorth.add(lblTitle, BorderLayout.NORTH);
@@ -58,6 +60,11 @@ public class QuanlyThongbaoPanel extends JPanel{
         };
         table = new JTable(model);
         table.setRowHeight(30);
+        javax.swing.table.DefaultTableCellRenderer headerRenderer = (javax.swing.table.DefaultTableCellRenderer) table.getTableHeader().getDefaultRenderer();
+        headerRenderer.setBackground(new Color(100, 150, 200));
+        headerRenderer.setForeground(Color.WHITE);
+        headerRenderer.setOpaque(true);
+        table.getTableHeader().setDefaultRenderer(headerRenderer);
         add(new JScrollPane(table), BorderLayout.CENTER);
 
 
@@ -81,9 +88,13 @@ public class QuanlyThongbaoPanel extends JPanel{
 
         JPanel pnlBtns = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         btnThem = createBtn("Thêm Mới", new Color(224, 255, 255));
+        ButtonStyleHelper.styleButtonAdd(btnThem);
         btnSua = createBtn("Cập Nhật", new Color(255, 250, 205));
+        ButtonStyleHelper.styleButtonEdit(btnSua);
         btnXoa = createBtn("Xóa Bỏ", new Color(255, 228, 225));
+        ButtonStyleHelper.styleButtonDelete(btnXoa);
         btnLamMoi = createBtn("Làm Mới", new Color(220, 220, 220));
+        ButtonStyleHelper.styleButtonView(btnLamMoi);
         
         pnlBtns.add(btnThem); 
         pnlBtns.add(btnSua); 

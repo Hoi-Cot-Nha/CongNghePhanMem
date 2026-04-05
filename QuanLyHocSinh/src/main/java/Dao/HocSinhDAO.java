@@ -25,10 +25,7 @@ public class HocSinhDAO {
                         rs.getString("GioiTinh"),
                         rs.getString("DiaChi"),
                         rs.getString("MaLop"),
-                        rs.getString("MaDT"),
-                        rs.getString("SDT"),
-                        rs.getString("TenPhuHuynh"),
-                        rs.getString("CCCD")
+                        rs.getString("MaDT")
                 ));
             }
         } catch (Exception e) {
@@ -41,8 +38,8 @@ public class HocSinhDAO {
     public boolean insert(HocSinh hs) {
         String sql = """
                 INSERT INTO HocSinh
-                (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT, SDT, TenPhuHuynh, CCCD)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
                 """;
 
         try (Connection con = ConnectDB.getConnection();
@@ -55,9 +52,6 @@ public class HocSinhDAO {
             ps.setString(5, hs.getDiaChi());
             ps.setString(6, hs.getMaLop());
             ps.setString(7, hs.getMaDT());
-            ps.setString(8, hs.getSdt());
-            ps.setString(9, hs.getTenPhuHuynh());
-            ps.setString(10, hs.getCccd());
 
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
@@ -70,7 +64,7 @@ public class HocSinhDAO {
         String sql = """
                 UPDATE HocSinh
                 SET HoTen = ?, NgaySinh = ?, GioiTinh = ?, DiaChi = ?,
-                    MaLop = ?, MaDT = ?, SDT = ?, TenPhuHuynh = ?, CCCD = ?
+                    MaLop = ?, MaDT = ?
                 WHERE MaHS = ?
                 """;
 
@@ -83,10 +77,7 @@ public class HocSinhDAO {
             ps.setString(4, hs.getDiaChi());
             ps.setString(5, hs.getMaLop());
             ps.setString(6, hs.getMaDT());
-            ps.setString(7, hs.getSdt());
-            ps.setString(8, hs.getTenPhuHuynh());
-            ps.setString(9, hs.getCccd());
-            ps.setString(10, hs.getMaHS());
+            ps.setString(7, hs.getMaHS());
 
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
@@ -116,7 +107,6 @@ public class HocSinhDAO {
                 SELECT * FROM HocSinh
                 WHERE MaHS LIKE ?
                    OR HoTen LIKE ?
-                   OR SDT LIKE ?
                 """;
 
         try (Connection con = ConnectDB.getConnection();
@@ -125,7 +115,6 @@ public class HocSinhDAO {
             String key = "%" + keyword + "%";
             ps.setString(1, key);
             ps.setString(2, key);
-            ps.setString(3, key);
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -136,10 +125,7 @@ public class HocSinhDAO {
                         rs.getString("GioiTinh"),
                         rs.getString("DiaChi"),
                         rs.getString("MaLop"),
-                        rs.getString("MaDT"),
-                        rs.getString("SDT"),
-                        rs.getString("TenPhuHuynh"),
-                        rs.getString("CCCD")
+                        rs.getString("MaDT")
                 ));
             }
         } catch (Exception e) {

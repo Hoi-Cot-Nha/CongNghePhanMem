@@ -2,6 +2,7 @@ package View.Dai;
 
 import Controller.Dai.DoiTuongUuTienController;
 import Model.DoiTuongUuTien;
+import TienIch.ButtonStyleHelper;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -61,6 +62,9 @@ public class QuanLyDoiTuongUuTienPanel extends JPanel {
         btnTim = new JButton("Tìm");
         btnHienThiTatCa = new JButton("Hiển thị tất cả");
 
+        ButtonStyleHelper.styleButtonSearch(btnTim);
+        ButtonStyleHelper.styleButtonView(btnHienThiTatCa);
+
         pnlSearch.add(btnTim);
         pnlSearch.add(btnHienThiTatCa);
 
@@ -72,6 +76,11 @@ public class QuanLyDoiTuongUuTienPanel extends JPanel {
         tableDT = new JTable(tableModel);
         tableDT.setRowHeight(25);
         tableDT.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        javax.swing.table.DefaultTableCellRenderer headerRenderer = (javax.swing.table.DefaultTableCellRenderer) tableDT.getTableHeader().getDefaultRenderer();
+        headerRenderer.setBackground(new Color(100, 150, 200));
+        headerRenderer.setForeground(Color.WHITE);
+        headerRenderer.setOpaque(true);
+        tableDT.getTableHeader().setDefaultRenderer(headerRenderer);
 
         tableDT.addMouseListener(new MouseAdapter() {
             @Override
@@ -117,6 +126,12 @@ public class QuanLyDoiTuongUuTienPanel extends JPanel {
         btnXoa = new JButton("Xóa");
         btnLuu = new JButton("Lưu");
         btnHuy = new JButton("Hủy");
+
+        ButtonStyleHelper.styleButtonAdd(btnThem);
+        ButtonStyleHelper.styleButtonEdit(btnSua);
+        ButtonStyleHelper.styleButtonDelete(btnXoa);
+        ButtonStyleHelper.styleButtonSave(btnLuu);
+        ButtonStyleHelper.styleButtonCancel(btnHuy);
 
         pnlButton.add(btnThem);
         pnlButton.add(btnSua);

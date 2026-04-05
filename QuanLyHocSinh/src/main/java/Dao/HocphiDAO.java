@@ -16,16 +16,66 @@ public class HocphiDAO {
     public List<Hocphi> getHocPhiByLop(String maLop, int hocKy, String namHoc) {
         List<Hocphi> list = new ArrayList<>();
 
+        System.out.println("\n=== HocphiDAO.getHocPhiByLop ===");
+        System.out.println("Tham số: maLop=" + maLop + ", hocKy=" + hocKy + ", namHoc=" + namHoc);
+
         String sql = "SELECT hp.* FROM HocPhi hp " +
                      "JOIN HocSinh hs ON hp.MaHS = hs.MaHS " +
                      "WHERE hs.MaLop = ? AND hp.HocKy = ? AND hp.NamHoc = ?";
 
-        try (Connection cons = ConnectDB.getConnection();
-             PreparedStatement ps = cons.prepareStatement(sql)) {
-
+        try {
+            Connection cons = ConnectDB.getConnection();
+            if (cons == null) {
+                System.out.println("❌ HocphiDAO: Kết nối database là null!");
+                return list;
+            }
+            
+            System.out.println("✓ Kết nối thành công");
+            
+            PreparedStatement ps = cons.prepareStatement(sql);
             ps.setString(1, maLop);
             ps.setInt(2, hocKy);
             ps.setString(3, namHoc);
+
+            System.out.println("✓ PreparedStatement tạo thành công");
+
+            ResultSet rs = ps.executeQuery();
+            System.out.println("✓ executeQuery() thành công");
+
+            while (rs.next()) {
+                Hocphi hp = new Hocphi();
+                hp.setMaHP(rs.getInt("MaHP"));
+                hp.setMaHS(rs.getString("MaHS"));
+                hp.setHocKy(rs.getInt("HocKy"));
+                hp.setNamHoc(rs.getString("NamHoc"));
+                hp.setTongTien(rs.getLong("TongTien"));
+                hp.setMienGiam(rs.getLong("MienGiam"));
+                hp.setPhaiDong(rs.getLong("PhaiDong"));
+                hp.setTrangThai(rs.getString("TrangThai"));
+                list.add(hp);
+            }
+            
+            System.out.println("✓ Tìm được " + list.size() + " dòng");
+            
+            rs.close();
+            ps.close();
+            cons.close();
+            
+        } catch (Exception e) {
+            System.out.println("❌ Exception trong getHocPhiByLop: " + e.getClass().getName());
+            System.out.println("❌ Message: " + e.getMessage());
+            e.printStackTrace();
+        }
+        System.out.println("=== Kết thúc getHocPhiByLop ===\n");
+        return list;
+    }
+
+    public List<Hocphi> getAllHocPhi() {
+        List<Hocphi> list = new ArrayList<>();
+        String sql = "SELECT * FROM HocPhi ORDER BY MaHS, HocKy, NamHoc";
+
+        try (Connection cons = ConnectDB.getConnection();
+             PreparedStatement ps = cons.prepareStatement(sql)) {
 
             ResultSet rs = ps.executeQuery();
 
@@ -38,12 +88,6 @@ public class HocphiDAO {
                 hp.setTongTien(rs.getLong("TongTien"));
                 hp.setMienGiam(rs.getLong("MienGiam"));
                 hp.setPhaiDong(rs.getLong("PhaiDong"));
-                hp.setPhaiDong(hp.getTongTien() - hp.getMienGiam());
-                    if (hp.getPhaiDong() == 0) {
-                        hp.setTrangThai("Đã đóng");
-                    } else {
-                        hp.setTrangThai("Chưa đóng");
-                    }
                 hp.setTrangThai(rs.getString("TrangThai"));
                 list.add(hp);
             }

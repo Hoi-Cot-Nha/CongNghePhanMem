@@ -15,13 +15,29 @@ public class LopDAO {
        
         String sql = "SELECT l.MaLop, l.TenLop, l.NienKhoa, l.MaGVCN, gv.HoTen " +
                      "FROM Lop l LEFT JOIN GiaoVien gv ON l.MaGVCN = gv.MaGV"; 
-        try (Connection conn = ConnectDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try {
+            Connection conn = ConnectDB.getConnection();
+            if (conn == null) {
+                System.out.println("❌ LopDAO: Kết nối database là null!");
+                return list;
+            }
+            
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            
             while (rs.next()) {
                 list.add(mapToLopGVCN(rs));
             }
-        } catch (Exception e) { e.printStackTrace(); }
+            
+            rs.close();
+            ps.close();
+            conn.close();
+            
+            System.out.println("✓ LopDAO: Tải được " + list.size() + " lớp");
+        } catch (Exception e) { 
+            System.out.println("❌ LopDAO Exception: " + e.getMessage());
+            e.printStackTrace(); 
+        }
         return list;
     }
 

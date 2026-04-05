@@ -17,6 +17,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
+import TienIch.ButtonStyleHelper;
 
 public class QuanLyToBoMonPanel extends JPanel {
 
@@ -56,6 +57,11 @@ public class QuanLyToBoMonPanel extends JPanel {
         tableTBM = new JTable(tableModel);
         tableTBM.setRowHeight(25);
         tableTBM.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        javax.swing.table.DefaultTableCellRenderer headerRenderer = (javax.swing.table.DefaultTableCellRenderer) tableTBM.getTableHeader().getDefaultRenderer();
+        headerRenderer.setBackground(new Color(100, 150, 200));
+        headerRenderer.setForeground(Color.WHITE);
+        headerRenderer.setOpaque(true);
+        tableTBM.getTableHeader().setDefaultRenderer(headerRenderer);
 
         add(new JScrollPane(tableTBM), BorderLayout.CENTER);
 
@@ -84,10 +90,15 @@ public class QuanLyToBoMonPanel extends JPanel {
 
         JPanel pnlBtn = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
         btnThem = new JButton("Thêm");
+        ButtonStyleHelper.styleButtonAdd(btnThem);
         btnSua = new JButton("Sửa");
+        ButtonStyleHelper.styleButtonEdit(btnSua);
         btnXoa = new JButton("Xóa");
+        ButtonStyleHelper.styleButtonDelete(btnXoa);
         btnLuu = new JButton("Lưu");
+        ButtonStyleHelper.styleButtonSave(btnLuu);
         btnHuy = new JButton("Huỷ");
+        ButtonStyleHelper.styleButtonCancel(btnHuy);
 
         Dimension btnSize = new Dimension(100, 40);
         btnThem.setPreferredSize(btnSize);

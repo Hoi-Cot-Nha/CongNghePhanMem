@@ -11,6 +11,7 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import TienIch.ButtonStyleHelper;
 /**
  *
  * @author ADMIN
@@ -45,6 +46,7 @@ public class QuanLyPhucKhaoPanel extends JPanel{
         pnlFilter.add(new JLabel("Tìm kiếm (Mã HS/MH):"));
         txtLoc = new JTextField(20);
         btnLoc = new JButton("Tìm Kiếm");
+        ButtonStyleHelper.styleButtonSearch(btnLoc);
         pnlFilter.add(txtLoc); 
         pnlFilter.add(btnLoc);
         pnlNorth.add(lblTitle, BorderLayout.NORTH);
@@ -56,6 +58,11 @@ public class QuanLyPhucKhaoPanel extends JPanel{
         model = new DefaultTableModel(cols, 0) { @Override public boolean isCellEditable(int r, int c) { return false; } };
         table = new JTable(model);
         table.setRowHeight(30);
+        javax.swing.table.DefaultTableCellRenderer headerRenderer = (javax.swing.table.DefaultTableCellRenderer) table.getTableHeader().getDefaultRenderer();
+        headerRenderer.setBackground(new Color(100, 150, 200));
+        headerRenderer.setForeground(Color.WHITE);
+        headerRenderer.setOpaque(true);
+        table.getTableHeader().setDefaultRenderer(headerRenderer);
         add(new JScrollPane(table), BorderLayout.CENTER);
 
 
@@ -74,13 +81,22 @@ public class QuanLyPhucKhaoPanel extends JPanel{
         gbc.gridx = 0; gbc.gridy = 2; pnlInput.add(new JLabel("Trạng Thái:"), gbc);
         gbc.gridx = 1; txtTrangThai = new JTextField(25); pnlInput.add(txtTrangThai, gbc);
         gbc.gridx = 0; gbc.gridy = 3; pnlInput.add(new JLabel("Lý Do:"), gbc);
-        gbc.gridx = 1; txtLyDo = new JTextArea(3, 25); pnlInput.add(new JScrollPane(txtLyDo), gbc);
+        gbc.gridx = 1; txtLyDo = new JTextArea(8, 25); 
+        txtLyDo.setLineWrap(true);
+        txtLyDo.setWrapStyleWord(true);
+        JScrollPane scrollLyDo = new JScrollPane(txtLyDo);
+        scrollLyDo.setPreferredSize(new Dimension(400, 150));
+        pnlInput.add(scrollLyDo, gbc);
 
         JPanel pnlBtns = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
         btnThem = createBtn("Thêm Mới", new Color(224, 255, 255));
+        ButtonStyleHelper.styleButtonAdd(btnThem);
         btnSua = createBtn("Cập Nhật", new Color(255, 250, 205));
+        ButtonStyleHelper.styleButtonEdit(btnSua);
         btnXoa = createBtn("Xóa Bỏ", new Color(255, 228, 225));
+        ButtonStyleHelper.styleButtonDelete(btnXoa);
         btnLamMoi = createBtn("Làm Mới", new Color(220, 220, 220));
+        ButtonStyleHelper.styleButtonView(btnLamMoi);
         pnlBtns.add(btnThem); pnlBtns.add(btnSua); pnlBtns.add(btnXoa); pnlBtns.add(btnLamMoi);
 
         pnlSouth.add(pnlInput, BorderLayout.CENTER);

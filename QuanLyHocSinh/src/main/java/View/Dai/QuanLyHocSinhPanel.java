@@ -2,6 +2,7 @@ package View.Dai;
 
 import Controller.Dai.HocSinhController;
 import Model.HocSinh;
+import TienIch.ButtonStyleHelper;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -21,8 +22,7 @@ public class QuanLyHocSinhPanel extends JPanel {
     private JTable tableHS;
     private DefaultTableModel tableModel;
 
-    private JTextField txtMaHS, txtHoTen, txtDiaChi,
-             txtSDT, txtTenPhuHuynh, txtCCCD;
+    private JTextField txtMaHS, txtHoTen, txtDiaChi;
  
     private JSpinner spNgaySinh; 
     
@@ -62,6 +62,9 @@ public class QuanLyHocSinhPanel extends JPanel {
         btnTim = new JButton("Tìm");
         btnHienThiTatCa = new JButton("Hiển thị tất cả");
 
+        ButtonStyleHelper.styleButtonSearch(btnTim);
+        ButtonStyleHelper.styleButtonView(btnHienThiTatCa);
+
         pnlSearch.add(new JLabel("Từ khóa:"));
         pnlSearch.add(txtTimKiem);
         pnlSearch.add(btnTim);
@@ -72,13 +75,17 @@ public class QuanLyHocSinhPanel extends JPanel {
 
         String[] cols = {
             "Mã HS", "Họ tên", "Ngày sinh", "Giới tính",
-            "Địa chỉ", "Mã lớp", "Mã đối tượng",
-            "SDT", "Tên phụ huynh", "CCCD"
+            "Địa chỉ", "Mã lớp", "Mã đối tượng"
         };
 
         tableModel = new DefaultTableModel(cols, 0);
         tableHS = new JTable(tableModel);
         tableHS.setRowHeight(25);
+        javax.swing.table.DefaultTableCellRenderer headerRenderer = (javax.swing.table.DefaultTableCellRenderer) tableHS.getTableHeader().getDefaultRenderer();
+        headerRenderer.setBackground(new Color(100, 150, 200));
+        headerRenderer.setForeground(Color.WHITE);
+        headerRenderer.setOpaque(true);
+        tableHS.getTableHeader().setDefaultRenderer(headerRenderer);
 
         tableHS.addMouseListener(new MouseAdapter() {
             @Override
@@ -136,14 +143,14 @@ public class QuanLyHocSinhPanel extends JPanel {
         cboGioiTinh = new JComboBox<>(new String[]{"Nam", "Nữ"});
         pnlLeft.add(cboGioiTinh, gbc);
 
-        y++;
+        y = 0;
         gbc.gridx = 0; gbc.gridy = y;
-        pnlLeft.add(new JLabel("Địa chỉ:"), gbc);
+        pnlRight.add(new JLabel("Địa chỉ:"), gbc);
         gbc.gridx = 1;
         txtDiaChi = new JTextField(20);
-        pnlLeft.add(txtDiaChi, gbc);
+        pnlRight.add(txtDiaChi, gbc);
 
-        y = 0;
+        y++;
         gbc.gridx = 0; gbc.gridy = y;
         pnlRight.add(new JLabel("Mã lớp:"), gbc);
         gbc.gridx = 1;
@@ -160,27 +167,6 @@ public class QuanLyHocSinhPanel extends JPanel {
 
 
 
-        y++;
-        gbc.gridx = 0; gbc.gridy = y;
-        pnlRight.add(new JLabel("SDT:"), gbc);
-        gbc.gridx = 1;
-        txtSDT = new JTextField(15);
-        pnlRight.add(txtSDT, gbc);
-
-        y++;
-        gbc.gridx = 0; gbc.gridy = y;
-        pnlRight.add(new JLabel("Tên phụ huynh:"), gbc);
-        gbc.gridx = 1;
-        txtTenPhuHuynh = new JTextField(20);
-        pnlRight.add(txtTenPhuHuynh, gbc);
-
-        y++;
-        gbc.gridx = 0; gbc.gridy = y;
-        pnlRight.add(new JLabel("CCCD:"), gbc);
-        gbc.gridx = 1;
-        txtCCCD = new JTextField(15);
-        pnlRight.add(txtCCCD, gbc);
-
         pnlSouth.add(pnlInput, BorderLayout.CENTER);
 
         JPanel pnlButton = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
@@ -189,6 +175,12 @@ public class QuanLyHocSinhPanel extends JPanel {
         btnXoa = new JButton("Xóa");
         btnLuu = new JButton("Lưu");
         btnHuy = new JButton("Hủy");
+
+        ButtonStyleHelper.styleButtonAdd(btnThem);
+        ButtonStyleHelper.styleButtonEdit(btnSua);
+        ButtonStyleHelper.styleButtonDelete(btnXoa);
+        ButtonStyleHelper.styleButtonSave(btnLuu);
+        ButtonStyleHelper.styleButtonCancel(btnHuy);
 
         pnlButton.add(btnThem);
         pnlButton.add(btnSua);
@@ -285,9 +277,6 @@ public class QuanLyHocSinhPanel extends JPanel {
         cboMaLop.setEnabled(enabled);
         cboMaDT.setEnabled(enabled);
 
-        txtSDT.setEnabled(enabled);
-        txtTenPhuHuynh.setEnabled(enabled);
-        txtCCCD.setEnabled(enabled);
 
         btnLuu.setEnabled(enabled);
         btnHuy.setEnabled(enabled);
@@ -328,9 +317,6 @@ public class QuanLyHocSinhPanel extends JPanel {
             cboMaLop.setSelectedItem(tableModel.getValueAt(r, 5).toString());
             cboMaDT.setSelectedItem(tableModel.getValueAt(r, 6).toString());
 
-            txtSDT.setText(tableModel.getValueAt(r, 7).toString());
-            txtTenPhuHuynh.setText(tableModel.getValueAt(r, 8).toString());
-            txtCCCD.setText(tableModel.getValueAt(r, 9).toString());
         }
     }
 
@@ -349,11 +335,7 @@ public class QuanLyHocSinhPanel extends JPanel {
                 cboGioiTinh.getSelectedItem().toString(),
                 txtDiaChi.getText(),
                 cboMaLop.getSelectedItem().toString(),
-                cboMaDT.getSelectedItem().toString(),
-
-                txtSDT.getText(),
-                txtTenPhuHuynh.getText(),
-                txtCCCD.getText()
+                cboMaDT.getSelectedItem().toString()
             );
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Lỗi định dạng ngày tháng!");
@@ -369,9 +351,6 @@ public class QuanLyHocSinhPanel extends JPanel {
         cboMaLop.setSelectedIndex(-1);
         cboMaDT.setSelectedIndex(-1);
 
-        txtSDT.setText("");
-        txtTenPhuHuynh.setText("");
-        txtCCCD.setText("");
     }
     
     private void loadComboBox() {

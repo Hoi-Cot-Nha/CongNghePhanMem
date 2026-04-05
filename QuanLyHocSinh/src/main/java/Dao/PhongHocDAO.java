@@ -161,4 +161,57 @@ public void updateTinhTrang(String maPhong, String tinhTrang) {
     }
 }
 
+    public void phongDangHocBulkUpdate() {
+        String sql = """
+            UPDATE PhongHoc
+            SET TinhTrang = CASE
+                WHEN MaPhong IN (SELECT DISTINCT MaPhong FROM ThoiKhoaBieu)
+                THEN 'Đang học'
+                ELSE 'Trống'
+            END
+        """;
+        
+        try (Connection c = ConnectDB.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.executeUpdate();
+            System.out.println("✓ Cập nhật trạng thái tất cả phòng trong 1 query");
+        } catch (Exception e) {
+            System.out.println("❌ Lỗi bulk update: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public List<PhongHoc> getAllWithTinhTrang() {
+        List<PhongHoc> list = new ArrayList<>();
+        String sql = """
+            SELECT p.MaPhong, p.TenPhong, p.SucChua, p.LoaiPhong,
+                   CASE
+                       WHEN p.MaPhong IN (SELECT DISTINCT MaPhong FROM ThoiKhoaBieu)
+                       THEN 'Đang học'
+                       ELSE 'Trống'
+                   END AS TinhTrangThucTe
+            FROM PhongHoc p
+        """;
+
+        try (Connection c = ConnectDB.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                list.add(new PhongHoc(
+                        rs.getString("MaPhong"),
+                        rs.getString("TenPhong"),
+                        rs.getInt("SucChua"),
+                        rs.getString("LoaiPhong"),
+                        rs.getString("TinhTrangThucTe")
+                ));
+            }
+            System.out.println("✓ Tải " + list.size() + " phòng với trạng thái trong 1 query");
+        } catch (Exception e) {
+            System.out.println("❌ Lỗi getAllWithTinhTrang: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return list;
+    }
+
 }

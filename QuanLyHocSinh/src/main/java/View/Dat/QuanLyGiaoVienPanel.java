@@ -5,6 +5,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import TienIch.ButtonStyleHelper;
 
 public class QuanLyGiaoVienPanel extends JPanel {
 
@@ -46,6 +47,7 @@ public class QuanLyGiaoVienPanel extends JPanel {
         pnlSearch.add(new JLabel("Từ khóa:"));
         txtTimKiem = new JTextField(20);
         btnTimKiem = new JButton("Tìm");
+        ButtonStyleHelper.styleButtonSearch(btnTimKiem);
 
         pnlSearch.add(txtTimKiem);
         pnlSearch.add(btnTimKiem);
@@ -62,6 +64,11 @@ public class QuanLyGiaoVienPanel extends JPanel {
         tableModel = new DefaultTableModel(cols, 0);
         tableGV = new JTable(tableModel);
         tableGV.setRowHeight(25);
+        javax.swing.table.DefaultTableCellRenderer headerRenderer = (javax.swing.table.DefaultTableCellRenderer) tableGV.getTableHeader().getDefaultRenderer();
+        headerRenderer.setBackground(new Color(100, 150, 200));
+        headerRenderer.setForeground(Color.WHITE);
+        headerRenderer.setOpaque(true);
+        tableGV.getTableHeader().setDefaultRenderer(headerRenderer);
         add(new JScrollPane(tableGV), BorderLayout.CENTER);
 
 
@@ -107,6 +114,7 @@ public class QuanLyGiaoVienPanel extends JPanel {
 
         gbc.gridx = 3;
         btnXem = new JButton("Tải lại DS");
+        ButtonStyleHelper.styleButtonView(btnXem);
         pnlInput.add(btnXem, gbc);
 
         pnlSouth.add(pnlInput, BorderLayout.CENTER);
@@ -114,10 +122,15 @@ public class QuanLyGiaoVienPanel extends JPanel {
 
         JPanel pnlBtn = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
         btnThem = new JButton("Thêm");
+        ButtonStyleHelper.styleButtonAdd(btnThem);
         btnSua  = new JButton("Sửa");
+        ButtonStyleHelper.styleButtonEdit(btnSua);
         btnXoa  = new JButton("Xóa");
+        ButtonStyleHelper.styleButtonDelete(btnXoa);
         btnLuu  = new JButton("Lưu");
+        ButtonStyleHelper.styleButtonSave(btnLuu);
         btnHuy  = new JButton("Hủy");
+        ButtonStyleHelper.styleButtonCancel(btnHuy);
 
         pnlBtn.add(btnThem);
         pnlBtn.add(btnSua);

@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.util.List;
+import TienIch.ButtonStyleHelper;
 
 /**
  *
@@ -61,6 +62,7 @@ public class FrmTKB extends JPanel {
         JPanel pnlView = new JPanel();
         pnlView.setBorder(new TitledBorder("Xem thời khóa biểu"));
         btnXemDanhSach = new JButton("Xem danh sách");
+        ButtonStyleHelper.styleButtonView(btnXemDanhSach);
         pnlView.add(btnXemDanhSach);
         pnlTop.add(pnlView);
 
@@ -71,6 +73,7 @@ public class FrmTKB extends JPanel {
         txtMaLopLoc = new JTextField(15);
         pnlSearch.add(txtMaLopLoc);
         btnTimTheoLop = new JButton("Tìm");
+        ButtonStyleHelper.styleButtonSearch(btnTimTheoLop);
         pnlSearch.add(btnTimTheoLop);
         pnlTop.add(pnlSearch);
 
@@ -88,6 +91,11 @@ public class FrmTKB extends JPanel {
         table = new JTable(model);
         table.setRowHeight(26);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        javax.swing.table.DefaultTableCellRenderer headerRenderer = (javax.swing.table.DefaultTableCellRenderer) table.getTableHeader().getDefaultRenderer();
+        headerRenderer.setBackground(new Color(100, 150, 200));
+        headerRenderer.setForeground(Color.WHITE);
+        headerRenderer.setOpaque(true);
+        table.getTableHeader().setDefaultRenderer(headerRenderer);
         add(new JScrollPane(table), BorderLayout.CENTER);
 
 
@@ -129,9 +137,13 @@ public class FrmTKB extends JPanel {
 
         JPanel pnlBtn = new JPanel();
         btnXuatExcel = new JButton("Xuất Excel");
+        ButtonStyleHelper.styleButtonExport(btnXuatExcel);
         btnLuu = new JButton("Lưu");
+        ButtonStyleHelper.styleButtonSave(btnLuu);
         btnXoa = new JButton("Xóa");
+        ButtonStyleHelper.styleButtonDelete(btnXoa);
         btnMoi = new JButton("Mới");
+        ButtonStyleHelper.styleButtonView(btnMoi);
 
         pnlBtn.add(btnXuatExcel);
         pnlBtn.add(btnLuu);

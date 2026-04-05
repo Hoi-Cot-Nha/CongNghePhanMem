@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.util.List;
+import TienIch.ButtonStyleHelper;
 
 public class LichThiPanel extends JPanel {
 
@@ -56,6 +57,8 @@ public class LichThiPanel extends JPanel {
         
         btnTimKiem = new JButton("Tìm Kiếm");
         btnXemTatCa = new JButton("Xem Tất Cả");
+        ButtonStyleHelper.styleButtonSearch(btnTimKiem);
+        ButtonStyleHelper.styleButtonView(btnXemTatCa);
         pnlSearch.add(btnTimKiem); pnlSearch.add(btnXemTatCa);
         
         pnlNorth.add(pnlSearch, BorderLayout.CENTER);
@@ -66,6 +69,11 @@ public class LichThiPanel extends JPanel {
         model = new DefaultTableModel(cols, 0);
         table = new JTable(model);
         table.setRowHeight(25);
+        javax.swing.table.DefaultTableCellRenderer headerRenderer = (javax.swing.table.DefaultTableCellRenderer) table.getTableHeader().getDefaultRenderer();
+        headerRenderer.setBackground(new Color(100, 150, 200));
+        headerRenderer.setForeground(Color.WHITE);
+        headerRenderer.setOpaque(true);
+        table.getTableHeader().setDefaultRenderer(headerRenderer);
         add(new JScrollPane(table), BorderLayout.CENTER);
 
         // 3. PHẦN DƯỚI (SOUTH): Form nhập liệu + Nút bấm
@@ -130,9 +138,13 @@ public class LichThiPanel extends JPanel {
         // Panel chứa các nút bấm phía dưới cùng
         JPanel pnlBtn = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         btnThem = new JButton("Thêm Mới");
+        ButtonStyleHelper.styleButtonAdd(btnThem);
         btnSua = new JButton("Cập Nhật");
+        ButtonStyleHelper.styleButtonEdit(btnSua);
         btnXoa = new JButton("Xóa");
+        ButtonStyleHelper.styleButtonDelete(btnXoa);
         btnMoi = new JButton("Làm Mới");
+        ButtonStyleHelper.styleButtonView(btnMoi);
         
         pnlBtn.add(btnThem); pnlBtn.add(btnSua); pnlBtn.add(btnXoa); pnlBtn.add(btnMoi);
         pnlSouth.add(pnlBtn, BorderLayout.SOUTH);
@@ -141,8 +153,7 @@ public class LichThiPanel extends JPanel {
         
         // Nút Xuất Excel (Style xanh lá)
         btnXuatExcel = new JButton("Xuất Excel");
-        btnXuatExcel.setBackground(new Color(30, 130, 76));
-        btnXuatExcel.setForeground(Color.WHITE);
+        ButtonStyleHelper.styleButtonExport(btnXuatExcel);
         pnlBtn.add(btnXuatExcel);
     }
 

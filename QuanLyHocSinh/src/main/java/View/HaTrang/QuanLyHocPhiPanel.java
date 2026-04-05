@@ -14,9 +14,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import javax.swing.border.TitledBorder;
+import TienIch.ButtonStyleHelper;
+import Dao.LopDAO;
 
 public class QuanLyHocPhiPanel extends JPanel {
-    private JTextField txtLocMaLop, txtNamHoc;
+    private JComboBox<String> cboMaLop, cboNamHoc;
     private JComboBox<String> cboHocKy;
     private JButton btnLoc, btnThem, btnLuu, btnXoa, btnLamMoi;
     private JTable tableHocPhi;
@@ -27,12 +29,8 @@ public class QuanLyHocPhiPanel extends JPanel {
         initComponents();
         
         // Khởi tạo Controller (Controller sẽ gán sự kiện cho các nút)
+        // Controller sẽ tự động tải dữ liệu sau khi khởi tạo xong
         Hocphicontroller controller = new Hocphicontroller(this);
-        
-        // --- SỬA Ở ĐÂY ---
-        // Tự động kích hoạt nút "Xem Danh Sách" ngay khi mở form
-        // Việc này sẽ gọi logic lọc dữ liệu trong Controller với các giá trị mặc định (10A1, 2024-2025)
-        btnLoc.doClick(); 
     }
 
     private void initComponents() {
@@ -54,20 +52,32 @@ public class QuanLyHocPhiPanel extends JPanel {
         pnlFilter.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230), 1));
 
         pnlFilter.add(new JLabel("Mã Lớp:"));
-        // Giá trị mặc định ban đầu
-        txtLocMaLop = new JTextField("10A1", 8); 
-        pnlFilter.add(txtLocMaLop);
+        cboMaLop = new JComboBox<>();
+        try {
+            loadLopComboBox();
+        } catch (Exception e) {
+            System.out.println("⚠️ Lỗi tải lớp: " + e.getMessage());
+            e.printStackTrace();
+        }
+        pnlFilter.add(cboMaLop);
 
         pnlFilter.add(new JLabel("Học Kỳ:"));
         cboHocKy = new JComboBox<>(new String[]{"1", "2"});
+        cboHocKy.setSelectedIndex(0);
         pnlFilter.add(cboHocKy);
 
         pnlFilter.add(new JLabel("Năm Học:"));
-        // Giá trị mặc định ban đầu
-        txtNamHoc = new JTextField("2024-2025", 8);
-        pnlFilter.add(txtNamHoc);
+        cboNamHoc = new JComboBox<>();
+        try {
+            loadNamHocComboBox();
+        } catch (Exception e) {
+            System.out.println("⚠️ Lỗi tải năm học: " + e.getMessage());
+            e.printStackTrace();
+        }
+        pnlFilter.add(cboNamHoc);
 
         btnLoc = new JButton("Xem Danh Sách");
+        ButtonStyleHelper.styleButtonView(btnLoc);
         btnLoc.setBackground(new Color(52, 152, 219));
         // btnLoc.setForeground(Color.WHITE); // Bạn có thể thêm màu chữ nếu muốn
         btnLoc.setFocusPainted(false);
@@ -85,7 +95,11 @@ public class QuanLyHocPhiPanel extends JPanel {
         tableHocPhi = new JTable(tableModel);
         tableHocPhi.setRowHeight(30);
         tableHocPhi.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
-        tableHocPhi.getTableHeader().setBackground(new Color(236, 240, 241));
+        javax.swing.table.DefaultTableCellRenderer headerRenderer = (javax.swing.table.DefaultTableCellRenderer) tableHocPhi.getTableHeader().getDefaultRenderer();
+        headerRenderer.setBackground(new Color(100, 150, 200));
+        headerRenderer.setForeground(Color.WHITE);
+        headerRenderer.setOpaque(true);
+        tableHocPhi.getTableHeader().setDefaultRenderer(headerRenderer);
         
         // Căn giữa dữ liệu bảng
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -139,9 +153,13 @@ public class QuanLyHocPhiPanel extends JPanel {
         pnlButtons.setOpaque(false);
 
         btnThem = createStyledButton("Thêm Mới", new Color(224, 255, 255));
+        ButtonStyleHelper.styleButtonAdd(btnThem);
         btnLuu = createStyledButton("Cập Nhật", new Color(255, 250, 205));
+        ButtonStyleHelper.styleButtonEdit(btnLuu);
         btnXoa = createStyledButton("Xóa Bỏ", new Color(255, 228, 225));
+        ButtonStyleHelper.styleButtonDelete(btnXoa);
         btnLamMoi = createStyledButton("Làm Mới", new Color(220, 220, 220));
+        ButtonStyleHelper.styleButtonView(btnLamMoi);
 
         pnlButtons.add(btnThem);
         pnlButtons.add(btnLuu);
@@ -175,6 +193,103 @@ public class QuanLyHocPhiPanel extends JPanel {
         return btn;
     }
 
+    private void loadLopComboBox() {
+        System.out.println("\n=== Bắt đầu loadLopComboBox ===");
+        try {
+            LopDAO lopDAO = new LopDAO();
+            System.out.println("✓ Tạo LopDAO thành công");
+            
+            var lopList = lopDAO.getAllLop();
+            System.out.println("✓ Gọi getAllLop() thành công, kết quả: " + (lopList == null ? "null" : lopList.size() + " lớp"));
+            
+            cboMaLop.removeAllItems();
+            System.out.println("✓ Clear combo box");
+            
+            if (lopList == null || lopList.isEmpty()) {
+                System.out.println("⚠️ CẢNH BÁO: Không có lớp nào từ database!");
+                cboMaLop.addItem("(Không có dữ liệu)");
+                return;
+            }
+            
+            int count = 0;
+            for (var lop : lopList) {
+                if (lop != null && lop.getMaLop() != null && !lop.getMaLop().isEmpty()) {
+                    cboMaLop.addItem(lop.getMaLop());
+                    count++;
+                }
+            }
+            
+            System.out.println("✓ Đã thêm " + count + " lớp vào combo box");
+            
+            if (cboMaLop.getItemCount() > 0) {
+                cboMaLop.setSelectedIndex(0);
+                System.out.println("✓ Chọn lớp mặc định: " + cboMaLop.getSelectedItem());
+            }
+            
+            System.out.println("=== Kết thúc loadLopComboBox thành công ===\n");
+            
+        } catch (Exception e) {
+            System.out.println("❌ EXCEPTION trong loadLopComboBox: " + e.getClass().getName());
+            System.out.println("❌ Message: " + e.getMessage());
+            e.printStackTrace();
+            cboMaLop.addItem("(Lỗi tải dữ liệu)");
+        }
+    }
+
+    private void loadNamHocComboBox() {
+        System.out.println("\n=== Bắt đầu loadNamHocComboBox ===");
+        try {
+            LopDAO lopDAO = new LopDAO();
+            System.out.println("✓ Tạo LopDAO thành công");
+            
+            var lopList = lopDAO.getAllLop();
+            System.out.println("✓ Gọi getAllLop() thành công, kết quả: " + (lopList == null ? "null" : lopList.size() + " lớp"));
+            
+            cboNamHoc.removeAllItems();
+            System.out.println("✓ Clear combo box");
+            
+            if (lopList == null || lopList.isEmpty()) {
+                System.out.println("⚠️ CẢNH BÁO: Không có lớp nào từ database!");
+                cboNamHoc.addItem("(Không có dữ liệu)");
+                return;
+            }
+            
+            java.util.Set<String> namHocSet = new java.util.HashSet<>();
+            for (var lop : lopList) {
+                if (lop != null && lop.getNienKhoa() != null && !lop.getNienKhoa().isEmpty()) {
+                    namHocSet.add(lop.getNienKhoa());
+                }
+            }
+            
+            System.out.println("✓ Tìm được " + namHocSet.size() + " năm học khác nhau");
+            
+            var sortedNamHoc = namHocSet.stream().sorted().toArray(String[]::new);
+            
+            if (sortedNamHoc.length == 0) {
+                System.out.println("⚠️ CẢNH BÁO: Không có năm học nào!");
+                cboNamHoc.addItem("(Không có dữ liệu)");
+                return;
+            }
+            
+            for (String nh : sortedNamHoc) {
+                cboNamHoc.addItem(nh);
+            }
+            
+            System.out.println("✓ Đã thêm " + sortedNamHoc.length + " năm học vào combo box");
+            
+            cboNamHoc.setSelectedIndex(sortedNamHoc.length - 1);
+            System.out.println("✓ Chọn năm học mặc định: " + cboNamHoc.getSelectedItem());
+            
+            System.out.println("=== Kết thúc loadNamHocComboBox thành công ===\n");
+            
+        } catch (Exception e) {
+            System.out.println("❌ EXCEPTION trong loadNamHocComboBox: " + e.getClass().getName());
+            System.out.println("❌ Message: " + e.getMessage());
+            e.printStackTrace();
+            cboNamHoc.addItem("(Lỗi tải dữ liệu)");
+        }
+    }
+
     // Hàm loadTable được Controller gọi để đổ dữ liệu vào
     public void loadTable(List<Hocphi> list) {
         tableModel.setRowCount(0);
@@ -204,9 +319,9 @@ public class QuanLyHocPhiPanel extends JPanel {
     }
 
     // ===== Getters cho Controller =====
-    public JTextField getTxtLocMaLop() { return txtLocMaLop; }
+    public JComboBox<String> getCboMaLop() { return cboMaLop; }
     public JComboBox<String> getCboHocKy() { return cboHocKy; }
-    public JTextField getTxtNamHoc() { return txtNamHoc; }
+    public JComboBox<String> getCboNamHoc() { return cboNamHoc; }
     public JButton getBtnLoc() { return btnLoc; }
     public JButton getBtnThem() { return btnThem; }
     public JButton getBtnLuu() { return btnLuu; }

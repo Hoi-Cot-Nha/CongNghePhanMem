@@ -41,8 +41,7 @@ public class PhongHocController {
                     view.getTinhTrangTim()
             );
 
-           
-            updateTinhTrangTheoTKB(list);
+            // ✅ Không cần cập nhật tình trạng nữa, đã có trong query
             view.setTableData(list);
         });
 
@@ -102,21 +101,8 @@ public class PhongHocController {
     }
 
     private void loadAllAndUpdateStatus() {
-        List<PhongHoc> list = dao.getAll();
-        updateTinhTrangTheoTKB(list);
+        // ✅ Sử dụng getAllWithTinhTrang() - chỉ 1 query thay vì N+1
+        List<PhongHoc> list = dao.getAllWithTinhTrang();
         view.setTableData(list);
-    }
-
-
-    private void updateTinhTrangTheoTKB(List<PhongHoc> list) {
-        for (PhongHoc p : list) {
-            if (dao.phongDangHoc(p.getMaPhong())) {
-                dao.updateTinhTrang(p.getMaPhong(), "Đang học");
-                p.setTinhTrang("Đang học");
-            } else {
-                dao.updateTinhTrang(p.getMaPhong(), "Trống");
-                p.setTinhTrang("Trống");
-            }
-        }
     }
 }

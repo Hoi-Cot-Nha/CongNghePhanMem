@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.util.List;
+import TienIch.ButtonStyleHelper;
 
 /**
  *
@@ -61,6 +62,7 @@ public class FrmPhongHoc extends JPanel {
         JPanel pnlView = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 5));
         pnlView.setBorder(new TitledBorder("Xem danh sách"));
         btnXem = new JButton("Xem tất cả phòng");
+        ButtonStyleHelper.styleButtonView(btnXem);
         pnlView.add(btnXem);
         pnlTop.add(pnlView);
 
@@ -85,6 +87,7 @@ public class FrmPhongHoc extends JPanel {
         pnlSearch.add(cboTinhTrangTim);
 
         btnTim = new JButton("Tìm");
+        ButtonStyleHelper.styleButtonSearch(btnTim);
         pnlSearch.add(btnTim);
         pnlTop.add(pnlSearch);
 
@@ -101,6 +104,11 @@ public class FrmPhongHoc extends JPanel {
         );
         table = new JTable(model);
         table.setRowHeight(25);
+        javax.swing.table.DefaultTableCellRenderer headerRenderer = (javax.swing.table.DefaultTableCellRenderer) table.getTableHeader().getDefaultRenderer();
+        headerRenderer.setBackground(new Color(100, 150, 200));
+        headerRenderer.setForeground(Color.WHITE);
+        headerRenderer.setOpaque(true);
+        table.getTableHeader().setDefaultRenderer(headerRenderer);
         add(new JScrollPane(table), BorderLayout.CENTER);
 
 
@@ -154,8 +162,11 @@ public class FrmPhongHoc extends JPanel {
 
         JPanel pnlBtn = new JPanel();
         btnLuu = new JButton("Lưu");
+        ButtonStyleHelper.styleButtonSave(btnLuu);
         btnXoa = new JButton("Xóa");
+        ButtonStyleHelper.styleButtonDelete(btnXoa);
         btnMoi = new JButton("Mới");
+        ButtonStyleHelper.styleButtonView(btnMoi);
 
         pnlBtn.add(btnLuu);
         pnlBtn.add(btnXoa);

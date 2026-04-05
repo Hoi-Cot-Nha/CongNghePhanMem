@@ -5,6 +5,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import TienIch.ButtonStyleHelper;
 
 public class QuanLyLopPanel extends JPanel {
 
@@ -52,6 +53,7 @@ public class QuanLyLopPanel extends JPanel {
         pnlSearch.add(new JLabel("Từ khóa:"));
         txtTimKiem = new JTextField(20);
         btnTimKiem = new JButton("Tìm");
+        ButtonStyleHelper.styleButtonSearch(btnTimKiem);
 
         pnlSearch.add(txtTimKiem);
         pnlSearch.add(btnTimKiem);
@@ -68,6 +70,11 @@ public class QuanLyLopPanel extends JPanel {
         tableModel = new DefaultTableModel(cols, 0);
         tableLop = new JTable(tableModel);
         tableLop.setRowHeight(25);
+        javax.swing.table.DefaultTableCellRenderer headerRenderer = (javax.swing.table.DefaultTableCellRenderer) tableLop.getTableHeader().getDefaultRenderer();
+        headerRenderer.setBackground(new Color(100, 150, 200));
+        headerRenderer.setForeground(Color.WHITE);
+        headerRenderer.setOpaque(true);
+        tableLop.getTableHeader().setDefaultRenderer(headerRenderer);
         add(new JScrollPane(tableLop), BorderLayout.CENTER);
 
 
@@ -106,16 +113,22 @@ public class QuanLyLopPanel extends JPanel {
 
         gbc.gridx = 4;
         btnXem = new JButton("Tải lại");
+        ButtonStyleHelper.styleButtonView(btnXem);
         pnlInput.add(btnXem, gbc);
 
         pnlSouth.add(pnlInput, BorderLayout.CENTER);
 
         JPanel pnlBtn = new JPanel(new FlowLayout());
         btnThem = new JButton("Thêm");
+        ButtonStyleHelper.styleButtonAdd(btnThem);
         btnSua = new JButton("Sửa");
+        ButtonStyleHelper.styleButtonEdit(btnSua);
         btnXoa = new JButton("Xóa");
+        ButtonStyleHelper.styleButtonDelete(btnXoa);
         btnLuu = new JButton("Lưu");
+        ButtonStyleHelper.styleButtonSave(btnLuu);
         btnHuy = new JButton("Hủy");
+        ButtonStyleHelper.styleButtonCancel(btnHuy);
 
         Dimension sz = new Dimension(90, 35);
         btnThem.setPreferredSize(sz);

@@ -109,6 +109,20 @@ public class HanhKiemDAO {
         }
     }
 
+    public List<String> getDistinctNamHoc() {
+        List<String> list = new ArrayList<>();
+        String sql = "SELECT DISTINCT NamHoc FROM HanhKiem ORDER BY NamHoc DESC";
+        try (Connection conn = ConnectDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                list.add(rs.getString("NamHoc"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 
     private HanhKiem mapResultSetToModel(ResultSet rs) throws SQLException {
         HanhKiem hk = new HanhKiem();

@@ -20,6 +20,7 @@ public class Hocphicontroller {
         this.view = view;
         this.dao = new HocphiDAO();
 
+        System.out.println("DEBUG Controller: Khởi tạo controller...");
         
         view.getBtnLoc().addActionListener(new ActionListener() {
             @Override
@@ -59,22 +60,53 @@ public class Hocphicontroller {
                 view.refreshForm();
             }
         });
+        
+        System.out.println("DEBUG Controller: Controller khởi tạo xong!");
+
+        loadTatCaDuLieu();
+    }
+
+    private void loadTatCaDuLieu() {
+        try {
+            List<Hocphi> listAll = dao.getAllHocPhi();
+            view.loadTable(listAll);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void locDuLieu() {
         try {
-            String maLop = view.getTxtLocMaLop().getText().trim();
-            int hocKy = Integer.parseInt(view.getCboHocKy().getSelectedItem().toString());
-            String namHoc = view.getTxtNamHoc().getText().trim();
+            Object cboMaLopSelected = view.getCboMaLop().getSelectedItem();
+            Object cboHocKySelected = view.getCboHocKy().getSelectedItem();
+            Object cboNamHocSelected = view.getCboNamHoc().getSelectedItem();
+
+            if (cboMaLopSelected == null || cboHocKySelected == null || cboNamHocSelected == null) {
+                JOptionPane.showMessageDialog(view, "Vui lòng chọn mã lớp, học kỳ và năm học!");
+                return;
+            }
+
+            String maLop = cboMaLopSelected.toString().trim();
+            int hocKy = Integer.parseInt(cboHocKySelected.toString());
+            String namHoc = cboNamHocSelected.toString().trim();
+
+            System.out.println("DEBUG: Lọc dữ liệu - Lớp: " + maLop + ", Kỳ: " + hocKy + ", Năm: " + namHoc);
 
             List<Hocphi> list = dao.getHocPhiByLop(maLop, hocKy, namHoc);
+            
+            System.out.println("DEBUG: Số dòng tìm được: " + list.size());
+
             view.loadTable(list);
 
             if (list.isEmpty()) {
-                JOptionPane.showMessageDialog(view, "Không tìm thấy dữ liệu cho lớp " + maLop);
+                JOptionPane.showMessageDialog(view, "Không tìm thấy dữ liệu cho lớp " + maLop + 
+                                            ", Kỳ " + hocKy + ", Năm " + namHoc);
             }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(view, "Lỗi định dạng: " + ex.getMessage());
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(view, "Lỗi khi lọc: " + ex.getMessage());
+            ex.printStackTrace();
         }
     }
 
@@ -94,7 +126,7 @@ public class Hocphicontroller {
             Hocphi hp = new Hocphi();
             hp.setMaHS(maHS);
             hp.setHocKy(Integer.parseInt(view.getCboHocKy().getSelectedItem().toString()));
-            hp.setNamHoc(view.getTxtNamHoc().getText().trim());
+            hp.setNamHoc(view.getCboNamHoc().getSelectedItem().toString().trim());
             
             long tongTien = Long.parseLong(tongTienStr);
             long mienGiam = mienGiamStr.isEmpty() ? 0 : Long.parseLong(mienGiamStr);

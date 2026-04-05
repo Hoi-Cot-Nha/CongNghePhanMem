@@ -11,6 +11,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
+import TienIch.ButtonStyleHelper;
 
 /**
  *
@@ -47,6 +48,7 @@ public class FrmMonHoc extends JPanel {
         JPanel pnlView = new JPanel();
         pnlView.setBorder(new TitledBorder("Xem danh sách"));
         btnXem = new JButton("Xem danh sách");
+        ButtonStyleHelper.styleButtonView(btnXem);
         pnlView.add(btnXem);
         pnlNorth.add(pnlView, BorderLayout.CENTER);
 
@@ -57,6 +59,7 @@ public class FrmMonHoc extends JPanel {
         txtTimKiem = new JTextField(20);
         pnlSearch.add(txtTimKiem);
         btnTimKiem = new JButton("Tìm");
+        ButtonStyleHelper.styleButtonSearch(btnTimKiem);
         pnlSearch.add(btnTimKiem);
         pnlNorth.add(pnlSearch, BorderLayout.SOUTH);
 
@@ -68,6 +71,11 @@ public class FrmMonHoc extends JPanel {
         model = new DefaultTableModel(new String[]{"Mã MH", "Tên môn"}, 0);
         table = new JTable(model);
         table.setRowHeight(25);
+        javax.swing.table.DefaultTableCellRenderer headerRenderer = (javax.swing.table.DefaultTableCellRenderer) table.getTableHeader().getDefaultRenderer();
+        headerRenderer.setBackground(new Color(100, 150, 200));
+        headerRenderer.setForeground(Color.WHITE);
+        headerRenderer.setOpaque(true);
+        table.getTableHeader().setDefaultRenderer(headerRenderer);
         add(new JScrollPane(table), BorderLayout.CENTER);
 
 
@@ -88,8 +96,11 @@ public class FrmMonHoc extends JPanel {
 
         JPanel pnlBtn = new JPanel();
         btnLuu = new JButton("Lưu");
+        ButtonStyleHelper.styleButtonSave(btnLuu);
         btnXoa = new JButton("Xóa");
+        ButtonStyleHelper.styleButtonDelete(btnXoa);
         btnMoi = new JButton("Mới");
+        ButtonStyleHelper.styleButtonView(btnMoi);
         pnlBtn.add(btnLuu);
         pnlBtn.add(btnXoa);
         pnlBtn.add(btnMoi);

@@ -8,14 +8,15 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.util.List;
+import TienIch.ButtonStyleHelper;
 
 public class HanhKiemPanel extends JPanel {
     
     // --- Khai báo Component ---
     private JButton btnXuatExcel;
     // Bộ lọc và tìm kiếm
-    private JTextField txtMaLop, txtNamHoc, txtTimKiem; 
-    private JComboBox<String> cboHocKy, cboXepLoai;
+    private JTextField txtTimKiem; 
+    private JComboBox<String> cboLocMaLop, cboLocNamHoc, cboHocKy, cboXepLoai;
     
     // Bảng hiển thị
     private JTable table;
@@ -53,15 +54,16 @@ public class HanhKiemPanel extends JPanel {
         pnlFilter.setBorder(new TitledBorder("Lọc theo lớp (Mặc định)"));
         
         pnlFilter.add(new JLabel("Mã Lớp:"));
-        txtMaLop = new JTextField("10A1", 8); pnlFilter.add(txtMaLop); 
+        cboLocMaLop = new JComboBox<>(); pnlFilter.add(cboLocMaLop); 
         
         pnlFilter.add(new JLabel("Năm Học:"));
-        txtNamHoc = new JTextField("2024-2025", 8); pnlFilter.add(txtNamHoc);
+        cboLocNamHoc = new JComboBox<>(); pnlFilter.add(cboLocNamHoc);
         
         pnlFilter.add(new JLabel("Học Kỳ:"));
         cboHocKy = new JComboBox<>(new String[]{"1", "2"}); pnlFilter.add(cboHocKy);
         
         btnXem = new JButton("Lọc Danh Sách");
+        ButtonStyleHelper.styleButtonFilter(btnXem);
         pnlFilter.add(btnXem);
         pnlTools.add(pnlFilter);
 
@@ -73,18 +75,16 @@ public class HanhKiemPanel extends JPanel {
         txtTimKiem = new JTextField(20); pnlSearch.add(txtTimKiem);
         
         btnTimKiem = new JButton("Tìm Kiếm");
-        btnTimKiem.setBackground(new Color(255, 102, 0)); // Màu cam nổi bật
-        btnTimKiem.setForeground(Color.WHITE);
+        ButtonStyleHelper.styleButtonSearch(btnTimKiem);
         pnlSearch.add(btnTimKiem);
         pnlTools.add(pnlSearch);
 
         pnlNorth.add(pnlTools, BorderLayout.CENTER);
         add(pnlNorth, BorderLayout.NORTH);
         
-        // Nút Xuất Excel (Style màu xanh lá)
+        // Nút Xuất Excel (Style màu xanh lá dễ nhìn)
         btnXuatExcel = new JButton("Xuất Excel");
-        btnXuatExcel.setBackground(new Color(30, 130, 76)); 
-        btnXuatExcel.setForeground(Color.WHITE);
+        ButtonStyleHelper.styleButtonExport(btnXuatExcel);
         btnXuatExcel.setPreferredSize(new Dimension(120, 35));
 
         // 2. PHẦN GIỮA (CENTER): Bảng dữ liệu
@@ -92,6 +92,11 @@ public class HanhKiemPanel extends JPanel {
         model = new DefaultTableModel(cols, 0);
         table = new JTable(model);
         table.setRowHeight(25);
+        javax.swing.table.DefaultTableCellRenderer headerRenderer = (javax.swing.table.DefaultTableCellRenderer) table.getTableHeader().getDefaultRenderer();
+        headerRenderer.setBackground(new Color(100, 150, 200));
+        headerRenderer.setForeground(Color.WHITE);
+        headerRenderer.setOpaque(true);
+        table.getTableHeader().setDefaultRenderer(headerRenderer);
         add(new JScrollPane(table), BorderLayout.CENTER);
 
         // 3. PHẦN DƯỚI (SOUTH): Form nhập liệu + Nút tác vụ
@@ -103,22 +108,25 @@ public class HanhKiemPanel extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 10, 5, 10); gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Dòng 1: Mã HS + Tên HS (Readonly vì chỉ cập nhật HK, k sửa tên ở đây)
+        // Dòng 1: Mã HS + Tên HS
         gbc.gridx=0; gbc.gridy=0; pnlInput.add(new JLabel("Mã HS:"), gbc);
         gbc.gridx=1; gbc.gridy=0; txtMaHS = new JTextField(15); txtMaHS.setEditable(false); pnlInput.add(txtMaHS, gbc);
         
         gbc.gridx=2; gbc.gridy=0; pnlInput.add(new JLabel("Tên HS:"), gbc);
         gbc.gridx=3; gbc.gridy=0; txtTenHS = new JTextField(15); txtTenHS.setEditable(false); pnlInput.add(txtTenHS, gbc);
         
-        // Dòng 2: Xếp loại + Nhận xét
+        // Dòng 2: Xếp loại
         gbc.gridx=0; gbc.gridy=1; pnlInput.add(new JLabel("Xếp Loại:"), gbc);
         gbc.gridx=1; gbc.gridy=1; 
         cboXepLoai = new JComboBox<>(new String[]{"Tot", "Kha", "Trung Binh", "Yeu"}); 
         pnlInput.add(cboXepLoai, gbc);
         
-        gbc.gridx=2; gbc.gridy=1; pnlInput.add(new JLabel("Nhận Xét:"), gbc);
-        gbc.gridx=3; gbc.gridy=1; 
-        txtNhanXet = new JTextArea(2, 20); 
+        // Dòng 3: Nhận xét mở rộng
+        gbc.gridx=0; gbc.gridy=2; pnlInput.add(new JLabel("Nhận Xét:"), gbc);
+        gbc.gridx=1; gbc.gridy=2; gbc.gridwidth=3;
+        txtNhanXet = new JTextArea(4, 40); // Tăng kích thước khu vực nhận xét
+        txtNhanXet.setLineWrap(true);
+        txtNhanXet.setWrapStyleWord(true);
         pnlInput.add(new JScrollPane(txtNhanXet), gbc);
 
         pnlSouth.add(pnlInput, BorderLayout.CENTER);
@@ -126,12 +134,15 @@ public class HanhKiemPanel extends JPanel {
         // Panel chứa các nút bấm cuối cùng
         JPanel pnlBtn = new JPanel();
         btnLuu = new JButton("Lưu / Cập Nhật");
+        ButtonStyleHelper.styleButtonSave(btnLuu);
         btnLuu.setPreferredSize(new Dimension(150, 35));
         
         btnXoa = new JButton("Xóa");
+        ButtonStyleHelper.styleButtonDelete(btnXoa);
         btnXoa.setPreferredSize(new Dimension(100, 35));
         
         btnMoi = new JButton("Làm Mới Form");
+        ButtonStyleHelper.styleButtonView(btnMoi);
         
         pnlBtn.add(btnXuatExcel);
         pnlBtn.add(btnLuu); pnlBtn.add(btnXoa); pnlBtn.add(btnMoi);
@@ -141,11 +152,34 @@ public class HanhKiemPanel extends JPanel {
     }
 
     // --- CÁC HÀM GETTER DỮ LIỆU TỪ FORM (ĐỂ CONTROLLER GỌI) ---
-    public String getMaLopFilter() { return txtMaLop.getText().trim(); }
-    public String getNamHocFilter() { return txtNamHoc.getText().trim(); }
-    public int getHocKyFilter() { return Integer.parseInt(cboHocKy.getSelectedItem().toString()); }
+    public String getMaLopFilter() { 
+        return cboLocMaLop.getSelectedItem() != null ? cboLocMaLop.getSelectedItem().toString() : ""; 
+    }
+    public String getNamHocFilter() { 
+        return cboLocNamHoc.getSelectedItem() != null ? cboLocNamHoc.getSelectedItem().toString() : ""; 
+    }
+    public int getHocKyFilter() { 
+        try {
+            return Integer.parseInt(cboHocKy.getSelectedItem().toString());
+        } catch(Exception e) { return 1; }
+    }
     public String getTuKhoaTimKiem() { return txtTimKiem.getText().trim(); } 
     
+    // --- Các hàm Setter dữ liệu cho ComboBox ---
+    public void setMaLopData(List<String> lops) {
+        cboLocMaLop.removeAllItems();
+        for (String lop : lops) {
+            cboLocMaLop.addItem(lop);
+        }
+    }
+
+    public void setNamHocData(List<String> namHocs) {
+        cboLocNamHoc.removeAllItems();
+        for (String n : namHocs) {
+            cboLocNamHoc.addItem(n);
+        }
+    }
+
     // Đóng gói dữ liệu từ form nhập thành Object HanhKiem
     public HanhKiem getHanhKiemInput() {
         HanhKiem hk = new HanhKiem();

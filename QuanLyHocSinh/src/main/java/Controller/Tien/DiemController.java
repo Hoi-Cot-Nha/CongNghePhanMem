@@ -1,10 +1,15 @@
 package Controller.Tien; 
 
 import Dao.DiemDAO;
+import Dao.LopDAO;
+import Dao.MonHocDAO;
 import Model.Diem;
+import Model.LopGVCN;
+import Model.MonHoc;
 import View.Tien.QuanLyDiemPanel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 import TienIch.XuatExcel;
 
@@ -17,11 +22,39 @@ public class DiemController {
         this.view = view;
         this.dao = new DiemDAO();
         
+        loadComboBoxData();
+        
         // Gán hành động cho các nút bấm ngay khi khởi tạo
         initEvents();
         
         // Load dữ liệu mặc định lên bảng luôn cho đỡ trống
         loadData(); 
+    }
+
+    private void loadComboBoxData() {
+        LopDAO lopDAO = new LopDAO();
+        MonHocDAO monHocDAO = new MonHocDAO();
+
+        List<LopGVCN> lops = lopDAO.getAllLop();
+        List<String> maLops = new ArrayList<>();
+        for (LopGVCN l : lops) {
+            maLops.add(l.getMaLop());
+        }
+        view.setMaLopData(maLops);
+
+        List<MonHoc> mons = monHocDAO.getAll();
+        List<String> maMons = new ArrayList<>();
+        for (MonHoc m : mons) {
+            maMons.add(m.getMaMH());
+        }
+        view.setMonHocData(maMons);
+
+        List<Integer> hks = dao.getDistinctHocKy();
+        if (hks.isEmpty()) {
+            hks.add(1);
+            hks.add(2);
+        }
+        view.setHocKyData(hks);
     }
 
     private void initEvents() {

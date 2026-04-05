@@ -1,3 +1,4 @@
+
 -- 1. TẠO CƠ SỞ DỮ LIỆU
 CREATE DATABASE QuanLyHocSinh;
 GO

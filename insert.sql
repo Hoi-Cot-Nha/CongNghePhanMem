@@ -1,4 +1,4 @@
-USE QuanLyHocSinh;
+﻿USE QuanLyHocSinh;
 GO
 
 -- 1. Thêm Đối tượng ưu tiên

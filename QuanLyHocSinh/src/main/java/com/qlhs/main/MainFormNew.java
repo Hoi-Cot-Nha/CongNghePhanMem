@@ -12,6 +12,7 @@
     import java.awt.RenderingHints;
     import java.awt.FontMetrics;
 
+    import Model.Auth;
     import view.LoginView;
     import Controller.Dai.LoginController;
 
@@ -61,6 +62,9 @@
         private JPanel sidebarPanel; // ✅ Lưu reference sidebar
 
         public MainFormNew() {
+
+            System.out.println("QUYỀN ĐANG ĐĂNG NHẬP LÀ: [" + Auth.currentRole + "]");
+            System.out.println("IS HOC SINH = " + Auth.isHocSinh());
             initUI();
         }
 
@@ -281,48 +285,58 @@
             JPanel sidebar = new JPanel();
             sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
             sidebar.setBackground(SIDEBAR_BG);
-            // ✅ Loại bỏ PreferredSize(250, 0) - khiến BoxLayout + ScrollPane không hoạt động
-            // sidebar.setPreferredSize(new Dimension(250, 0));
             sidebar.setBorder(new EmptyBorder(10, 0, 10, 0));
 
-            // -- HỆ THỐNG --
+            // -- HỆ THỐNG (Ai cũng thấy) --
             addSideHeader(sidebar, "Hệ thống");
             addSideButton(sidebar, "Đăng xuất", "DangXuat", "logout.png");
             sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
 
-            // -- HỒ SƠ & CƠ CẤU (Đạt) --
-            addSideHeader(sidebar, "Hồ sơ & cơ cấu");
-            addSideButton(sidebar, "Quản lý lớp học", "FormLopHoc", "class.png");
-            addSideButton(sidebar, "Quản lý giáo viên", "FormGiaoVien", "teacher.png");
-            addSideButton(sidebar, "Quản lý tổ bộ môn", "FormToBoMon", "group.png");
-            sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
+            // -- HỒ SƠ & CƠ CẤU (Học sinh KHÔNG được xem) --
+            if (!Auth.isHocSinh()) {
+                addSideHeader(sidebar, "Hồ sơ & cơ cấu");
+                addSideButton(sidebar, "Quản lý lớp học", "FormLopHoc", "class.png");
+                addSideButton(sidebar, "Quản lý giáo viên", "FormGiaoVien", "teacher.png");
+                addSideButton(sidebar, "Quản lý tổ bộ môn", "FormToBoMon", "group.png");
+                sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
+            }
 
-            // -- ĐÀO TẠO (Thu Trang) --
+            // -- ĐÀO TẠO --
             addSideHeader(sidebar, "Đào tạo");
-            addSideButton(sidebar, "Quản lý môn học", "FormMonHoc", "subject.png");
-            addSideButton(sidebar, "Thời khóa biểu / Lịch dạy", "FormTKB", "schedule.png");
-            addSideButton(sidebar, "Phòng học & Thiết bị", "FormPhongHoc", "room.png");
+            if (!Auth.isHocSinh()) {
+                addSideButton(sidebar, "Quản lý môn học", "FormMonHoc", "subject.png");
+            }
+            addSideButton(sidebar, "Thời khóa biểu / Lịch dạy", "FormTKB", "schedule.png"); // Học sinh được xem
+            if (!Auth.isHocSinh()) {
+                addSideButton(sidebar, "Phòng học & Thiết bị", "FormPhongHoc", "room.png");
+            }
             sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
 
-            // -- KHẢO THÍ & KẾT QUẢ (Tiến) --
+            // -- KHẢO THÍ & KẾT QUẢ --
             addSideHeader(sidebar, "Khảo thí & kết quả");
-            addSideButton(sidebar, "Quản lý điểm số", "FormDiemSo", "score.png");
-            addSideButton(sidebar, "Hạnh kiểm / Rèn luyện", "FormHanhKiem", "conduct.png");
-            addSideButton(sidebar, "Lịch thi", "FormLichThi", "exam.png");
+            addSideButton(sidebar, "Quản lý điểm số", "FormDiemSo", "score.png"); // Học sinh được xem
+            if (!Auth.isHocSinh()) {
+                addSideButton(sidebar, "Hạnh kiểm / Rèn luyện", "FormHanhKiem", "conduct.png");
+                addSideButton(sidebar, "Lịch thi", "FormLichThi", "exam.png");
+            }
             sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
 
-            // -- HÀNH CHÍNH & TÀI VỤ (Hà Trang) --
+            // -- HÀNH CHÍNH & TÀI VỤ --
             addSideHeader(sidebar, "Hành chính & tài vụ");
-            addSideButton(sidebar, "Quản lý học phí", "FormHocPhi", "fee.png");
-            addSideButton(sidebar, "Quản lý thông báo", "FormThongBao", "notification.png");
-            addSideButton(sidebar, "Quản lý phúc khảo", "FormPhucKhao", "review.png");
+            addSideButton(sidebar, "Quản lý học phí", "FormHocPhi", "fee.png"); // Học sinh được xem
+            addSideButton(sidebar, "Quản lý thông báo", "FormThongBao", "notification.png"); // Học sinh được xem
+            if (!Auth.isHocSinh()) {
+                addSideButton(sidebar, "Quản lý phúc khảo", "FormPhucKhao", "review.png");
+            }
             sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
 
-            // -- HỆ THỐNG & CHÍNH SÁCH (Đại) --
-            addSideHeader(sidebar, "Hệ thống & chính sách");
-            addSideButton(sidebar, "Hồ sơ học sinh (Chi tiết)", "FormHocSinh", "student.png");
-            addSideButton(sidebar, "Quản lý tài khoản user", "FormTaiKhoan", "user.png");
-            addSideButton(sidebar, "Đối tượng chính sách", "FormChinhSach", "policy.png");
+            // -- HỆ THỐNG & CHÍNH SÁCH (Học sinh KHÔNG được xem) --
+            if (!Auth.isHocSinh()) {
+                addSideHeader(sidebar, "Hệ thống & chính sách");
+                addSideButton(sidebar, "Hồ sơ học sinh (Chi tiết)", "FormHocSinh", "student.png");
+                addSideButton(sidebar, "Quản lý tài khoản user", "FormTaiKhoan", "user.png");
+                addSideButton(sidebar, "Đối tượng chính sách", "FormChinhSach", "policy.png");
+            }
 
             return sidebar;
         }

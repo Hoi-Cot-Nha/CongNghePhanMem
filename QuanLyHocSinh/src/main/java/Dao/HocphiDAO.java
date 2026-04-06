@@ -211,4 +211,24 @@ public class HocphiDAO {
             return false;
         }
     }
+    public List<Hocphi> getByMaHS(String maHS) {
+        List<Hocphi> list = new ArrayList<>();
+        String sql = "SELECT * FROM HocPhi WHERE MaHS = ?";
+
+        try (Connection con = ConnectDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, maHS);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Hocphi hp = new Hocphi();
+                // set dữ liệu ở đây
+                list.add(hp);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

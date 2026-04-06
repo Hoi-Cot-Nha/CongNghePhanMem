@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 import javax.swing.JOptionPane;
 import TienIch.XuatExcel;
+import Model.Auth;
 
 public class LichThiController {
     
@@ -17,7 +18,9 @@ public class LichThiController {
     public LichThiController(LichThiPanel view) {
         this.view = view;
         this.dao = new LichThiDAO();
-        
+        if (Auth.isHocSinh()) {
+            view.showMessage("Bạn chỉ có quyền xem lịch thi!");
+        }
         // Gán sự kiện cho các nút bấm
         initEvents();
         

@@ -145,6 +145,10 @@ public class QuanLyDiemPanel extends JPanel {
         
         pnlSouth.add(pnlButton, BorderLayout.SOUTH);
         this.add(pnlSouth, BorderLayout.SOUTH);
+        if (Model.Auth.isHocSinh()) {
+            btnCapNhat.setVisible(false);
+            btnXuatExcel.setVisible(false);
+        }
     }
 
     // --- Các hàm Getter dữ liệu từ Form (Cho Controller gọi) ---
@@ -244,4 +248,13 @@ public class QuanLyDiemPanel extends JPanel {
     public void addBtnCapNhatListener(ActionListener action) { btnCapNhat.addActionListener(action); }
     public void addTableMouseListener(MouseAdapter adapter) { tableDiem.addMouseListener(adapter); }
     public void addBtnXuatExcelListener(ActionListener ac) { btnXuatExcel.addActionListener(ac); }
+    // Cấp quyền truy cập cái Bảng cho Controller
+    public javax.swing.table.DefaultTableModel getTableModel() {
+        // Tùy theo việc bạn đặt tên bảng là gì lúc thiết kế (ví dụ: jTable1, tblDiem, v.v.)
+        // Hãy sửa chữ "tblDiem" thành tên biến đúng của bạn.
+        return (javax.swing.table.DefaultTableModel) tableDiem.getModel();
+    }
+    public javax.swing.JButton getBtnCapNhat() {
+        return btnCapNhat;
+    }
 }

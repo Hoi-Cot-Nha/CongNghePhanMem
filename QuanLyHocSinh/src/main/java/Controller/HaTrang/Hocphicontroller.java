@@ -5,6 +5,7 @@
 package Controller.HaTrang;
 
 import Dao.HocphiDAO;
+import Model.Auth;
 import Model.Hocphi;
 import View.HaTrang.QuanLyHocPhiPanel;
 import java.awt.event.ActionEvent;
@@ -19,6 +20,13 @@ public class Hocphicontroller {
     public Hocphicontroller(QuanLyHocPhiPanel view) {
         this.view = view;
         this.dao = new HocphiDAO();
+        List<Hocphi> list;
+
+        if (Auth.isHocSinh()) {
+            list = dao.getByMaHS(Auth.maNguoiDung);
+        } else {
+            list = dao.getByMaHS(Auth.maNguoiDung);
+        }
 
         System.out.println("DEBUG Controller: Khởi tạo controller...");
         

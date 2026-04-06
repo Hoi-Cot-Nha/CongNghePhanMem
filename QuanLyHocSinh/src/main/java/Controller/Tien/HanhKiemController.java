@@ -10,6 +10,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import Model.Auth;
 
 public class HanhKiemController {
     
@@ -19,6 +20,10 @@ public class HanhKiemController {
     public HanhKiemController(HanhKiemPanel view) {
         this.view = view;
         this.dao = new HanhKiemDAO();
+        if (Auth.isHocSinh()) {
+            view.showMessage("Bạn không có quyền truy cập!");
+            return;
+        }
         
         loadComboBoxData();
         

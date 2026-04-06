@@ -143,4 +143,29 @@ public class TaiKhoanDAO {
         tk.setMaNguoiDung(rs.getString("MaNguoiDung"));
         return tk;
     }
+    // Thêm cho phân quyền tài khoản
+    public TaiKhoan checkLoginFull(String tenDangNhap, String matKhau) {
+        TaiKhoan tk = null;
+        String sql = "SELECT * FROM TaiKhoan WHERE TenDangNhap = ? AND MatKhau = ?";
+
+        try (java.sql.Connection con = ConnectDB.getConnection();
+             java.sql.PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, tenDangNhap);
+            ps.setString(2, matKhau);
+
+            try (java.sql.ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    tk = new TaiKhoan();
+                    tk.setTenDangNhap(rs.getString("TenDangNhap"));
+                    tk.setMatKhau(rs.getString("MatKhau"));
+                    tk.setQuyen(rs.getString("Quyen"));
+                    tk.setMaNguoiDung(rs.getString("MaNguoiDung")); // Lấy mã để phân quyền dữ liệu
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return tk;
+    }
 }

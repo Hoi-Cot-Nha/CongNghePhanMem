@@ -12,6 +12,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import TienIch.ButtonStyleHelper;
+import TienIch.TableSortHelper;
 /**
  *
  * @author ADMIN
@@ -59,6 +60,7 @@ public class QuanlyThongbaoPanel extends JPanel{
             public boolean isCellEditable(int r, int c) { return false; }
         };
         table = new JTable(model);
+        TableSortHelper.enableTableSorting(table);
         table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         table.setRowHeight(30);
         table.getTableHeader().setDefaultRenderer(new TienIch.CustomTableHeaderRenderer());

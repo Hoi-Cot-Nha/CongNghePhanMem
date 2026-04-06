@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 import TienIch.ButtonStyleHelper;
+import TienIch.TableSortHelper;
 
 /**
  *
@@ -70,6 +71,7 @@ public class FrmMonHoc extends JPanel {
         // ===== 2. TABLE (CENTER) =====
         model = new DefaultTableModel(new String[]{"Mã MH", "Tên môn"}, 0);
         table = new JTable(model);
+        TableSortHelper.enableTableSorting(table);
         table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         table.setRowHeight(25);
         table.getTableHeader().setDefaultRenderer(new TienIch.CustomTableHeaderRenderer());

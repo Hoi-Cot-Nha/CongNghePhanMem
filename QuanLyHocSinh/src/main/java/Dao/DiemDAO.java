@@ -8,11 +8,45 @@ import java.util.List;
 
 public class DiemDAO {
 
+    // Lấy tất cả dữ liệu điểm (không filter)
+    public List<Diem> getAllDiem() {
+        List<Diem> list = new ArrayList<>();
+  
+        String sql = "SELECT d.*, hs.HoTen, mh.TenMH FROM Diem d " +
+                     "JOIN HocSinh hs ON d.MaHS = hs.MaHS " +
+                     "JOIN MonHoc mh ON d.MaMH = mh.MaMH";
+        
+        try (Connection conn = ConnectDB.getConnection();
+             Statement stmt = conn.createStatement()) {
+             
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                Diem d = new Diem();
+                d.setMaHS(rs.getString("MaHS"));
+                d.setTenHS(rs.getString("HoTen"));
+                d.setMaMH(rs.getString("MaMH"));
+                d.setTenMH(rs.getString("TenMH"));
+                d.setHocKy(rs.getInt("HocKy"));
+                
+                d.setDiem15p(rs.getDouble("Diem15p"));
+                d.setDiem1Tiet(rs.getDouble("Diem1Tiet"));
+                d.setDiemGiuaKy(rs.getDouble("DiemGiuaKy"));
+                d.setDiemCuoiKy(rs.getDouble("DiemCuoiKy")); 
+                
+                list.add(d);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     public List<Diem> getDiemByFilter(String maLop, String maMH, int hocKy) {
         List<Diem> list = new ArrayList<>();
  
-        String sql = "SELECT d.*, hs.HoTen FROM Diem d " +
+        String sql = "SELECT d.*, hs.HoTen, mh.TenMH FROM Diem d " +
                      "JOIN HocSinh hs ON d.MaHS = hs.MaHS " +
+                     "JOIN MonHoc mh ON d.MaMH = mh.MaMH " +
                      "WHERE hs.MaLop = ? AND d.MaMH = ? AND d.HocKy = ?";
         
         try (Connection conn = ConnectDB.getConnection();
@@ -28,7 +62,8 @@ public class DiemDAO {
                 d.setMaHS(rs.getString("MaHS"));
                 d.setTenHS(rs.getString("HoTen"));
                 d.setMaMH(rs.getString("MaMH"));
-                d.setHocKy(rs.getInt("HocKy")); 
+                d.setTenMH(rs.getString("TenMH"));
+                d.setHocKy(rs.getInt("HocKy"));
                 
      
                 d.setDiem15p(rs.getDouble("Diem15p"));
@@ -68,10 +103,11 @@ public class DiemDAO {
         }
     }
     
-    public List<Diem> searchDiem(String keyword) {
+     public List<Diem> searchDiem(String keyword) {
         List<Diem> list = new ArrayList<>();
-        String sql = "SELECT d.*, hs.HoTen FROM Diem d " +
+        String sql = "SELECT d.*, hs.HoTen, mh.TenMH FROM Diem d " +
                      "JOIN HocSinh hs ON d.MaHS = hs.MaHS " +
+                     "JOIN MonHoc mh ON d.MaMH = mh.MaMH " +
                      "WHERE d.MaHS LIKE ? OR hs.HoTen LIKE ?";
         
         try (Connection conn = ConnectDB.getConnection();
@@ -82,11 +118,12 @@ public class DiemDAO {
             ps.setString(2, key);
             
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
+             while (rs.next()) {
                 Diem d = new Diem();
                 d.setMaHS(rs.getString("MaHS"));
                 d.setTenHS(rs.getString("HoTen"));
                 d.setMaMH(rs.getString("MaMH"));
+                d.setTenMH(rs.getString("TenMH"));
                 d.setHocKy(rs.getInt("HocKy"));
                 
                 d.setDiem15p(rs.getDouble("Diem15p"));

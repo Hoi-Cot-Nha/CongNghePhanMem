@@ -24,7 +24,7 @@ public class HocSinhController {
                 hs.getGioiTinh(),
                 hs.getDiaChi(),
                 hs.getMaLop(),
-                hs.getMaDT()
+                (hs.getMaDT() == null || hs.getMaDT().isEmpty()) ? "Không" : hs.getMaDT()
             });
         }
     }
@@ -45,16 +45,20 @@ public class HocSinhController {
     
     public void loadComboMaLop(JComboBox<String> cbo) {
         cbo.removeAllItems();
+        cbo.addItem(""); // Mục rỗng mặc định
         for (String ma : dao.getAllMaLop()) {
             cbo.addItem(ma);
         }
+        cbo.setSelectedIndex(0); // Mặc định chọn mục rỗng
     }
 
     public void loadComboMaDT(JComboBox<String> cbo) {
         cbo.removeAllItems();
+        cbo.addItem(""); // Mục rỗng mặc định
         for (String ma : dao.getAllMaDT()) {
             cbo.addItem(ma);
         }
+        cbo.setSelectedIndex(0); // Mặc định chọn mục rỗng
     }
 
 
@@ -71,7 +75,7 @@ public class HocSinhController {
                 hs.getGioiTinh(),
                 hs.getDiaChi(),
                 hs.getMaLop(),
-                hs.getMaDT()
+                (hs.getMaDT() == null || hs.getMaDT().isEmpty()) ? "Không" : hs.getMaDT()
             });
         }
     }

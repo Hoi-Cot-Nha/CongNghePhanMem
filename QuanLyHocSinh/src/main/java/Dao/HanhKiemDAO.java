@@ -130,8 +130,8 @@ public class HanhKiemDAO {
         hk.setTenHS(rs.getString("HoTen"));
         hk.setHocKy(rs.getInt("HocKy"));
         hk.setNamHoc(rs.getString("NamHoc"));
-        hk.setXepLoai(rs.getString("XepLoai"));
-        hk.setNhanXet(rs.getString("NhanXet"));
+        hk.setXepLoai(rs.getString("XepLoai") != null ? rs.getString("XepLoai") : "");
+        hk.setNhanXet(rs.getString("NhanXet") != null ? rs.getString("NhanXet") : "");
         return hk;
     }
 }

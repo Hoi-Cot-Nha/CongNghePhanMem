@@ -18,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 import TienIch.ButtonStyleHelper;
+import TienIch.TableSortHelper;
 
 public class QuanLyToBoMonPanel extends JPanel {
 
@@ -55,6 +56,7 @@ public class QuanLyToBoMonPanel extends JPanel {
              public boolean isCellEditable(int row, int column) { return false; }
         };
         tableTBM = new JTable(tableModel);
+        TableSortHelper.enableTableSorting(tableTBM);
         tableTBM.setRowHeight(25);
         tableTBM.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         tableTBM.getTableHeader().setDefaultRenderer(new TienIch.CustomTableHeaderRenderer());

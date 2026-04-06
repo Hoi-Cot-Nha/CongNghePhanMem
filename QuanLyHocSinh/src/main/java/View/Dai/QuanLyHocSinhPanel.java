@@ -12,6 +12,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import TienIch.TableSortHelper;
 
 public class QuanLyHocSinhPanel extends JPanel {
 
@@ -80,6 +81,7 @@ public class QuanLyHocSinhPanel extends JPanel {
 
         tableModel = new DefaultTableModel(cols, 0);
         tableHS = new JTable(tableModel);
+        TableSortHelper.enableTableSorting(tableHS);
         tableHS.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         tableHS.setRowHeight(25);
         tableHS.getTableHeader().setDefaultRenderer(new TienIch.CustomTableHeaderRenderer());
@@ -137,7 +139,8 @@ public class QuanLyHocSinhPanel extends JPanel {
         gbc.gridx = 0; gbc.gridy = y;
         pnlLeft.add(new JLabel("Giới tính:"), gbc);
         gbc.gridx = 1;
-        cboGioiTinh = new JComboBox<>(new String[]{"Nam", "Nữ"});
+        cboGioiTinh = new JComboBox<>(new String[]{"", "Nam", "Nữ"});
+        cboGioiTinh.setSelectedIndex(0);
         pnlLeft.add(cboGioiTinh, gbc);
 
         y = 0;
@@ -344,10 +347,10 @@ public class QuanLyHocSinhPanel extends JPanel {
         txtMaHS.setText("");
         txtHoTen.setText("");
         spNgaySinh.setValue(new Date()); 
+        cboGioiTinh.setSelectedIndex(0); // Mục rỗng
         txtDiaChi.setText("");
-        cboMaLop.setSelectedIndex(-1);
-        cboMaDT.setSelectedIndex(-1);
-
+        cboMaLop.setSelectedIndex(0); // Mục rỗng
+        cboMaDT.setSelectedIndex(0); // Mục rỗng
     }
     
     private void loadComboBox() {

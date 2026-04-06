@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.util.List;
 import TienIch.ButtonStyleHelper;
+import TienIch.TableSortHelper;
 
 /**
  *
@@ -76,14 +77,16 @@ public class FrmPhongHoc extends JPanel {
 
         pnlSearch.add(new JLabel("Loại phòng:"));
         cboLoaiPhongTim = new JComboBox<>(new String[]{
-            "Tất cả", "Lý thuyết", "Thực hành"
+            "", "Tất cả", "Lý thuyết", "Thực hành"
         });
+        cboLoaiPhongTim.setSelectedIndex(0);
         pnlSearch.add(cboLoaiPhongTim);
 
         pnlSearch.add(new JLabel("Tình trạng:"));
         cboTinhTrangTim = new JComboBox<>(new String[]{
-            "Tất cả", "Trống", "Đang học", "Bảo trì"
+            "", "Tất cả", "Trống", "Đang học", "Bảo trì"
         });
+        cboTinhTrangTim.setSelectedIndex(0);
         pnlSearch.add(cboTinhTrangTim);
 
         btnTim = new JButton("Tìm");
@@ -103,6 +106,7 @@ public class FrmPhongHoc extends JPanel {
                 new String[]{"Mã phòng", "Tên phòng", "Sức chứa", "Loại", "Tình trạng"}, 0
         );
         table = new JTable(model);
+        TableSortHelper.enableTableSorting(table);
         table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         table.setRowHeight(25);
         table.getTableHeader().setDefaultRenderer(new TienIch.CustomTableHeaderRenderer());
@@ -123,12 +127,14 @@ public class FrmPhongHoc extends JPanel {
         txtSucChua = new JTextField(15);
 
         cboLoaiPhong = new JComboBox<>(new String[]{
-            "Lý thuyết", "Thực hành"
+            "", "Lý thuyết", "Thực hành"
         });
+        cboLoaiPhong.setSelectedIndex(0);
 
         cboTinhTrang = new JComboBox<>(new String[]{
-            "Trống", "Đang học", "Bảo trì"
+            "", "Trống", "Đang học", "Bảo trì"
         });
+        cboTinhTrang.setSelectedIndex(0);
 
         gbc.gridx = 0; gbc.gridy = 0;
         pnlInput.add(new JLabel("Mã phòng"), gbc);

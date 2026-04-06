@@ -12,12 +12,12 @@ import java.awt.AlphaComposite;
 import java.awt.RenderingHints;
 import java.awt.FontMetrics;
 
-import view.LoginView; 
+import View.Tien.HanhKiemPanel;
+import view.LoginView;
 import Controller.Dai.LoginController;
 
 import View.Tien.QuanLyDiemPanel;
 import Controller.Tien.DiemController;
-import View.Tien.HanhKiemPanel;
 import Controller.Tien.HanhKiemController;
 import View.Tien.LichThiPanel;
 import Controller.Tien.LichThiController;

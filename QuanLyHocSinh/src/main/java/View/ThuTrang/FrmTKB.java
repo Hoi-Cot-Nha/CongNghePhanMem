@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.util.List;
 import TienIch.ButtonStyleHelper;
+import TienIch.TableSortHelper;
 
 /**
  *
@@ -89,6 +90,7 @@ public class FrmTKB extends JPanel {
             new String[]{"ID", "Lớp", "Môn", "GV", "Phòng", "Thứ", "Tiết BD", "Tiết KT"}, 0
         );
         table = new JTable(model);
+        TableSortHelper.enableTableSorting(table);
         table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         table.setRowHeight(26);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

@@ -1,6 +1,7 @@
 package View.Tien;
 
 import Model.Diem;
+import Model.MonHoc;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
@@ -9,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.util.List;
 import TienIch.ButtonStyleHelper;
+import TienIch.TableSortHelper;
 
 public class QuanLyDiemPanel extends JPanel {
 
@@ -16,6 +18,9 @@ public class QuanLyDiemPanel extends JPanel {
     // Bộ lọc dữ liệu (Lớp, Môn, Học Kỳ)
     private JComboBox<String> cboLocMaLop, cboLocMon, cboLocHocKy;
     private JButton btnLocDuLieu;
+    
+    // Mapping: TenMH -> MaMH (để lấy mã khi cần)
+    private java.util.Map<String, String> monHocMap = new java.util.HashMap<>();
     
     // Bảng hiển thị điểm
     private JTable tableDiem;
@@ -93,6 +98,7 @@ public class QuanLyDiemPanel extends JPanel {
         String[] columnNames = {"Mã HS", "Họ Tên", "Môn", "HK", "Điểm 15p", "1 Tiết", "Giữa Kỳ", "Cuối Kỳ", "Tổng Kết"};
         tableModel = new DefaultTableModel(columnNames, 0);
         tableDiem = new JTable(tableModel);
+        TableSortHelper.enableTableSorting(tableDiem);
         tableDiem.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         tableDiem.setRowHeight(25);
         tableDiem.getTableHeader().setDefaultRenderer(new TienIch.CustomTableHeaderRenderer());
@@ -152,7 +158,12 @@ public class QuanLyDiemPanel extends JPanel {
         return cboLocMaLop.getSelectedItem() != null ? cboLocMaLop.getSelectedItem().toString() : ""; 
     }
     public String getMaMonFilter() { 
-        return cboLocMon.getSelectedItem() != null ? cboLocMon.getSelectedItem().toString() : ""; 
+        Object selected = cboLocMon.getSelectedItem();
+        if (selected == null || selected.toString().isEmpty()) {
+            return ""; // Trống = tìm tất cả
+        }
+        String tenMH = selected.toString();
+        return monHocMap.getOrDefault(tenMH, ""); // Lấy mã từ mapping
     }
     public int getHocKyFilter() { 
         try {
@@ -166,22 +177,38 @@ public class QuanLyDiemPanel extends JPanel {
     // --- Các hàm Setter dữ liệu cho ComboBox ---
     public void setMaLopData(List<String> lops) {
         cboLocMaLop.removeAllItems();
+        cboLocMaLop.addItem(""); // Thêm option rỗng
         for (String lop : lops) {
             cboLocMaLop.addItem(lop);
         }
+        if (cboLocMaLop.getItemCount() > 0) {
+            cboLocMaLop.setSelectedIndex(0);
+        }
     }
 
-    public void setMonHocData(List<String> mons) {
+    public void setMonHocData(List<MonHoc> mons) {
         cboLocMon.removeAllItems();
-        for (String mon : mons) {
-            cboLocMon.addItem(mon);
+        cboLocMon.addItem(""); // Thêm option rỗng để tìm tất cả
+        monHocMap.clear();
+        for (MonHoc m : mons) {
+            String tenMH = m.getTenMH();
+            String maMH = m.getMaMH();
+            cboLocMon.addItem(tenMH);
+            monHocMap.put(tenMH, maMH); // Lưu mapping
+        }
+        if (cboLocMon.getItemCount() > 0) {
+            cboLocMon.setSelectedIndex(0);
         }
     }
 
     public void setHocKyData(List<Integer> hks) {
         cboLocHocKy.removeAllItems();
+        cboLocHocKy.addItem(""); // Thêm option rỗng
         for (Integer hk : hks) {
             cboLocHocKy.addItem(hk.toString());
+        }
+        if (cboLocHocKy.getItemCount() > 0) {
+            cboLocHocKy.setSelectedIndex(0);
         }
     }
 
@@ -208,10 +235,13 @@ public class QuanLyDiemPanel extends JPanel {
         for (Diem d : list) {
             // Làm tròn điểm trung bình 2 chữ số thập phân
             double dtb = Math.round(d.getDiemTongKet() * 100.0) / 100.0;
+            String tenMH = (d.getTenMH() != null && !d.getTenMH().isEmpty()) 
+                         ? d.getTenMH() 
+                         : d.getMaMH(); // Fallback to MaMH if TenMH is empty
             tableModel.addRow(new Object[]{
                 d.getMaHS(), 
                 d.getTenHS(), 
-                d.getMaMH(), 
+                tenMH,  // Hiển thị tên môn
                 d.getHocKy(),
                 d.getDiem15p(), 
                 d.getDiem1Tiet(),   

@@ -101,8 +101,7 @@ public class PhongHocController {
     }
 
     private void loadAllAndUpdateStatus() {
-        // ✅ Sử dụng getAllWithTinhTrang() - chỉ 1 query thay vì N+1
-        List<PhongHoc> list = dao.getAllWithTinhTrang();
+        List<PhongHoc> list = dao.getAll();
         view.setTableData(list);
     }
 }

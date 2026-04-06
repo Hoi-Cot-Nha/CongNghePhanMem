@@ -43,11 +43,7 @@ public class DiemController {
         view.setMaLopData(maLops);
 
         List<MonHoc> mons = monHocDAO.getAll();
-        List<String> maMons = new ArrayList<>();
-        for (MonHoc m : mons) {
-            maMons.add(m.getMaMH());
-        }
-        view.setMonHocData(maMons);
+        view.setMonHocData(mons);
 
         List<Integer> hks = dao.getDistinctHocKy();
         if (hks.isEmpty()) {
@@ -108,19 +104,18 @@ public class DiemController {
     // Hàm lấy danh sách điểm dựa theo bộ lọc (Lớp, Môn, Kỳ)
     private void loadData() {
         String maLop = view.getMaLopFilter();
-        
-        // Nếu chưa nhập lớp thì thôi không load (tránh lỗi query)
-        if (maLop.isEmpty()) { 
-             // Có thể báo lỗi hoặc im lặng tùy bạn
-             return; 
-        }
-        
         String maMon = view.getMaMonFilter();
         int hocKy = view.getHocKyFilter();
 
-        // Gọi DAO lấy list về và đẩy lên bảng
-        List<Diem> list = dao.getDiemByFilter(maLop, maMon, hocKy);
-        view.setTableData(list);
+        // Nếu tất cả filter rỗng → load toàn bộ dữ liệu
+        if (maLop.isEmpty() && maMon.isEmpty()) {
+            List<Diem> list = dao.getAllDiem();
+            view.setTableData(list);
+        } else {
+            // Nếu có filter → gọi getDiemByFilter
+            List<Diem> list = dao.getDiemByFilter(maLop, maMon, hocKy);
+            view.setTableData(list);
+        }
     }
 
     // Hàm tìm kiếm theo tên hoặc mã

@@ -30,10 +30,13 @@ public class LichThiController {
         // 1. Nút Tìm kiếm
         view.addBtnTimKiemListener(e -> {
             String kw = view.getKeyword();
+            
+            // Nếu keyword trống → load toàn bộ dữ liệu
             if(kw.isEmpty()) { 
-                view.showMessage("Nhập Môn hoặc Tên kỳ thi để tìm!"); 
+                loadAll();
                 return; 
             }
+            
             List<LichThi> list = dao.searchLichThi(kw);
             view.setTableData(list);
             

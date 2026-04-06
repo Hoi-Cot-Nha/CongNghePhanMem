@@ -117,10 +117,8 @@ public class HanhKiemController {
             String namHoc = view.getNamHocFilter();
             int hocKy = view.getHocKyFilter();
 
-            // Nếu ô lọc trống thì thôi ko load (để tránh lỗi query)
-            if (maLop.isEmpty() || namHoc.isEmpty()) return;
-
-            // Gọi DAO lấy list về và đổ lên bảng
+            // Nếu filter rỗng → gọi DAO với empty string, DAO sẽ xử lý để lấy tất cả
+            // Không return, cứ load dữ liệu
             List<HanhKiem> list = dao.getHanhKiemByFilter(maLop, namHoc, hocKy);
             view.setTableData(list);
             

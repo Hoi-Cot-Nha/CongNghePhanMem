@@ -19,7 +19,10 @@ public class PhongHocDAO {
 
     public List<PhongHoc> getAll() {
         List<PhongHoc> list = new ArrayList<>();
-        String sql = "SELECT * FROM PhongHoc";
+        String sql = """
+            SELECT MaPhong, TenPhong, SucChua, LoaiPhong, TinhTrang
+            FROM PhongHoc
+        """;
 
         try (Connection c = ConnectDB.getConnection();
              PreparedStatement ps = c.prepareStatement(sql);
@@ -43,7 +46,7 @@ public class PhongHocDAO {
    
     public List<PhongHoc> search(String maPhong, String loai, String tinhTrang) {
         List<PhongHoc> list = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT * FROM PhongHoc WHERE 1=1");
+        StringBuilder sql = new StringBuilder("SELECT MaPhong, TenPhong, SucChua, LoaiPhong, TinhTrang FROM PhongHoc WHERE 1=1 ");
 
         if (!maPhong.isEmpty()) sql.append(" AND MaPhong LIKE ?");
         if (!loai.equals("Tất cả")) sql.append(" AND LoaiPhong = ?");
@@ -181,38 +184,6 @@ public void updateTinhTrang(String maPhong, String tinhTrang) {
         }
     }
 
-    public List<PhongHoc> getAllWithTinhTrang() {
-        List<PhongHoc> list = new ArrayList<>();
-        String sql = """
-            SELECT p.MaPhong, p.TenPhong, p.SucChua, p.LoaiPhong,
-                   CASE
-                       WHEN p.TinhTrang = 'Bảo trì' THEN 'Bảo trì'
-                       WHEN p.MaPhong IN (SELECT DISTINCT MaPhong FROM ThoiKhoaBieu)
-                       THEN 'Đang học'
-                       ELSE 'Trống'
-                   END AS TinhTrangThucTe
-            FROM PhongHoc p
-        """;
 
-        try (Connection c = ConnectDB.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-
-            while (rs.next()) {
-                list.add(new PhongHoc(
-                        rs.getString("MaPhong"),
-                        rs.getString("TenPhong"),
-                        rs.getInt("SucChua"),
-                        rs.getString("LoaiPhong"),
-                        rs.getString("TinhTrangThucTe")
-                ));
-            }
-            System.out.println("✓ Tải " + list.size() + " phòng với trạng thái trong 1 query");
-        } catch (Exception e) {
-            System.out.println("❌ Lỗi getAllWithTinhTrang: " + e.getMessage());
-            e.printStackTrace();
-        }
-        return list;
-    }
 
 }

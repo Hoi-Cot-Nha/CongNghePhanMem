@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.util.List;
 import TienIch.ButtonStyleHelper;
+import TienIch.TableSortHelper;
 
 public class LichThiPanel extends JPanel {
 
@@ -68,6 +69,7 @@ public class LichThiPanel extends JPanel {
         String[] cols = {"Mã LT", "Kỳ Thi", "Mã Môn", "Ngày Thi", "Bắt Đầu", "Kết Thúc", "Phòng"};
         model = new DefaultTableModel(cols, 0);
         table = new JTable(model);
+        TableSortHelper.enableTableSorting(table);
         table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         table.setRowHeight(25);
         table.getTableHeader().setDefaultRenderer(new TienIch.CustomTableHeaderRenderer());
@@ -94,7 +96,8 @@ public class LichThiPanel extends JPanel {
         pnlInput.add(new JLabel("Kỳ Thi:"), gbc);
         
         gbc.gridx=3; gbc.gridy=0; gbc.weightx = 1.0; 
-        cboTenKyThi = new JComboBox<>(new String[]{"Giữa Kỳ 1", "Cuối Kỳ 1", "Giữa Kỳ 2", "Cuối Kỳ 2"});
+        cboTenKyThi = new JComboBox<>(new String[]{"", "Giữa Kỳ 1", "Cuối Kỳ 1", "Giữa Kỳ 2", "Cuối Kỳ 2"});
+        cboTenKyThi.setSelectedIndex(0);
         pnlInput.add(cboTenKyThi, gbc);
 
         // --- Dòng 2: Mã Môn + Ngày Thi ---

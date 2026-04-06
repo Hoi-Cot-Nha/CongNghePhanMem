@@ -8,6 +8,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import TienIch.ButtonStyleHelper;
+import TienIch.TableSortHelper;
 
 public class QuanLyGiaoVienPanel extends JPanel {
 
@@ -65,6 +66,7 @@ public class QuanLyGiaoVienPanel extends JPanel {
         String[] cols = {"Mã GV", "Họ Tên", "Ngày Sinh", "SĐT", "Tổ Bộ Môn"};
         tableModel = new DefaultTableModel(cols, 0);
         tableGV = new JTable(tableModel);
+        TableSortHelper.enableTableSorting(tableGV);
         tableGV.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         tableGV.setRowHeight(25);
         tableGV.getTableHeader().setDefaultRenderer(new TienIch.CustomTableHeaderRenderer());

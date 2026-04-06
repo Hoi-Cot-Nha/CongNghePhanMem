@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.util.List;
 import TienIch.ButtonStyleHelper;
+import TienIch.TableSortHelper;
 
 public class HanhKiemPanel extends JPanel {
     
@@ -54,13 +55,21 @@ public class HanhKiemPanel extends JPanel {
         pnlFilter.setBorder(new TitledBorder("Lọc theo lớp (Mặc định)"));
         
         pnlFilter.add(new JLabel("Mã Lớp:"));
-        cboLocMaLop = new JComboBox<>(); pnlFilter.add(cboLocMaLop); 
+        cboLocMaLop = new JComboBox<>();
+        cboLocMaLop.addItem("");
+        cboLocMaLop.setSelectedIndex(0);
+        pnlFilter.add(cboLocMaLop); 
         
         pnlFilter.add(new JLabel("Năm Học:"));
-        cboLocNamHoc = new JComboBox<>(); pnlFilter.add(cboLocNamHoc);
+        cboLocNamHoc = new JComboBox<>();
+        cboLocNamHoc.addItem("");
+        cboLocNamHoc.setSelectedIndex(0);
+        pnlFilter.add(cboLocNamHoc);
         
         pnlFilter.add(new JLabel("Học Kỳ:"));
-        cboHocKy = new JComboBox<>(new String[]{"1", "2"}); pnlFilter.add(cboHocKy);
+        cboHocKy = new JComboBox<>(new String[]{"", "1", "2"}); 
+        cboHocKy.setSelectedIndex(0);
+        pnlFilter.add(cboHocKy);
         
         btnXem = new JButton("Lọc Danh Sách");
         ButtonStyleHelper.styleButtonFilter(btnXem);
@@ -91,6 +100,7 @@ public class HanhKiemPanel extends JPanel {
         String[] cols = {"Mã HS", "Tên HS", "Năm Học", "Học Kỳ", "Xếp Loại", "Nhận Xét"};
         model = new DefaultTableModel(cols, 0);
         table = new JTable(model);
+        TableSortHelper.enableTableSorting(table);
         table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         table.setRowHeight(25);
         table.getTableHeader().setDefaultRenderer(new TienIch.CustomTableHeaderRenderer());
@@ -115,7 +125,7 @@ public class HanhKiemPanel extends JPanel {
         // Dòng 2: Xếp loại
         gbc.gridx=0; gbc.gridy=1; pnlInput.add(new JLabel("Xếp Loại:"), gbc);
         gbc.gridx=1; gbc.gridy=1; 
-        cboXepLoai = new JComboBox<>(new String[]{"Tot", "Kha", "Trung Binh", "Yeu"}); 
+        cboXepLoai = new JComboBox<>(new String[]{"", "Tốt", "Khá", "Trung bình", "Yếu"}); 
         pnlInput.add(cboXepLoai, gbc);
         
         // Dòng 3: Nhận xét mở rộng
@@ -148,8 +158,7 @@ public class HanhKiemPanel extends JPanel {
         add(pnlSouth, BorderLayout.SOUTH);
     }
 
-    // --- CÁC HÀM GETTER DỮ LIỆU TỪ FORM (ĐỂ CONTROLLER GỌI) ---
-    public String getMaLopFilter() { 
+    public String getMaLopFilter() {
         return cboLocMaLop.getSelectedItem() != null ? cboLocMaLop.getSelectedItem().toString() : ""; 
     }
     public String getNamHocFilter() { 
@@ -177,19 +186,16 @@ public class HanhKiemPanel extends JPanel {
         }
     }
 
-    // Đóng gói dữ liệu từ form nhập thành Object HanhKiem
     public HanhKiem getHanhKiemInput() {
         HanhKiem hk = new HanhKiem();
         hk.setMaHS(txtMaHS.getText());
-        hk.setNamHoc(getNamHocFilter()); // Lấy năm từ ô lọc
-        hk.setHocKy(getHocKyFilter());   // Lấy kỳ từ ô lọc
+        hk.setNamHoc(getNamHocFilter());
+        hk.setHocKy(getHocKyFilter());
         hk.setXepLoai(cboXepLoai.getSelectedItem().toString());
         hk.setNhanXet(txtNhanXet.getText());
         return hk;
     }
 
-    // --- CÁC HÀM SETTER (HIỂN THỊ DỮ LIỆU) ---
-    // Đổ danh sách Hạnh kiểm lên bảng
     public void setTableData(List<HanhKiem> list) {
         model.setRowCount(0);
         for (HanhKiem hk : list) {
@@ -204,16 +210,43 @@ public class HanhKiemPanel extends JPanel {
         if(row >= 0) {
             txtMaHS.setText(model.getValueAt(row, 0).toString());
             txtTenHS.setText(model.getValueAt(row, 1).toString());
-     
-            cboXepLoai.setSelectedItem(model.getValueAt(row, 4).toString());
+            
+            String namHoc = model.getValueAt(row, 2).toString();
+            String hocKy = model.getValueAt(row, 3).toString();
+            cboLocNamHoc.setSelectedItem(namHoc);
+            cboHocKy.setSelectedItem(hocKy);
+            
+            String xepLoai = model.getValueAt(row, 4).toString();
+            if(xepLoai != null && !xepLoai.isEmpty()) {
+                cboXepLoai.setSelectedItem(xepLoai);
+            } else {
+                cboXepLoai.setSelectedIndex(0);
+            }
             Object nx = model.getValueAt(row, 5);
             txtNhanXet.setText(nx != null ? nx.toString() : "");
         }
     }
     
-    // Reset trắng form nhập
     public void clearForm() {
-        txtMaHS.setText(""); txtTenHS.setText(""); txtNhanXet.setText("");
+        txtMaHS.setText("");
+        txtTenHS.setText("");
+        txtNhanXet.setText("");
+        
+        // Set ComboBox về giá trị mặc định (index 0)
+        if (cboLocNamHoc.getItemCount() > 0) {
+            cboLocNamHoc.setSelectedIndex(0);
+        }
+        if (cboHocKy.getItemCount() > 0) {
+            cboHocKy.setSelectedIndex(0);
+        }
+        if (cboXepLoai.getItemCount() > 0) {
+            cboXepLoai.setSelectedIndex(0);
+        }
+        
+        // Bỏ chọn bảng
+        if (table != null) {
+            table.clearSelection();
+        }
     }
     
     // Tiện ích hiện thông báo

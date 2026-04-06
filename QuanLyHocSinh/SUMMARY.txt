@@ -1,0 +1,61 @@
+═══════════════════════════════════════════════════════════════════════════════
+                    TÓNG KẾT CÁC THAY ĐỔI ĐÃ HOÀN THÀNH
+═══════════════════════════════════════════════════════════════════════════════
+
+TASK 1: QuanLyHocPhiPanel - Thêm cột "Mã Lớp"
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ 1. Model/Hocphi.java
+   - Thêm trường: private String maLop;
+   - Thêm getter/setter: getMaLop(), setMaLop()
+   - Cập nhật constructor
+
+✅ 2. Dao/HocphiDAO.java  
+   - getHocPhiByLop(): SQL thêm "hs.MaLop", thêm setMaLop()
+   - getAllHocPhi(): SQL thêm "hs.MaLop", thêm setMaLop()
+
+✅ 3. View/HaTrang/QuanLyHocPhiPanel.java
+   - Dòng 90: Thêm "Mã Lớp" vào cols array
+     {"ID", "Mã HS", "Mã Lớp", "Kỳ", "Năm học", "Tổng tiền", "Miễn giảm", "Phải đóng", "Trạng thái"}
+   
+   - Dòng 298: Thêm hp.getMaLop() trong loadTable()
+   
+   - Dòng 177-180: Cập nhật column indices do thêm cột
+     r,5 (Tổng tiền), r,6 (Miễn giảm), r,7 (Phải đóng), r,8 (Trạng thái)
+
+
+TASK 2: QuanLyDoiTuongUuTienPanel - Nhân TiLeGiam × 100
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ 4. Controller/Dai/DoiTuongUuTienController.java
+   - loadTable(): dt.getTiLeGiam() * 100
+   - timKiem(): dt.getTiLeGiam() * 100
+
+✅ 5. View/Dai/QuanLyDoiTuongUuTienPanel.java
+   - doDuLieuVaoForm(): tiLeDisplay / 100 khi load form
+     (chia 100 vì controller đã nhân 100 khi hiển thị)
+
+
+LOGIC CHUYỂN ĐỔI
+═══════════════════════════════════════════════════════════════════════════════
+
+TASK 1 - MÃ LỚP:
+  HocSinh.MaLop → HocPhi.MaLop → UI hiển thị ở cột 2
+  
+TASK 2 - TỈ LỆ GIẢM:
+  DB: 0.5 → Controller: 0.5 × 100 = 50 → UI hiển thị: 50%
+  UI: 50% → chia 100 → Form input: 0.5 → Lưu: 0.5
+
+
+CÁC FILE ĐƯỢC SỬA ĐỔI
+═══════════════════════════════════════════════════════════════════════════════
+
+1. src/main/java/Model/Hocphi.java
+2. src/main/java/Dao/HocphiDAO.java
+3. src/main/java/View/HaTrang/QuanLyHocPhiPanel.java
+4. src/main/java/Controller/Dai/DoiTuongUuTienController.java
+5. src/main/java/View/Dai/QuanLyDoiTuongUuTienPanel.java
+
+═══════════════════════════════════════════════════════════════════════════════
+TRẠNG THÁI: ✅ 100% HOÀN THÀNH | 5 FILES | 8 THAY ĐỔI
+═══════════════════════════════════════════════════════════════════════════════

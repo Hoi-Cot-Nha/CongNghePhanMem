@@ -1,0 +1,111 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                     HOÀN THÀNH CẢ 2 TASK THAY ĐỔI                           ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TASK 1: QuanLyHocPhiPanel - Thêm cột "Mã Lớp"
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+【Thay đổi 1】Model/Hocphi.java - Thêm trường maLop
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CẬP NHẬT CLASS:
+  ✓ Thêm: private String maLop;
+  ✓ Cập nhật: Constructor(maHP, maHS, maLop, hocKy, ...)
+  ✓ Thêm: getMaLop() { return maLop; }
+  ✓ Thêm: setMaLop(String maLop) { this.maLop = maLop; }
+
+【Thay đổi 2】Dao/HocphiDAO.java - Fetch MaLop từ DB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+getHocPhiByLop():
+  ✓ SQL CŨ:  SELECT hp.* FROM HocPhi hp JOIN HocSinh hs
+  ✓ SQL MỚI: SELECT hp.*, hs.MaLop FROM HocPhi hp JOIN HocSinh hs
+  ✓ Thêm: hp.setMaLop(rs.getString("MaLop"));
+
+getAllHocPhi():
+  ✓ SQL CŨ:  SELECT * FROM HocPhi ORDER BY MaHS, HocKy, NamHoc
+  ✓ SQL MỚI: SELECT hp.*, hs.MaLop FROM HocPhi hp JOIN HocSinh hs
+             ORDER BY hs.MaLop, hp.HocKy, hp.NamHoc
+  ✓ Thêm: hp.setMaLop(rs.getString("MaLop"));
+
+【Thay đổi 3】View/HaTrang/QuanLyHocPhiPanel.java
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+DÒNG 90 - Thêm cột:
+┌─────────────────────────────────────────────────────┐
+│ CŨ: {"ID", "Mã HS", "Kỳ", "Năm học", ...}         │
+│ MỚI: {"ID", "Mã HS", "Mã Lớp", "Kỳ", "Năm học", ...} │
+└─────────────────────────────────────────────────────┘
+
+DÒNG 298 - loadTable() thêm MaLop:
+┌─────────────────────────────────────────────────────┐
+│ CŨ: hp.getMaHS(),                                   │
+│     hp.getHocKy(),                                  │
+│                                                     │
+│ MỚI: hp.getMaHS(),                                  │
+│      hp.getMaLop(),     ✓ THÊM MỚI                 │
+│      hp.getHocKy(),                                 │
+└─────────────────────────────────────────────────────┘
+
+DÒNG 169-180 - Cập nhật indices (vì thêm 1 cột):
+┌──────────────────────────────────────────────────┐
+│ CŨ (cột):        │ MỚI (cột):                  │
+│ ─────────────────┼─────────────────────────────│
+│ r,1=MaHS        │ r,1=MaHS (không thay)       │
+│ r,4=TongTien    │ r,5=TongTien ✓              │
+│ r,5=MienGiam    │ r,6=MienGiam ✓              │
+│ r,6=PhaiDong    │ r,7=PhaiDong ✓              │
+│ r,7=TrangThai   │ r,8=TrangThai ✓             │
+└──────────────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TASK 2: QuanLyDoiTuongUuTienPanel - Nhân TiLeGiam × 100
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+【Thay đổi 4】Controller/Dai/DoiTuongUuTienController.java
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+loadTable():
+  ┌──────────────────────────────────────────┐
+  │ CŨ: dt.getTiLeGiam()                     │
+  │ MỚI: dt.getTiLeGiam() * 100  ✓            │
+  └──────────────────────────────────────────┘
+
+timKiem():
+  ┌──────────────────────────────────────────┐
+  │ CŨ: dt.getTiLeGiam()                     │
+  │ MỚI: dt.getTiLeGiam() * 100  ✓            │
+  └──────────────────────────────────────────┘
+
+【Thay đổi 5】View/Dai/QuanLyDoiTuongUuTienPanel.java
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+doDuLieuVaoForm():
+  ┌──────────────────────────────────────────┐
+  │ CŨ: txtTiLeGiam.setText(                 │
+  │         tableModel.getValueAt(r,2))      │
+  │                                          │
+  │ MỚI: double tiLeDisplay =                │
+  │      Double.parseDouble(value.toString()) │
+  │      txtTiLeGiam.setText(                │
+  │         tiLeDisplay / 100)  ✓             │
+  └──────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+KẾT QUẢ CUỐI CÙNG
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ TASK 1 - Mã Lớp:
+   Bảng HỌC PHÍ hiển thị:
+   ID | Mã HS | Mã Lớp | Kỳ | Năm học | Tổng tiền | Miễn giảm | Phải đóng | Trạng thái
+   1  | HS001 | 10A1   | 1  | 2024    | 5,000,000 | 0         | 5,000,000 | Chưa đóng
+
+✅ TASK 2 - Tỉ Lệ Giảm:
+   Bảng ĐỐI TƯỢNG ƯU TIÊN hiển thị:
+   Mã Đối Tượng | Tên Đối Tượng       | Tỉ Lệ Giảm (%)
+   DT001        | Học sinh giỏi       | 50     (DB: 0.5)
+   DT002        | Khuyết tật          | 100    (DB: 1.0)
+   DT003        | Vùng sâu           | 25     (DB: 0.25)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FILE ĐÃ SỬA ĐỔI: 5 FILES | THAY ĐỔI: 8 CHỖ | TRẠNG THÁI: 100% HOÀN THÀNH ✅
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

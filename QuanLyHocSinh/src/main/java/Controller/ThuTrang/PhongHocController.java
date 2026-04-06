@@ -29,11 +29,10 @@ public class PhongHocController {
 
    
     private void initEvents() {
+        boolean[] editMode = {false};
 
-      
         view.addBtnXemListener(e -> loadAllAndUpdateStatus());
 
-        
         view.addBtnTimListener(e -> {
             List<PhongHoc> list = dao.search(
                     view.getMaPhongTim(),
@@ -41,11 +40,49 @@ public class PhongHocController {
                     view.getTinhTrangTim()
             );
 
-            // ✅ Không cần cập nhật tình trạng nữa, đã có trong query
             view.setTableData(list);
         });
 
-    
+        // Nút Thêm: bật chế độ chỉnh sửa, xóa nội dung form
+        view.addBtnThemListener(e -> {
+            editMode[0] = false;
+            view.clearForm();
+        });
+
+        // Nút Sửa: bật chế độ chỉnh sửa từ dữ liệu chọn
+        view.addBtnSuaListener(e -> {
+            int row = view.getTable().getSelectedRow();
+            if (row == -1) {
+                view.showMessage("Vui lòng chọn một bản ghi");
+                return;
+            }
+            editMode[0] = true;
+            view.fillForm(row);
+        });
+
+        // Nút Xóa: xóa bản ghi đã chọn
+        view.addBtnXoaListener(e -> {
+            int row = view.getTable().getSelectedRow();
+            if (row == -1) {
+                view.showMessage("Vui lòng chọn phòng cần xóa");
+                return;
+            }
+
+            String maPhong = view.getTable().getValueAt(row, 0).toString();
+            int confirm = javax.swing.JOptionPane.showConfirmDialog(
+                view, "Bạn có chắc chắn muốn xóa?", "Xác nhận",
+                javax.swing.JOptionPane.YES_NO_OPTION
+            );
+            if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+                dao.delete(maPhong);
+                view.showMessage("Đã xoá");
+                loadAllAndUpdateStatus();
+                view.clearForm();
+                editMode[0] = false;
+            }
+        });
+
+        // Nút Lưu: lưu dữ liệu (thêm hoặc sửa)
         view.addBtnLuuListener(e -> {
             try {
                 PhongHoc p = view.getPhongHocInput();
@@ -55,7 +92,7 @@ public class PhongHocController {
                     return;
                 }
 
-                if (dao.exists(p.getMaPhong())) {
+                if (editMode[0]) {
                     dao.update(p);
                     view.showMessage("✔ Cập nhật phòng học thành công");
                 } else {
@@ -65,29 +102,18 @@ public class PhongHocController {
 
                 loadAllAndUpdateStatus();
                 view.clearForm();
+                editMode[0] = false;
 
             } catch (NumberFormatException ex) {
                 view.showMessage("Sức chứa phải là số");
             }
         });
 
-      
-        view.addBtnXoaListener(e -> {
-            int row = view.getTable().getSelectedRow();
-            if (row == -1) {
-                view.showMessage("Vui lòng chọn phòng cần xóa");
-                return;
-            }
-
-            String maPhong = view.getTable().getValueAt(row, 0).toString();
-            dao.delete(maPhong);
-            view.showMessage("Đã xoá");
-            loadAllAndUpdateStatus();
+        // Nút Hủy: hủy chỉnh sửa, xóa form
+        view.addBtnHuyListener(e -> {
             view.clearForm();
+            editMode[0] = false;
         });
-
-
-        view.addBtnMoiListener(e -> view.clearForm());
 
         view.addTableMouseListener(new MouseAdapter() {
             @Override

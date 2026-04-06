@@ -24,8 +24,7 @@ public class HanhKiemPanel extends JPanel {
     private DefaultTableModel model;
     
     // Nút chức năng
-    private JButton btnXem, btnTimKiem, btnLuu, btnXoa, btnMoi; 
-
+    private JButton btnXem, btnTimKiem, btnThem, btnSua, btnXoa, btnLuu, btnHuy, btnMoi;
     // Form nhập liệu chi tiết
     private JTextField txtMaHS, txtTenHS;
     private JTextArea txtNhanXet;
@@ -138,21 +137,38 @@ public class HanhKiemPanel extends JPanel {
 
         pnlSouth.add(pnlInput, BorderLayout.CENTER);
 
-        // Panel chứa các nút bấm cuối cùng
-        JPanel pnlBtn = new JPanel();
-        btnLuu = new JButton("Lưu / Cập Nhật");
-        ButtonStyleHelper.styleButtonSave(btnLuu);
-        btnLuu.setPreferredSize(new Dimension(150, 35));
-        
+        // Panel chứa các nút bấm chuẩn
+        JPanel pnlBtn = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        btnThem = new JButton("Thêm");
+        ButtonStyleHelper.styleButtonAdd(btnThem);
+        btnSua = new JButton("Sửa");
+        ButtonStyleHelper.styleButtonEdit(btnSua);
         btnXoa = new JButton("Xóa");
         ButtonStyleHelper.styleButtonDelete(btnXoa);
-        btnXoa.setPreferredSize(new Dimension(100, 35));
+        btnLuu = new JButton("Lưu");
+        ButtonStyleHelper.styleButtonSave(btnLuu);
+        btnHuy = new JButton("Hủy");
+        ButtonStyleHelper.styleButtonCancel(btnHuy);
+
+        Dimension sz = new Dimension(90, 35);
+        btnThem.setPreferredSize(sz);
+        btnSua.setPreferredSize(sz);
+        btnXoa.setPreferredSize(sz);
+        btnLuu.setPreferredSize(sz);
+        btnHuy.setPreferredSize(sz);
+
+        pnlBtn.add(btnThem);
+        pnlBtn.add(btnSua);
+        pnlBtn.add(btnXoa);
+        pnlBtn.add(btnLuu);
+        pnlBtn.add(btnHuy);
         
-        btnMoi = new JButton("Làm Mới Form");
-        ButtonStyleHelper.styleButtonView(btnMoi);
-        
+        // Nút Xuất Excel (Style xanh lá)
+        btnXuatExcel = new JButton("Xuất Excel");
+        ButtonStyleHelper.styleButtonExport(btnXuatExcel);
+        btnXuatExcel.setPreferredSize(new Dimension(120, 35));
         pnlBtn.add(btnXuatExcel);
-        pnlBtn.add(btnLuu); pnlBtn.add(btnXoa); pnlBtn.add(btnMoi);
+        
         pnlSouth.add(pnlBtn, BorderLayout.SOUTH);
         
         add(pnlSouth, BorderLayout.SOUTH);
@@ -256,9 +272,18 @@ public class HanhKiemPanel extends JPanel {
     // --- GÁN SỰ KIỆN (Controller sẽ dùng các hàm này) ---
     public void addBtnXemListener(ActionListener log) { btnXem.addActionListener(log); }
     public void addBtnTimKiemListener(ActionListener log) { btnTimKiem.addActionListener(log); }
-    public void addBtnLuuListener(ActionListener log) { btnLuu.addActionListener(log); }
+    public void addBtnThemListener(ActionListener log) { btnThem.addActionListener(log); }
+    public void addBtnSuaListener(ActionListener log) { btnSua.addActionListener(log); }
     public void addBtnXoaListener(ActionListener log) { btnXoa.addActionListener(log); }
+    public void addBtnLuuListener(ActionListener log) { btnLuu.addActionListener(log); }
+    public void addBtnHuyListener(ActionListener log) { btnHuy.addActionListener(log); }
     public void addBtnMoiListener(ActionListener log) { btnMoi.addActionListener(log); }
     public void addTableMouseListener(MouseAdapter log) { table.addMouseListener(log); }
     public void addBtnXuatExcelListener(ActionListener log) { btnXuatExcel.addActionListener(log); }
+    
+    public JButton getBtnThem() { return btnThem; }
+    public JButton getBtnSua() { return btnSua; }
+    public JButton getBtnXoa() { return btnXoa; }
+    public JButton getBtnLuu() { return btnLuu; }
+    public JButton getBtnHuy() { return btnHuy; }
 }

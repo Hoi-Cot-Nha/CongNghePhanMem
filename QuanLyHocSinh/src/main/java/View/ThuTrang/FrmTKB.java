@@ -32,7 +32,7 @@ public class FrmTKB extends JPanel {
     // ===== FORM =====
     private JTextField txtMaLopThem, txtMaMH, txtMaGV, txtPhong, txtTietBD, txtTietKT;
     private JComboBox<Integer> cboThuThem;
-    private JButton btnLuu, btnXoa, btnMoi, btnXuatExcel;
+    private JButton btnThem, btnSua, btnXoa, btnLuu, btnHuy, btnMoi, btnXuatExcel;
 
     public FrmTKB() {
         initComponents();
@@ -134,20 +134,38 @@ public class FrmTKB extends JPanel {
 
         pnlSouth.add(pnlInput, BorderLayout.CENTER);
 
-        JPanel pnlBtn = new JPanel();
-        btnXuatExcel = new JButton("Xuất Excel");
-        ButtonStyleHelper.styleButtonExport(btnXuatExcel);
-        btnLuu = new JButton("Lưu");
-        ButtonStyleHelper.styleButtonSave(btnLuu);
+        JPanel pnlBtn = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        btnThem = new JButton("Thêm");
+        ButtonStyleHelper.styleButtonAdd(btnThem);
+        btnSua = new JButton("Sửa");
+        ButtonStyleHelper.styleButtonEdit(btnSua);
         btnXoa = new JButton("Xóa");
         ButtonStyleHelper.styleButtonDelete(btnXoa);
-        btnMoi = new JButton("Mới");
+        btnLuu = new JButton("Lưu");
+        ButtonStyleHelper.styleButtonSave(btnLuu);
+        btnHuy = new JButton("Hủy");
+        ButtonStyleHelper.styleButtonCancel(btnHuy);
+        btnMoi = new JButton("Làm Mới");
         ButtonStyleHelper.styleButtonView(btnMoi);
+        btnXuatExcel = new JButton("Xuất Excel");
+        ButtonStyleHelper.styleButtonExport(btnXuatExcel);
 
-        pnlBtn.add(btnXuatExcel);
-        pnlBtn.add(btnLuu);
+        Dimension sz = new Dimension(90, 35);
+        btnThem.setPreferredSize(sz);
+        btnSua.setPreferredSize(sz);
+        btnXoa.setPreferredSize(sz);
+        btnLuu.setPreferredSize(sz);
+        btnHuy.setPreferredSize(sz);
+        btnMoi.setPreferredSize(sz);
+        btnXuatExcel.setPreferredSize(new Dimension(120, 35));
+
+        pnlBtn.add(btnThem);
+        pnlBtn.add(btnSua);
         pnlBtn.add(btnXoa);
+        pnlBtn.add(btnLuu);
+        pnlBtn.add(btnHuy);
         pnlBtn.add(btnMoi);
+        pnlBtn.add(btnXuatExcel);
 
         pnlSouth.add(pnlBtn, BorderLayout.SOUTH);
         add(pnlSouth, BorderLayout.SOUTH);
@@ -184,6 +202,12 @@ public class FrmTKB extends JPanel {
     }
 
     public JTable getTable() { return table; }
+    
+    public JButton getBtnThem() { return btnThem; }
+    public JButton getBtnSua() { return btnSua; }
+    public JButton getBtnXoa() { return btnXoa; }
+    public JButton getBtnLuu() { return btnLuu; }
+    public JButton getBtnHuy() { return btnHuy; }
 
     public void clearForm() {
         txtMaLopThem.setText("");
@@ -220,12 +244,24 @@ public class FrmTKB extends JPanel {
         btnTimTheoLop.addActionListener(l);
     }
 
-    public void addBtnLuuListener(ActionListener l) {
-        btnLuu.addActionListener(l);
+    public void addBtnThemListener(ActionListener l) {
+        btnThem.addActionListener(l);
+    }
+
+    public void addBtnSuaListener(ActionListener l) {
+        btnSua.addActionListener(l);
     }
 
     public void addBtnXoaListener(ActionListener l) {
         btnXoa.addActionListener(l);
+    }
+
+    public void addBtnLuuListener(ActionListener l) {
+        btnLuu.addActionListener(l);
+    }
+
+    public void addBtnHuyListener(ActionListener l) {
+        btnHuy.addActionListener(l);
     }
 
     public void addBtnMoiListener(ActionListener l) {

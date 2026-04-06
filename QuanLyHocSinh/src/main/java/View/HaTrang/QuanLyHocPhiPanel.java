@@ -21,7 +21,7 @@ import Dao.LopDAO;
 public class QuanLyHocPhiPanel extends JPanel {
     private JComboBox<String> cboMaLop, cboNamHoc;
     private JComboBox<String> cboHocKy;
-    private JButton btnLoc, btnThem, btnLuu, btnXoa, btnLamMoi;
+    private JButton btnLoc, btnThem, btnSua, btnXoa, btnLuu, btnHuy;
     private JTable tableHocPhi;
     private DefaultTableModel tableModel;
     private JTextField txtMaHS, txtTongTien, txtMienGiam, txtPhaiDong;
@@ -159,19 +159,29 @@ public class QuanLyHocPhiPanel extends JPanel {
         JPanel pnlButtons = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         pnlButtons.setOpaque(false);
 
-        btnThem = createStyledButton("Thêm Mới", new Color(224, 255, 255));
+        btnThem = new JButton("Thêm");
         ButtonStyleHelper.styleButtonAdd(btnThem);
-        btnLuu = createStyledButton("Cập Nhật", new Color(255, 250, 205));
-        ButtonStyleHelper.styleButtonEdit(btnLuu);
-        btnXoa = createStyledButton("Xóa Bỏ", new Color(255, 228, 225));
+        btnSua = new JButton("Sửa");
+        ButtonStyleHelper.styleButtonEdit(btnSua);
+        btnXoa = new JButton("Xóa");
         ButtonStyleHelper.styleButtonDelete(btnXoa);
-        btnLamMoi = createStyledButton("Làm Mới", new Color(220, 220, 220));
-        ButtonStyleHelper.styleButtonView(btnLamMoi);
+        btnLuu = new JButton("Lưu");
+        ButtonStyleHelper.styleButtonSave(btnLuu);
+        btnHuy = new JButton("Hủy");
+        ButtonStyleHelper.styleButtonCancel(btnHuy);
+
+        Dimension sz = new Dimension(90, 35);
+        btnThem.setPreferredSize(sz);
+        btnSua.setPreferredSize(sz);
+        btnXoa.setPreferredSize(sz);
+        btnLuu.setPreferredSize(sz);
+        btnHuy.setPreferredSize(sz);
 
         pnlButtons.add(btnThem);
-        pnlButtons.add(btnLuu);
+        pnlButtons.add(btnSua);
         pnlButtons.add(btnXoa);
-        pnlButtons.add(btnLamMoi);
+        pnlButtons.add(btnLuu);
+        pnlButtons.add(btnHuy);
 
         pnlSouth.add(pnlButtons, BorderLayout.SOUTH);
         add(pnlSouth, BorderLayout.SOUTH);
@@ -375,9 +385,10 @@ public class QuanLyHocPhiPanel extends JPanel {
     public JComboBox<String> getCboNamHoc() { return cboNamHoc; }
     public JButton getBtnLoc() { return btnLoc; }
     public JButton getBtnThem() { return btnThem; }
-    public JButton getBtnLuu() { return btnLuu; }
+    public JButton getBtnSua() { return btnSua; }
     public JButton getBtnXoa() { return btnXoa; }
-    public JButton getBtnLamMoi() { return btnLamMoi; }
+    public JButton getBtnLuu() { return btnLuu; }
+    public JButton getBtnHuy() { return btnHuy; }
     public JTable getTableHocPhi() { return tableHocPhi; }
     public JTextField getTxtMaHS() { return txtMaHS; }
     public JTextField getTxtTongTien() { return txtTongTien; }

@@ -24,7 +24,7 @@ public class FrmMonHoc extends JPanel {
     private DefaultTableModel model;
 
     private JTextField txtMaMH, txtTenMH, txtTimKiem;
-    private JButton btnXem, btnTimKiem, btnLuu, btnXoa, btnMoi;
+    private JButton btnXem, btnTimKiem, btnThem, btnSua, btnXoa, btnLuu, btnHuy;
 
     public FrmMonHoc() {
         initComponents();
@@ -93,16 +93,30 @@ public class FrmMonHoc extends JPanel {
 
         pnlSouth.add(pnlInput, BorderLayout.CENTER);
 
-        JPanel pnlBtn = new JPanel();
-        btnLuu = new JButton("Lưu");
-        ButtonStyleHelper.styleButtonSave(btnLuu);
+        JPanel pnlBtn = new JPanel(new FlowLayout());
+        btnThem = new JButton("Thêm");
+        ButtonStyleHelper.styleButtonAdd(btnThem);
+        btnSua = new JButton("Sửa");
+        ButtonStyleHelper.styleButtonEdit(btnSua);
         btnXoa = new JButton("Xóa");
         ButtonStyleHelper.styleButtonDelete(btnXoa);
-        btnMoi = new JButton("Mới");
-        ButtonStyleHelper.styleButtonView(btnMoi);
-        pnlBtn.add(btnLuu);
+        btnLuu = new JButton("Lưu");
+        ButtonStyleHelper.styleButtonSave(btnLuu);
+        btnHuy = new JButton("Hủy");
+        ButtonStyleHelper.styleButtonCancel(btnHuy);
+
+        Dimension sz = new Dimension(90, 35);
+        btnThem.setPreferredSize(sz);
+        btnSua.setPreferredSize(sz);
+        btnXoa.setPreferredSize(sz);
+        btnLuu.setPreferredSize(sz);
+        btnHuy.setPreferredSize(sz);
+
+        pnlBtn.add(btnThem);
+        pnlBtn.add(btnSua);
         pnlBtn.add(btnXoa);
-        pnlBtn.add(btnMoi);
+        pnlBtn.add(btnLuu);
+        pnlBtn.add(btnHuy);
 
         pnlSouth.add(pnlBtn, BorderLayout.SOUTH);
         add(pnlSouth, BorderLayout.SOUTH);
@@ -119,6 +133,8 @@ public class FrmMonHoc extends JPanel {
     public String getTuKhoa() {
         return txtTimKiem.getText().trim();
     }
+
+    public JTextField getTxtTimKiem() { return txtTimKiem; }
 
     public void setTableData(List<MonHoc> list) {
         model.setRowCount(0);
@@ -147,6 +163,15 @@ public class FrmMonHoc extends JPanel {
         JOptionPane.showMessageDialog(this, msg);
     }
 
+    // ===== GETTERS =====
+    public JButton getBtnThem() { return btnThem; }
+    public JButton getBtnSua() { return btnSua; }
+    public JButton getBtnXoa() { return btnXoa; }
+    public JButton getBtnLuu() { return btnLuu; }
+    public JButton getBtnHuy() { return btnHuy; }
+    public JButton getBtnXem() { return btnXem; }
+    public JButton getBtnTimKiem() { return btnTimKiem; }
+
     // ===== EVENTS =====
     public void addBtnXemListener(ActionListener l) {
         btnXem.addActionListener(l);
@@ -156,16 +181,24 @@ public class FrmMonHoc extends JPanel {
         btnTimKiem.addActionListener(l);
     }
 
-    public void addBtnLuuListener(ActionListener l) {
-        btnLuu.addActionListener(l);
+    public void addBtnThemListener(ActionListener l) {
+        btnThem.addActionListener(l);
+    }
+
+    public void addBtnSuaListener(ActionListener l) {
+        btnSua.addActionListener(l);
     }
 
     public void addBtnXoaListener(ActionListener l) {
         btnXoa.addActionListener(l);
     }
 
-    public void addBtnMoiListener(ActionListener l) {
-        btnMoi.addActionListener(l);
+    public void addBtnLuuListener(ActionListener l) {
+        btnLuu.addActionListener(l);
+    }
+
+    public void addBtnHuyListener(ActionListener l) {
+        btnHuy.addActionListener(l);
     }
 
     public void addTableMouseListener(MouseAdapter l) {

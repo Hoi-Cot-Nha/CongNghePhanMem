@@ -54,48 +54,66 @@ public class DiemController {
     }
 
     private void initEvents() {
-        
-        // 1. Nút Lọc (Xem danh sách theo lớp/môn/kỳ)
+        boolean[] editMode = {false};
+
+        // View button - load filter
         view.addBtnXemListener(e -> loadData());
 
-        // 2. Nút Tìm kiếm
+        // Search button
         view.addBtnTimKiemListener(e -> searchData());
 
-        // 3. Nút Cập Nhật Điểm (Logic quan trọng nhất)
-        view.addBtnCapNhatListener(e -> {
-            // Lấy dữ liệu điểm từ các ô nhập trên giao diện
+        // Add button
+        view.addBtnThemListener(e -> {
+            editMode[0] = false;
+            view.clearForm();
+        });
+
+        // Table click - select row and fill form
+        view.addTableMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int row = view.getTable().getSelectedRow();
+                if (row >= 0) {
+                    editMode[0] = true;
+                    view.fillFormInput(row);
+                }
+            }
+        });
+
+        // Update score button (Cập Nhật / Lưu)
+        view.addBtnLuuListener(e -> {
+            // Get score input from form
             Diem d = view.getDiemInput();
             
-            // Kiểm tra: Nếu view trả về null tức là người dùng nhập chữ vào ô số
+            // Validate: Input must be valid number
             if (d == null) {
                 view.showMessage("Điểm số phải là số thực (Ví dụ: 8.5)!"); 
                 return;
             }
-            // Kiểm tra: Phải chọn học sinh rồi mới sửa điểm được
+            
+            // Validate: Must select a student first
             if (d.getMaHS().isEmpty()) {
                 view.showMessage("Vui lòng click chọn học sinh trên bảng trước!"); 
                 return;
             }
 
-            // Gọi DAO để lưu xuống database
+            // Save to database
             if (dao.updateDiem(d)) {
                 view.showMessage("Đã cập nhật điểm thành công!");
-                loadData(); // Load lại bảng để thấy điểm mới vừa sửa
+                loadData();
+                editMode[0] = false;
             } else {
                 view.showMessage("Cập nhật thất bại! Hãy kiểm tra kết nối CSDL.");
             }
         });
 
-        // 4. Sự kiện click vào bảng -> Đổ dữ liệu lên các ô nhập
-        view.addTableMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int row = view.getTable().getSelectedRow();
-                view.fillFormInput(row); // Gọi hàm bên View để điền text
-            }
+        // Cancel button
+        view.addBtnHuyListener(e -> {
+            view.clearForm();
+            editMode[0] = false;
         });
         
-        // 5. Nút Xuất Excel (Dùng class tiện ích chung)
+        // Excel export button
         view.addBtnXuatExcelListener(e -> {
             XuatExcel.xuatFileExcel(view.getTable(), view);
         });

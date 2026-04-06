@@ -22,7 +22,7 @@ public class QuanLyPhucKhaoPanel extends JPanel{
     private DefaultTableModel model;
     private JTextField txtMaHS, txtMaMH, txtTrangThai, txtLoc;
     private JTextArea txtLyDo;
-    private JButton btnLoc, btnThem, btnSua, btnXoa, btnLamMoi;
+    private JButton btnLoc, btnThem, btnSua, btnXoa, btnLuu, btnHuy;
 
     public QuanLyPhucKhaoPanel() {
         initComponents();
@@ -88,15 +88,29 @@ public class QuanLyPhucKhaoPanel extends JPanel{
         pnlInput.add(scrollLyDo, gbc);
 
         JPanel pnlBtns = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
-        btnThem = createBtn("Thêm Mới", new Color(224, 255, 255));
+        btnThem = new JButton("Thêm");
         ButtonStyleHelper.styleButtonAdd(btnThem);
-        btnSua = createBtn("Cập Nhật", new Color(255, 250, 205));
+        btnSua = new JButton("Sửa");
         ButtonStyleHelper.styleButtonEdit(btnSua);
-        btnXoa = createBtn("Xóa Bỏ", new Color(255, 228, 225));
+        btnXoa = new JButton("Xóa");
         ButtonStyleHelper.styleButtonDelete(btnXoa);
-        btnLamMoi = createBtn("Làm Mới", new Color(220, 220, 220));
-        ButtonStyleHelper.styleButtonView(btnLamMoi);
-        pnlBtns.add(btnThem); pnlBtns.add(btnSua); pnlBtns.add(btnXoa); pnlBtns.add(btnLamMoi);
+        btnLuu = new JButton("Lưu");
+        ButtonStyleHelper.styleButtonSave(btnLuu);
+        btnHuy = new JButton("Hủy");
+        ButtonStyleHelper.styleButtonCancel(btnHuy);
+        
+        Dimension sz = new Dimension(90, 35);
+        btnThem.setPreferredSize(sz);
+        btnSua.setPreferredSize(sz);
+        btnXoa.setPreferredSize(sz);
+        btnLuu.setPreferredSize(sz);
+        btnHuy.setPreferredSize(sz);
+        
+        pnlBtns.add(btnThem);
+        pnlBtns.add(btnSua);
+        pnlBtns.add(btnXoa);
+        pnlBtns.add(btnLuu);
+        pnlBtns.add(btnHuy);
 
         pnlSouth.add(pnlInput, BorderLayout.CENTER);
         pnlSouth.add(pnlBtns, BorderLayout.SOUTH);
@@ -148,11 +162,14 @@ public class QuanLyPhucKhaoPanel extends JPanel{
     public JButton getBtnXoa() { 
         return btnXoa; 
     }
-    public JButton getBtnLoc() { 
-        return btnLoc; 
+    public JButton getBtnLuu() { 
+        return btnLuu; 
     }
-    public JButton getBtnLamMoi() { 
-        return btnLamMoi; 
+    public JButton getBtnHuy() { 
+        return btnHuy; 
+    }
+    public JButton getBtnLoc() {
+        return btnLoc; 
     }
     public String getMaHS() { 
         return txtMaHS.getText(); 
@@ -169,4 +186,12 @@ public class QuanLyPhucKhaoPanel extends JPanel{
     public String getLocKeyword() { 
         return txtLoc.getText(); 
     }
+    
+    public void addBtnThemListener(java.awt.event.ActionListener ac) { btnThem.addActionListener(ac); }
+    public void addBtnSuaListener(java.awt.event.ActionListener ac) { btnSua.addActionListener(ac); }
+    public void addBtnXoaListener(java.awt.event.ActionListener ac) { btnXoa.addActionListener(ac); }
+    public void addBtnLuuListener(java.awt.event.ActionListener ac) { btnLuu.addActionListener(ac); }
+    public void addBtnHuyListener(java.awt.event.ActionListener ac) { btnHuy.addActionListener(ac); }
+    public void addBtnLocListener(java.awt.event.ActionListener ac) { btnLoc.addActionListener(ac); }
+    public void addTableMouseListener(java.awt.event.MouseAdapter ad) { table.addMouseListener(ad); }
 }

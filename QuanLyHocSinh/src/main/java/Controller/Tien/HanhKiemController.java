@@ -46,65 +46,87 @@ public class HanhKiemController {
     }
 
     private void initEvents() {
-        // 1. Nút Xem/Lọc danh sách
+        boolean[] editMode = {false};
+
+        // View button - load filter
         view.addBtnXemListener(e -> loadData());
 
-        // 2. Nút Tìm kiếm
+        // Search button
         view.addBtnTimKiemListener(e -> searchData());
 
-        // 3. Nút Lưu (Xử lý cả Thêm mới và Cập nhật)
+        // Add button
+        view.addBtnThemListener(e -> {
+            editMode[0] = false;
+            view.clearForm();
+        });
+
+        // Save/Update button (handles both add and edit)
         view.addBtnLuuListener(e -> {
-            // Lấy object Hạnh kiểm từ form nhập
             HanhKiem hk = view.getHanhKiemInput();
             
-            // Validate: Phải chọn HS trên bảng trước mới biết đánh giá cho ai
+            // Validate: Must select a student first
             if(hk.getMaHS().isEmpty()) {
                 view.showMessage("Vui lòng chọn học sinh trên bảng để đánh giá!");
                 return;
             }
             
-            // Gọi DAO lưu xuống DB
+            // Save to database
             if (dao.saveHanhKiem(hk)) {
                 view.showMessage("Lưu hạnh kiểm thành công!");
-                loadData(); // Load lại bảng để thấy kết quả
+                loadData();
+                editMode[0] = false;
             } else {
                 view.showMessage("Lưu thất bại! Có lỗi xảy ra.");
             }
         });
-        
-        // 4. Nút Xóa (Xóa xếp loại/nhận xét của HS trong kỳ đó)
+
+        // Delete button with confirmation
         view.addBtnXoaListener(e -> {
             HanhKiem hk = view.getHanhKiemInput();
             
-            // Check xem đã chọn dòng nào chưa
+            // Check if row is selected
             if(hk.getMaHS().isEmpty()) {
                  view.showMessage("Vui lòng chọn dòng cần xóa!"); 
                  return;
             }
             
-            // Gọi DAO xóa dựa trên Composite Key (MaHS + NamHoc + HocKy)
-            if (dao.deleteHanhKiem(hk.getMaHS(), hk.getNamHoc(), hk.getHocKy())) {
-                view.showMessage("Xóa thành công!");
-                loadData();
-                view.clearForm(); // Xóa xong thì reset form nhập cho sạch
-            } else {
-                view.showMessage("Xóa thất bại!");
+            // Confirm deletion
+            int confirm = javax.swing.JOptionPane.showConfirmDialog(
+                view, "Bạn có chắc chắn muốn xóa?", "Xác nhận",
+                javax.swing.JOptionPane.YES_NO_OPTION
+            );
+            
+            if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+                if (dao.deleteHanhKiem(hk.getMaHS(), hk.getNamHoc(), hk.getHocKy())) {
+                    view.showMessage("Xóa thành công!");
+                    loadData();
+                    view.clearForm();
+                    editMode[0] = false;
+                } else {
+                    view.showMessage("Xóa thất bại!");
+                }
             }
         });
 
-        // 5. Sự kiện Click vào bảng -> Đổ dữ liệu ngược lên form nhập
+        // Table click - select row and fill form
         view.addTableMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int row = view.getTable().getSelectedRow();
-                view.fillFormInput(row);
+                if (row >= 0) {
+                    editMode[0] = true;
+                    view.fillFormInput(row);
+                }
             }
         });
+
+        // Cancel button
+        view.addBtnHuyListener(e -> {
+            view.clearForm();
+            editMode[0] = false;
+        });
         
-        // 6. Nút Làm mới (Reset trắng form nhập)
-        view.addBtnMoiListener(e -> view.clearForm());
-        
-        // 7. Xuất Excel (Dùng class tiện ích chung)
+        // Excel export button
         view.addBtnXuatExcelListener(e -> {
             XuatExcel.xuatFileExcel(view.getTable(), view);
         });

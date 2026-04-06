@@ -28,11 +28,13 @@ public class QuanLyDiemPanel extends JPanel {
     
     // Form nhập liệu / Cập nhật điểm
     private JTextField txtMaHS, txtTenHS, txtDiem15p, txtDiem1Tiet, txtDiemGiuaKy, txtDiemCuoiKy;
-    private JButton btnCapNhat;
     
     // Tìm kiếm & Tiện ích
     private JTextField txtTimKiem;
     private JButton btnTimKiem;
+    
+    // Nút chuẩn (Thêm, Sửa, Xóa, Lưu, Hủy)
+    private JButton btnThem, btnSua, btnXoa, btnLuu, btnHuy;
     private JButton btnXuatExcel;
 
     public QuanLyDiemPanel() {
@@ -135,18 +137,36 @@ public class QuanLyDiemPanel extends JPanel {
 
         pnlSouth.add(pnlInput, BorderLayout.CENTER);
         
-        // Panel chứa nút Lưu và Xuất Excel
+        // Panel chứa các nút bấm chuẩn
         JPanel pnlButton = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        btnCapNhat = new JButton("Lưu / Cập Nhật Điểm");
-        ButtonStyleHelper.styleButtonSave(btnCapNhat);
-        btnCapNhat.setPreferredSize(new Dimension(200, 40));
-        pnlButton.add(btnCapNhat);
+        btnThem = new JButton("Thêm");
+        ButtonStyleHelper.styleButtonAdd(btnThem);
+        btnSua = new JButton("Sửa");
+        ButtonStyleHelper.styleButtonEdit(btnSua);
+        btnXoa = new JButton("Xóa");
+        ButtonStyleHelper.styleButtonDelete(btnXoa);
+        btnLuu = new JButton("Lưu");
+        ButtonStyleHelper.styleButtonSave(btnLuu);
+        btnHuy = new JButton("Hủy");
+        ButtonStyleHelper.styleButtonCancel(btnHuy);
+
+        Dimension sz = new Dimension(90, 35);
+        btnThem.setPreferredSize(sz);
+        btnSua.setPreferredSize(sz);
+        btnXoa.setPreferredSize(sz);
+        btnLuu.setPreferredSize(sz);
+        btnHuy.setPreferredSize(sz);
+
+        pnlButton.add(btnThem);
+        pnlButton.add(btnSua);
+        pnlButton.add(btnXoa);
+        pnlButton.add(btnLuu);
+        pnlButton.add(btnHuy);
         
         // Nút Xuất Excel (Style xanh lá)
         btnXuatExcel = new JButton("Xuất Excel");
         ButtonStyleHelper.styleButtonExport(btnXuatExcel);
-
-        btnXuatExcel.setPreferredSize(new Dimension(130, 40));
+        btnXuatExcel.setPreferredSize(new Dimension(120, 35));
         pnlButton.add(btnXuatExcel);
         
         pnlSouth.add(pnlButton, BorderLayout.SOUTH);
@@ -252,6 +272,15 @@ public class QuanLyDiemPanel extends JPanel {
         }
     }
 
+    public void clearForm() {
+        txtMaHS.setText("");
+        txtTenHS.setText("");
+        txtDiem15p.setText("");
+        txtDiem1Tiet.setText("");
+        txtDiemGiuaKy.setText("");
+        txtDiemCuoiKy.setText("");
+    }
+
     // Click vào dòng -> Đổ ngược dữ liệu vào form nhập
     public void fillFormInput(int row) {
         if (row >= 0) {
@@ -270,8 +299,18 @@ public class QuanLyDiemPanel extends JPanel {
     public JTable getTable() { return tableDiem; }
 
     public void addBtnXemListener(ActionListener action) { btnLocDuLieu.addActionListener(action); }
-    public void addBtnTimKiemListener(ActionListener action) { btnTimKiem.addActionListener(action); } 
-    public void addBtnCapNhatListener(ActionListener action) { btnCapNhat.addActionListener(action); }
+    public void addBtnTimKiemListener(ActionListener action) { btnTimKiem.addActionListener(action); }
+    public void addBtnThemListener(ActionListener action) { btnThem.addActionListener(action); }
+    public void addBtnSuaListener(ActionListener action) { btnSua.addActionListener(action); }
+    public void addBtnXoaListener(ActionListener action) { btnXoa.addActionListener(action); }
+    public void addBtnLuuListener(ActionListener action) { btnLuu.addActionListener(action); }
+    public void addBtnHuyListener(ActionListener action) { btnHuy.addActionListener(action); }
     public void addTableMouseListener(MouseAdapter adapter) { tableDiem.addMouseListener(adapter); }
     public void addBtnXuatExcelListener(ActionListener ac) { btnXuatExcel.addActionListener(ac); }
+    
+    public JButton getBtnThem() { return btnThem; }
+    public JButton getBtnSua() { return btnSua; }
+    public JButton getBtnXoa() { return btnXoa; }
+    public JButton getBtnLuu() { return btnLuu; }
+    public JButton getBtnHuy() { return btnHuy; }
 }

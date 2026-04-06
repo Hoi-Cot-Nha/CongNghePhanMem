@@ -19,9 +19,14 @@ public class Hocphicontroller {
     public Hocphicontroller(QuanLyHocPhiPanel view) {
         this.view = view;
         this.dao = new HocphiDAO();
+        initEvents();
+        loadTatCaDuLieu();
+    }
 
-        System.out.println("DEBUG Controller: Khởi tạo controller...");
-        
+    private void initEvents() {
+        boolean[] editMode = {false};
+
+        // Filter button
         view.getBtnLoc().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -29,41 +34,41 @@ public class Hocphicontroller {
             }
         });
 
-       
+        // Add button
         view.getBtnThem().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                xuLyLuu(true); 
+                editMode[0] = false;
+                view.refreshForm();
             }
         });
 
-      
+        // Save button (handles both add and update)
         view.getBtnLuu().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                xuLyLuu(false); 
+                xuLyLuu(editMode[0]);
+                editMode[0] = false;
             }
         });
 
-        
+        // Delete button with confirmation
         view.getBtnXoa().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 xoaHocPhi();
+                editMode[0] = false;
             }
         });
 
-      
-        view.getBtnLamMoi().addActionListener(new ActionListener() {
+        // Cancel/Reset button
+        view.getBtnHuy().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 view.refreshForm();
+                editMode[0] = false;
             }
         });
-        
-        System.out.println("DEBUG Controller: Controller khởi tạo xong!");
-
-        loadTatCaDuLieu();
     }
 
     private void loadTatCaDuLieu() {
@@ -108,7 +113,7 @@ public class Hocphicontroller {
         }
     }
 
-    private void xuLyLuu(boolean isThemMoi) {
+    private void xuLyLuu(boolean isUpdate) {
         try {
            
             String maHS = view.getTxtMaHS().getText().trim();
@@ -139,7 +144,7 @@ public class Hocphicontroller {
 
             
             if (dao.saveHocPhi(hp)) {
-                String thongBao = isThemMoi ? "Thêm mới học phí thành công!" : "Cập nhật học phí thành công!";
+                String thongBao = isUpdate ? "Cập nhật học phí thành công!" : "Thêm mới học phí thành công!";
                 JOptionPane.showMessageDialog(view, thongBao);
                 locDuLieu();
                 view.refreshForm(); 

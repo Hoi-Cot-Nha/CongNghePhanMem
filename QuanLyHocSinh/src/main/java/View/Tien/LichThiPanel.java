@@ -30,7 +30,7 @@ public class LichThiPanel extends JPanel {
     private JComboBox<String> cboTenKyThi;
     
     // Các nút thao tác CRUD
-    private JButton btnThem, btnSua, btnXoa, btnMoi;
+    private JButton btnThem, btnSua, btnXoa, btnLuu, btnHuy, btnMoi;
 
     public LichThiPanel() {
         initComponents();
@@ -137,24 +137,43 @@ public class LichThiPanel extends JPanel {
 
         // Panel chứa các nút bấm phía dưới cùng
         JPanel pnlBtn = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        btnThem = new JButton("Thêm Mới");
+        btnThem = new JButton("Thêm");
         ButtonStyleHelper.styleButtonAdd(btnThem);
-        btnSua = new JButton("Cập Nhật");
+        btnSua = new JButton("Sửa");
         ButtonStyleHelper.styleButtonEdit(btnSua);
         btnXoa = new JButton("Xóa");
         ButtonStyleHelper.styleButtonDelete(btnXoa);
+        btnLuu = new JButton("Lưu");
+        ButtonStyleHelper.styleButtonSave(btnLuu);
+        btnHuy = new JButton("Hủy");
+        ButtonStyleHelper.styleButtonCancel(btnHuy);
         btnMoi = new JButton("Làm Mới");
         ButtonStyleHelper.styleButtonView(btnMoi);
         
-        pnlBtn.add(btnThem); pnlBtn.add(btnSua); pnlBtn.add(btnXoa); pnlBtn.add(btnMoi);
-        pnlSouth.add(pnlBtn, BorderLayout.SOUTH);
+        Dimension sz = new Dimension(90, 35);
+        btnThem.setPreferredSize(sz);
+        btnSua.setPreferredSize(sz);
+        btnXoa.setPreferredSize(sz);
+        btnLuu.setPreferredSize(sz);
+        btnHuy.setPreferredSize(sz);
+        btnMoi.setPreferredSize(sz);
         
-        add(pnlSouth, BorderLayout.SOUTH);
+        pnlBtn.add(btnThem);
+        pnlBtn.add(btnSua);
+        pnlBtn.add(btnXoa);
+        pnlBtn.add(btnLuu);
+        pnlBtn.add(btnHuy);
+        pnlBtn.add(btnMoi);
         
         // Nút Xuất Excel (Style xanh lá)
         btnXuatExcel = new JButton("Xuất Excel");
         ButtonStyleHelper.styleButtonExport(btnXuatExcel);
+        btnXuatExcel.setPreferredSize(new Dimension(120, 35));
         pnlBtn.add(btnXuatExcel);
+        
+        pnlSouth.add(pnlBtn, BorderLayout.SOUTH);
+        
+        add(pnlSouth, BorderLayout.SOUTH);
     }
 
     // --- Getter lấy từ khóa tìm kiếm ---
@@ -213,7 +232,15 @@ public class LichThiPanel extends JPanel {
     public void addBtnThemListener(ActionListener ac) { btnThem.addActionListener(ac); }
     public void addBtnSuaListener(ActionListener ac) { btnSua.addActionListener(ac); }
     public void addBtnXoaListener(ActionListener ac) { btnXoa.addActionListener(ac); }
+    public void addBtnLuuListener(ActionListener ac) { btnLuu.addActionListener(ac); }
+    public void addBtnHuyListener(ActionListener ac) { btnHuy.addActionListener(ac); }
     public void addBtnMoiListener(ActionListener ac) { btnMoi.addActionListener(ac); }
     public void addTableMouseListener(MouseAdapter ad) { table.addMouseListener(ad); }
     public void addBtnXuatExcelListener(ActionListener ac) { btnXuatExcel.addActionListener(ac); }
+    
+    public JButton getBtnThem() { return btnThem; }
+    public JButton getBtnSua() { return btnSua; }
+    public JButton getBtnXoa() { return btnXoa; }
+    public JButton getBtnLuu() { return btnLuu; }
+    public JButton getBtnHuy() { return btnHuy; }
 }

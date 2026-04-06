@@ -1,4 +1,14 @@
+/*USE master;
+GO
 
+-- Ngắt các kết nối đang sử dụng database này (nếu có)
+ALTER DATABASE QuanLyHocSinh SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+GO
+
+-- Xóa hoàn toàn database
+DROP DATABASE QuanLyHocSinh;
+GO
+*/
 -- 1. TẠO CƠ SỞ DỮ LIỆU
 CREATE DATABASE QuanLyHocSinh;
 GO
@@ -183,6 +193,3 @@ CREATE TABLE PhucKhao (
 );
 GO
 
--- Sửa lỗi quyền truy cập DB
-EXEC sp_changedbowner 'sa';
-GO

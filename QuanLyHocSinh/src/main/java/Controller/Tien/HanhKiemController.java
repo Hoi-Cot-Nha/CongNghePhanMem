@@ -20,10 +20,6 @@ public class HanhKiemController {
     public HanhKiemController(HanhKiemPanel view) {
         this.view = view;
         this.dao = new HanhKiemDAO();
-        if (Auth.isHocSinh()) {
-            view.showMessage("Bạn không có quyền truy cập!");
-            return;
-        }
         
         loadComboBoxData();
         
@@ -118,17 +114,29 @@ public class HanhKiemController {
     // Hàm lấy dữ liệu dựa theo bộ lọc (Lớp, Năm, Kỳ)
     private void loadData() {
         try {
-            String maLop = view.getMaLopFilter();
-            String namHoc = view.getNamHocFilter();
-            int hocKy = view.getHocKyFilter();
 
-            // Nếu ô lọc trống thì thôi ko load (để tránh lỗi query)
-            if (maLop.isEmpty() || namHoc.isEmpty()) return;
+            List<HanhKiem> list;
 
-            // Gọi DAO lấy list về và đổ lên bảng
-            List<HanhKiem> list = dao.getHanhKiemByFilter(maLop, namHoc, hocKy);
+            if (Auth.isHocSinh()) {
+
+                list = dao.getHanhKiemByMaHS(Auth.maNguoiDung);
+
+                // Ẩn nút
+                view.hideButtonForStudent();
+
+            } else {
+
+                String maLop = view.getMaLopFilter();
+                String namHoc = view.getNamHocFilter();
+                int hocKy = view.getHocKyFilter();
+
+                if (maLop.isEmpty() || namHoc.isEmpty()) return;
+
+                list = dao.getHanhKiemByFilter(maLop, namHoc, hocKy);
+            }
+
             view.setTableData(list);
-            
+
         } catch (Exception ex) {
             view.showMessage("Lỗi tải dữ liệu: " + ex.getMessage());
         }
@@ -143,8 +151,13 @@ public class HanhKiemController {
             return;
         }
 
-        List<HanhKiem> list = dao.searchHanhKiem(keyword);
-        view.setTableData(list);
+        List<HanhKiem> list;
+
+        if (Auth.isHocSinh()) {
+            list = dao.searchHanhKiemByMaHS(Auth.maNguoiDung, keyword);
+        } else {
+            list = dao.searchHanhKiem(keyword);
+        }
 
         if(list.isEmpty()) {
             view.showMessage("Không tìm thấy kết quả nào cho: " + keyword);

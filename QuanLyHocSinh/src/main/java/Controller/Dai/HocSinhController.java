@@ -1,6 +1,7 @@
 package Controller.Dai;
 
 import Dao.HocSinhDAO;
+import Model.Auth;
 import Model.HocSinh;
 
 import javax.swing.*;
@@ -74,5 +75,8 @@ public class HocSinhController {
                 hs.getMaDT()
             });
         }
+    }
+    public HocSinh getThongTinCaNhan() {
+        return dao.getByMaHS(Auth.maNguoiDung);
     }
 }

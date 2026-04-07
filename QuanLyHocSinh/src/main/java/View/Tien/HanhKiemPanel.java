@@ -228,4 +228,9 @@ public class HanhKiemPanel extends JPanel {
     public void addBtnMoiListener(ActionListener log) { btnMoi.addActionListener(log); }
     public void addTableMouseListener(MouseAdapter log) { table.addMouseListener(log); }
     public void addBtnXuatExcelListener(ActionListener log) { btnXuatExcel.addActionListener(log); }
+
+    public void hideButtonForStudent() {
+        btnLuu.setVisible(false);
+        btnXoa.setVisible(false);
+    }
 }

@@ -40,8 +40,19 @@ public class QuanLyHocSinhPanel extends JPanel {
     public QuanLyHocSinhPanel() {
         initComponents();
         loadComboBox();
-        controller.loadTable(tableModel); 
-        setFormEnabled(false); 
+        controller.loadTable(tableModel);
+        setFormEnabled(false);
+
+        if (Model.Auth.isHocSinh()) {
+            loadThongTinCaNhan();
+
+            // khóa chỉnh sửa
+            setFormEnabled(false);
+            btnThem.setVisible(false);
+            btnSua.setVisible(false);
+            btnXoa.setVisible(false);
+            btnLuu.setVisible(false);
+        }
     }
 
     private void initComponents() {
@@ -355,4 +366,24 @@ public class QuanLyHocSinhPanel extends JPanel {
         controller.loadComboMaDT(cboMaDT);
     }
 
+    private void loadThongTinCaNhan() {
+        HocSinh hs = controller.getThongTinCaNhan();
+
+        if (hs != null) {
+            txtMaHS.setText(hs.getMaHS());
+            txtHoTen.setText(hs.getHoTen());
+
+            try {
+                Date d = new SimpleDateFormat("yyyy-MM-dd").parse(hs.getNgaySinh());
+                spNgaySinh.setValue(d);
+            } catch (Exception e) {
+                spNgaySinh.setValue(new Date());
+            }
+
+            cboGioiTinh.setSelectedItem(hs.getGioiTinh());
+            txtDiaChi.setText(hs.getDiaChi());
+            cboMaLop.setSelectedItem(hs.getMaLop());
+            cboMaDT.setSelectedItem(hs.getMaDT());
+        }
+    }
 }

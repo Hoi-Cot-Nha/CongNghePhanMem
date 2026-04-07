@@ -167,4 +167,31 @@ public class HocSinhDAO {
         }
         return list;
     }
+    public HocSinh getByMaHS(String maHS) {
+        String sql = "SELECT * FROM HocSinh WHERE MaHS = ?";
+
+        try (Connection con = ConnectDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, maHS);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new HocSinh(
+                        rs.getString("MaHS"),
+                        rs.getString("HoTen"),
+                        rs.getString("NgaySinh"),
+                        rs.getString("GioiTinh"),
+                        rs.getString("DiaChi"),
+                        rs.getString("MaLop"),
+                        rs.getString("MaDT")
+                );
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 }

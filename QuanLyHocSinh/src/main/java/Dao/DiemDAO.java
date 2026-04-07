@@ -120,7 +120,11 @@ public class DiemDAO {
     public List<Diem> getDiemByMaHS(String maHS) {
         List<Diem> list = new ArrayList<>();
 
-        String sql = "SELECT * FROM Diem WHERE UPPER(maHS) = UPPER(?)";
+        String sql = "SELECT d.*, hs.HoTen AS tenHS, mh.tenMH\n" +
+                "FROM Diem d\n" +
+                "JOIN HocSinh hs ON d.MaHS = hs.MaHS\n" +
+                "JOIN MonHoc mh ON d.MaMH = mh.MaMH\n" +
+                "WHERE d.MaHS = ?";
 
         try (Connection con = ConnectDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -135,7 +139,7 @@ public class DiemDAO {
             while (rs.next()) {
                 Diem d = new Diem();
                 d.setMaHS(rs.getString("maHS"));
-                d.setTenHS(rs.getString("tenHS"));
+                d.setTenHS(rs.getString("HoTen"));
                 d.setMaMH(rs.getString("maMH"));
                 d.setHocKy(rs.getInt("hocKy"));
                 d.setDiem15p(rs.getDouble("diem15p"));
@@ -177,5 +181,4 @@ public class DiemDAO {
         }
         return list;
     }
-
 }

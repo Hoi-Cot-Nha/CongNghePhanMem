@@ -134,4 +134,62 @@ public class HanhKiemDAO {
         hk.setNhanXet(rs.getString("NhanXet") != null ? rs.getString("NhanXet") : "");
         return hk;
     }
+    public List<HanhKiem> getHanhKiemByMaHS(String maHS) {
+        List<HanhKiem> list = new ArrayList<>();
+
+        String sql = """
+        SELECT hk.*, hs.HoTen
+        FROM HanhKiem hk
+        JOIN HocSinh hs ON hk.MaHS = hs.MaHS
+        WHERE hk.MaHS = ?
+    """;
+
+        try (Connection conn = ConnectDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, maHS);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(mapResultSetToModel(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public List<HanhKiem> searchHanhKiemByMaHS(String maHS, String keyword) {
+        List<HanhKiem> list = new ArrayList<>();
+
+        String sql = """
+        SELECT hk.*, hs.HoTen
+        FROM HanhKiem hk
+        JOIN HocSinh hs ON hk.MaHS = hs.MaHS
+        WHERE hk.MaHS = ?
+        AND (hk.MaHS LIKE ? OR hs.HoTen LIKE ?)
+    """;
+
+        try (Connection conn = ConnectDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            String key = "%" + keyword + "%";
+
+            ps.setString(1, maHS);
+            ps.setString(2, key);
+            ps.setString(3, key);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(mapResultSetToModel(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
 }

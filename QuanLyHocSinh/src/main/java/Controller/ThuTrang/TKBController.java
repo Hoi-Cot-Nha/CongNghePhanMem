@@ -153,11 +153,45 @@ public class TKBController {
             }
         });
 
-        // Nút Hủy: hủy chỉnh sửa, xóa form
-        view.addBtnHuyListener(e -> {
+
+        view.addBtnXoaListener(e -> {
+            int row = view.getTable().getSelectedRow();
+
+            if (row == -1) {
+                view.showMessage("Vui lòng chọn dòng cần xóa");
+                return;
+            }
+
+            int confirm = JOptionPane.showConfirmDialog(
+                view,
+                "Bạn có chắc chắn muốn xóa thời khóa biểu này?",
+                "Xác nhận",
+                JOptionPane.YES_NO_OPTION
+            );
+
+            if (confirm != JOptionPane.YES_OPTION) return;
+
+            int id = Integer.parseInt(
+                view.getTable().getValueAt(row, 0).toString()
+            );
+
+            dao.delete(id);
+            view.showMessage("Đã xóa");
+
+            String maLopLoc = view.getMaLopLoc();
+            if (!maLopLoc.isEmpty()) {
+                view.setTableData(
+                    dao.getByLop(maLopLoc)
+                );
+            }
+
             view.clearForm();
             editMode[0] = false;
         });
+
+
+        view.addBtnMoiListener(e -> view.clearForm());
+
 
         view.addTableMouseListener(new MouseAdapter() {
             @Override

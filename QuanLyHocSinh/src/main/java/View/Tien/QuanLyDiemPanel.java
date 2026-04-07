@@ -28,7 +28,8 @@ public class QuanLyDiemPanel extends JPanel {
     
     // Form nhập liệu / Cập nhật điểm
     private JTextField txtMaHS, txtTenHS, txtDiem15p, txtDiem1Tiet, txtDiemGiuaKy, txtDiemCuoiKy;
-    
+    private JButton btnCapNhat;
+
     // Tìm kiếm & Tiện ích
     private JTextField txtTimKiem;
     private JButton btnTimKiem;
@@ -137,8 +138,12 @@ public class QuanLyDiemPanel extends JPanel {
 
         pnlSouth.add(pnlInput, BorderLayout.CENTER);
         
-        // Panel chứa các nút bấm chuẩn
+        // Panel chứa nút Lưu và Xuất Excel
         JPanel pnlButton = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        btnCapNhat = new JButton("Lưu / Cập Nhật Điểm");
+        ButtonStyleHelper.styleButtonSave(btnCapNhat);
+        btnCapNhat.setPreferredSize(new Dimension(200, 40));
+        pnlButton.add(btnCapNhat);
         btnThem = new JButton("Thêm");
         ButtonStyleHelper.styleButtonAdd(btnThem);
         btnSua = new JButton("Sửa");
@@ -171,6 +176,10 @@ public class QuanLyDiemPanel extends JPanel {
         
         pnlSouth.add(pnlButton, BorderLayout.SOUTH);
         this.add(pnlSouth, BorderLayout.SOUTH);
+        if (Model.Auth.isHocSinh()) {
+            btnCapNhat.setVisible(false);
+            btnXuatExcel.setVisible(false);
+        }
     }
 
     // --- Các hàm Getter dữ liệu từ Form (Cho Controller gọi) ---
@@ -300,6 +309,7 @@ public class QuanLyDiemPanel extends JPanel {
 
     public void addBtnXemListener(ActionListener action) { btnLocDuLieu.addActionListener(action); }
     public void addBtnTimKiemListener(ActionListener action) { btnTimKiem.addActionListener(action); }
+    public void addBtnCapNhatListener(ActionListener action) { btnCapNhat.addActionListener(action); }
     public void addBtnThemListener(ActionListener action) { btnThem.addActionListener(action); }
     public void addBtnSuaListener(ActionListener action) { btnSua.addActionListener(action); }
     public void addBtnXoaListener(ActionListener action) { btnXoa.addActionListener(action); }
@@ -313,4 +323,14 @@ public class QuanLyDiemPanel extends JPanel {
     public JButton getBtnXoa() { return btnXoa; }
     public JButton getBtnLuu() { return btnLuu; }
     public JButton getBtnHuy() { return btnHuy; }
+
+    // Cấp quyền truy cập cái Bảng cho Controller
+    public javax.swing.table.DefaultTableModel getTableModel() {
+        // Tùy theo việc bạn đặt tên bảng là gì lúc thiết kế (ví dụ: jTable1, tblDiem, v.v.)
+        // Hãy sửa chữ "tblDiem" thành tên biến đúng của bạn.
+        return (javax.swing.table.DefaultTableModel) tableDiem.getModel();
+    }
+    public javax.swing.JButton getBtnCapNhat() {
+        return btnCapNhat;
+    }
 }

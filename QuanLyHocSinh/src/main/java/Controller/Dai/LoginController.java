@@ -1,5 +1,7 @@
 package Controller.Dai;
 
+import Model.Auth;
+import Model.TaiKhoan;
 import view.LoginView;
 import Dao.TaiKhoanDAO; 
 import com.qlhs.main.MainFormNew;
@@ -32,8 +34,13 @@ public class LoginController {
 
             
             String role = dao.checkLogin(user, pass);
+            TaiKhoan tk = dao.checkLoginFull(user, pass);
 
             if (role != null) {
+                Auth.currentUser = tk.getTenDangNhap();
+                Auth.currentRole = tk.getQuyen();
+                Auth.maNguoiDung = tk.getMaNguoiDung();
+                System.out.println("ROLE = " + Auth.currentRole);
                 view.showMessage("Đăng nhập thành công! Quyền: " + role);
                 view.dispose(); 
 

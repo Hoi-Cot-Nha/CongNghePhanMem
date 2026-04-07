@@ -3,6 +3,7 @@ package Controller.Tien;
 import Dao.DiemDAO;
 import Dao.LopDAO;
 import Dao.MonHocDAO;
+import Model.Auth;
 import Model.Diem;
 import Model.LopGVCN;
 import Model.MonHoc;
@@ -12,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import TienIch.XuatExcel;
+import Model.Auth;
 
 public class DiemController { 
     
@@ -106,7 +108,13 @@ public class DiemController {
                 view.showMessage("Cập nhật thất bại! Hãy kiểm tra kết nối CSDL.");
             }
         });
-
+        view.addTableMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int row = view.getTable().getSelectedRow();
+                view.fillFormInput(row); // Gọi hàm bên View để điền text
+            }
+        });
         // Cancel button
         view.addBtnHuyListener(e -> {
             view.clearForm();
@@ -120,26 +128,34 @@ public class DiemController {
     }
 
     // Hàm lấy danh sách điểm dựa theo bộ lọc (Lớp, Môn, Kỳ)
-    private void loadData() {
-        String maLop = view.getMaLopFilter();
-        String maMon = view.getMaMonFilter();
-        int hocKy = view.getHocKyFilter();
-
-        // Nếu tất cả filter rỗng → load toàn bộ dữ liệu
-        if (maLop.isEmpty() && maMon.isEmpty()) {
-            List<Diem> list = dao.getAllDiem();
-            view.setTableData(list);
-        } else {
-            // Nếu có filter → gọi getDiemByFilter
-            List<Diem> list = dao.getDiemByFilter(maLop, maMon, hocKy);
-            view.setTableData(list);
-        }
-    }
+//    private void loadData() {
+//        String maLop = view.getMaLopFilter();
+//
+//        // Nếu chưa nhập lớp thì thôi không load (tránh lỗi query)
+//        if (maLop.isEmpty()) {
+//             // Có thể báo lỗi hoặc im lặng tùy bạn
+//             return;
+//        }
+//
+//        String maMon = view.getMaMonFilter();
+//        int hocKy = view.getHocKyFilter();
+//
+//        // Nếu tất cả filter rỗng → load toàn bộ dữ liệu
+//        if (maLop.isEmpty() && maMon.isEmpty()) {
+//            List<Diem> list = dao.getAllDiem();
+//            view.setTableData(list);
+//        } else {
+//            // Nếu có filter → gọi getDiemByFilter
+//            List<Diem> list = dao.getDiemByFilter(maLop, maMon, hocKy);
+//            view.setTableData(list);
+//        }
+//    }
 
     // Hàm tìm kiếm theo tên hoặc mã
     private void searchData() {
         String keyword = view.getTuKhoaTimKiem();
         
+
         if (keyword.isEmpty()) {
             view.showMessage("Nhập tên hoặc mã HS để tìm kiếm nhé!");
             return;
@@ -151,5 +167,38 @@ public class DiemController {
         if (list.isEmpty()) {
             view.showMessage("Không tìm thấy học sinh nào với từ khóa: " + keyword);
         }
+    }
+    // Thêm cho phân quyền tài khoản
+    // Import thêm Auth vào đầu file
+    // import com.qlhs.main.Auth;
+
+    private void loadData() {
+
+        List<Diem> list;
+
+        // ✅ Nếu là học sinh
+        if (Auth.isHocSinh()) {
+
+            // DEBUG xem có đúng mã không
+            System.out.println("LOGIN MA HS = [" + Auth.maNguoiDung + "]");
+
+            // ✅ ÉP CHUẨN CHỮ HOA (QUAN TRỌNG)
+            list = dao.getDiemByMaHS(Auth.maNguoiDung.toUpperCase());
+
+            // Ẩn nút cập nhật
+            view.getBtnCapNhat().setVisible(false);
+
+        } else {
+
+            String maLop = view.getMaLopFilter();
+            if (maLop.isEmpty()) return;
+
+            String maMon = view.getMaMonFilter();
+            int hocKy = view.getHocKyFilter();
+
+            list = dao.getDiemByFilter(maLop, maMon, hocKy);
+        }
+
+        view.setTableData(list);
     }
 }

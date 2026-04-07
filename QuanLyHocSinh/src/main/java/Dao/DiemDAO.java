@@ -153,4 +153,69 @@ public class DiemDAO {
         }
         return list;
     }
+    // Thêm cho phân quyền tài khoản
+    public List<Diem> getDiemByMaHS(String maHS) {
+        List<Diem> list = new ArrayList<>();
+
+        String sql = "SELECT d.*, hs.HoTen AS tenHS, mh.tenMH\n" +
+                "FROM Diem d\n" +
+                "JOIN HocSinh hs ON d.MaHS = hs.MaHS\n" +
+                "JOIN MonHoc mh ON d.MaMH = mh.MaMH\n" +
+                "WHERE d.MaHS = ?";
+
+        try (Connection con = ConnectDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, maHS);
+
+            // DEBUG
+            System.out.println("SQL MAHS = " + maHS);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Diem d = new Diem();
+                d.setMaHS(rs.getString("maHS"));
+                d.setTenHS(rs.getString("HoTen"));
+                d.setMaMH(rs.getString("maMH"));
+                d.setHocKy(rs.getInt("hocKy"));
+                d.setDiem15p(rs.getDouble("diem15p"));
+                d.setDiem1Tiet(rs.getDouble("diem1Tiet"));
+                d.setDiemGiuaKy(rs.getDouble("diemGiuaKy"));
+                d.setDiemCuoiKy(rs.getDouble("diemCuoiKy"));
+                list.add(d);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+    // 1. Lấy toàn bộ điểm (Sửa lỗi Cannot resolve method 'getAll')
+    public List<Diem> getAll() {
+        List<Diem> list = new ArrayList<>();
+        // Lưu ý: Tên bảng "Diem" có thể khác trong SQL của bạn, hãy sửa cho khớp
+        String sql = "SELECT * FROM Diem";
+
+        try (java.sql.Connection con = ConnectDB.getConnection();
+             java.sql.PreparedStatement ps = con.prepareStatement(sql);
+             java.sql.ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Diem d = new Diem();
+                d.setMaHS(rs.getString("MaHS"));
+                d.setMaMH(rs.getString("MaMH"));
+                d.setHocKy(rs.getInt("HocKy"));
+                d.setDiem15p(rs.getDouble("Diem15p"));
+                d.setDiem1Tiet(rs.getDouble("Diem1Tiet"));
+                d.setDiemGiuaKy(rs.getDouble("DiemGiuaKy"));
+                d.setDiemCuoiKy(rs.getDouble("DiemCuoiKy"));
+                list.add(d);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

@@ -116,6 +116,7 @@ public class MonHocController {
             editMode[0] = false;
         });
 
+
         view.addTableMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {

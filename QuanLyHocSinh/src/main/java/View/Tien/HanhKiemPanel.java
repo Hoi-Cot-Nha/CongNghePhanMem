@@ -286,4 +286,9 @@ public class HanhKiemPanel extends JPanel {
     public JButton getBtnXoa() { return btnXoa; }
     public JButton getBtnLuu() { return btnLuu; }
     public JButton getBtnHuy() { return btnHuy; }
+
+    public void hideButtonForStudent() {
+        btnLuu.setVisible(false);
+        btnXoa.setVisible(false);
+    }
 }

@@ -10,6 +10,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import Model.Auth;
 
 public class HanhKiemController {
     
@@ -135,13 +136,26 @@ public class HanhKiemController {
     // Hàm lấy dữ liệu dựa theo bộ lọc (Lớp, Năm, Kỳ)
     private void loadData() {
         try {
+            List<HanhKiem> list;
+
+            if (Auth.isHocSinh()) {
+
+                list = dao.getHanhKiemByMaHS(Auth.maNguoiDung);
+
+                // Ẩn nút
+                view.hideButtonForStudent();
+
+            } else {
+
             String maLop = view.getMaLopFilter();
             String namHoc = view.getNamHocFilter();
             int hocKy = view.getHocKyFilter();
-
+                if (maLop.isEmpty() || namHoc.isEmpty()) return;
             // Nếu filter rỗng → gọi DAO với empty string, DAO sẽ xử lý để lấy tất cả
             // Không return, cứ load dữ liệu
-            List<HanhKiem> list = dao.getHanhKiemByFilter(maLop, namHoc, hocKy);
+           // List<HanhKiem> list = dao.getHanhKiemByFilter(maLop, namHoc, hocKy);
+                list = dao.getHanhKiemByFilter(maLop, namHoc, hocKy);
+            }
             view.setTableData(list);
             
         } catch (Exception ex) {
@@ -158,8 +172,13 @@ public class HanhKiemController {
             return;
         }
 
-        List<HanhKiem> list = dao.searchHanhKiem(keyword);
-        view.setTableData(list);
+        List<HanhKiem> list;
+
+        if (Auth.isHocSinh()) {
+            list = dao.searchHanhKiemByMaHS(Auth.maNguoiDung, keyword);
+        } else {
+            list = dao.searchHanhKiem(keyword);
+        }
 
         if(list.isEmpty()) {
             view.showMessage("Không tìm thấy kết quả nào cho: " + keyword);

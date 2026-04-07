@@ -18,9 +18,6 @@ public class LichThiController {
     public LichThiController(LichThiPanel view) {
         this.view = view;
         this.dao = new LichThiDAO();
-        if (Auth.isHocSinh()) {
-            view.showMessage("Bạn chỉ có quyền xem lịch thi!");
-        }
         // Gán sự kiện cho các nút bấm
         initEvents();
         

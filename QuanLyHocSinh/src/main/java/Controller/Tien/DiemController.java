@@ -45,7 +45,11 @@ public class DiemController {
         view.setMaLopData(maLops);
 
         List<MonHoc> mons = monHocDAO.getAll();
-        view.setMonHocData(mons);
+        List<String> maMons = new ArrayList<>();
+        for (MonHoc m : mons) {
+            maMons.add(m.getMaMH());
+        }
+        view.setMonHocData(maMons);
 
         List<Integer> hks = dao.getDistinctHocKy();
         if (hks.isEmpty()) {
@@ -56,58 +60,39 @@ public class DiemController {
     }
 
     private void initEvents() {
-        boolean[] editMode = {false};
-
-        // View button - load filter
+        
+        // 1. Nút Lọc (Xem danh sách theo lớp/môn/kỳ)
         view.addBtnXemListener(e -> loadData());
 
-        // Search button
+        // 2. Nút Tìm kiếm
         view.addBtnTimKiemListener(e -> searchData());
 
-        // Add button
-        view.addBtnThemListener(e -> {
-            editMode[0] = false;
-            view.clearForm();
-        });
-
-        // Table click - select row and fill form
-        view.addTableMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int row = view.getTable().getSelectedRow();
-                if (row >= 0) {
-                    editMode[0] = true;
-                    view.fillFormInput(row);
-                }
-            }
-        });
-
-        // Update score button (Cập Nhật / Lưu)
-        view.addBtnLuuListener(e -> {
-            // Get score input from form
+        // 3. Nút Cập Nhật Điểm (Logic quan trọng nhất)
+        view.addBtnCapNhatListener(e -> {
+            // Lấy dữ liệu điểm từ các ô nhập trên giao diện
             Diem d = view.getDiemInput();
             
-            // Validate: Input must be valid number
+            // Kiểm tra: Nếu view trả về null tức là người dùng nhập chữ vào ô số
             if (d == null) {
                 view.showMessage("Điểm số phải là số thực (Ví dụ: 8.5)!"); 
                 return;
             }
-            
-            // Validate: Must select a student first
+            // Kiểm tra: Phải chọn học sinh rồi mới sửa điểm được
             if (d.getMaHS().isEmpty()) {
                 view.showMessage("Vui lòng click chọn học sinh trên bảng trước!"); 
                 return;
             }
 
-            // Save to database
+            // Gọi DAO để lưu xuống database
             if (dao.updateDiem(d)) {
                 view.showMessage("Đã cập nhật điểm thành công!");
-                loadData();
-                editMode[0] = false;
+                loadData(); // Load lại bảng để thấy điểm mới vừa sửa
             } else {
                 view.showMessage("Cập nhật thất bại! Hãy kiểm tra kết nối CSDL.");
             }
         });
+
+        // 4. Sự kiện click vào bảng -> Đổ dữ liệu lên các ô nhập
         view.addTableMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -115,46 +100,34 @@ public class DiemController {
                 view.fillFormInput(row); // Gọi hàm bên View để điền text
             }
         });
-        // Cancel button
-        view.addBtnHuyListener(e -> {
-            view.clearForm();
-            editMode[0] = false;
-        });
         
-        // Excel export button
+        // 5. Nút Xuất Excel (Dùng class tiện ích chung)
         view.addBtnXuatExcelListener(e -> {
             XuatExcel.xuatFileExcel(view.getTable(), view);
         });
     }
 
-    // Hàm lấy danh sách điểm dựa theo bộ lọc (Lớp, Môn, Kỳ)
-//    private void loadData() {
-//        String maLop = view.getMaLopFilter();
-//
-//        // Nếu chưa nhập lớp thì thôi không load (tránh lỗi query)
-//        if (maLop.isEmpty()) {
-//             // Có thể báo lỗi hoặc im lặng tùy bạn
-//             return;
-//        }
-//
-//        String maMon = view.getMaMonFilter();
-//        int hocKy = view.getHocKyFilter();
-//
-//        // Nếu tất cả filter rỗng → load toàn bộ dữ liệu
-//        if (maLop.isEmpty() && maMon.isEmpty()) {
-//            List<Diem> list = dao.getAllDiem();
-//            view.setTableData(list);
-//        } else {
-//            // Nếu có filter → gọi getDiemByFilter
-//            List<Diem> list = dao.getDiemByFilter(maLop, maMon, hocKy);
-//            view.setTableData(list);
-//        }
-//    }
+   /* // Hàm lấy danh sách điểm dựa theo bộ lọc (Lớp, Môn, Kỳ)
+    private void loadData() {
+        String maLop = view.getMaLopFilter();
+
+        // Nếu chưa nhập lớp thì thôi không load (tránh lỗi query)
+        if (maLop.isEmpty()) {
+             // Có thể báo lỗi hoặc im lặng tùy bạn
+             return;
+        }
+
+        String maMon = view.getMaMonFilter();
+        int hocKy = view.getHocKyFilter();
+
+        // Gọi DAO lấy list về và đẩy lên bảng
+        List<Diem> list = dao.getDiemByFilter(maLop, maMon, hocKy);
+        view.setTableData(list);
+    }*/
 
     // Hàm tìm kiếm theo tên hoặc mã
     private void searchData() {
         String keyword = view.getTuKhoaTimKiem();
-        
 
         if (keyword.isEmpty()) {
             view.showMessage("Nhập tên hoặc mã HS để tìm kiếm nhé!");
@@ -173,32 +146,35 @@ public class DiemController {
     // import com.qlhs.main.Auth;
 
     private void loadData() {
-
         List<Diem> list;
 
-        // ✅ Nếu là học sinh
         if (Auth.isHocSinh()) {
+            // Lấy mã học sinh từ class Auth (viết hoa để đảm bảo trùng khớp mã trong database)
+            String maHocSinh = Auth.maNguoiDung.toUpperCase();
 
-            // DEBUG xem có đúng mã không
-            System.out.println("LOGIN MA HS = [" + Auth.maNguoiDung + "]");
+            // Gọi đúng hàm getDiemByMaHS trong DiemDAO
+            list = dao.getDiemByMaHS(maHocSinh);
 
-            // ✅ ÉP CHUẨN CHỮ HOA (QUAN TRỌNG)
-            list = dao.getDiemByMaHS(Auth.maNguoiDung.toUpperCase());
-
-            // Ẩn nút cập nhật
-            view.getBtnCapNhat().setVisible(false);
+            // Ẩn nút cập nhật nếu là học sinh
+            if (view.getBtnCapNhat() != null) {
+                view.getBtnCapNhat().setVisible(false);
+            }
 
         } else {
-
+            // NẾU LÀ ADMIN / GIÁO VIÊN: Load dữ liệu theo bộ lọc ComboBox
             String maLop = view.getMaLopFilter();
+
+            // Tránh lỗi khi vừa mở form chưa có dữ liệu lớp
             if (maLop.isEmpty()) return;
 
             String maMon = view.getMaMonFilter();
             int hocKy = view.getHocKyFilter();
 
+            // Gọi đúng hàm getDiemByFilter trong DiemDAO
             list = dao.getDiemByFilter(maLop, maMon, hocKy);
         }
 
+        // Cuối cùng: Đổ danh sách lên bảng
         view.setTableData(list);
     }
 }

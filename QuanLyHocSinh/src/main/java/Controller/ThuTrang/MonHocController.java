@@ -110,9 +110,9 @@ public class MonHocController {
             editMode[0] = false;
         });
 
-        // Nút Hủy: hủy chỉnh sửa, xóa form
         view.addBtnHuyListener(e -> {
             view.clearForm();
+            loadData();
             editMode[0] = false;
         });
 

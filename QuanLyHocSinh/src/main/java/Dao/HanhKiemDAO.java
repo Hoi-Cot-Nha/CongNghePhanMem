@@ -2,6 +2,7 @@ package Dao;
 
 import Connection.ConnectDB;
 import Model.HanhKiem;
+import Model.Auth;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +59,12 @@ public class HanhKiemDAO {
 
 
     public boolean saveHanhKiem(HanhKiem hk) {
+        // Kiểm tra quyền
+        if (!Auth.canEditData(hk.getMaHS())) {
+            System.out.println("Bạn không có quyền cập nhật hạnh kiểm cho học sinh này!");
+            return false;
+        }
+
         String checkSql = "SELECT count(*) FROM HanhKiem WHERE MaHS = ? AND NamHoc = ? AND HocKy = ?";
         try (Connection conn = ConnectDB.getConnection()) {
             PreparedStatement psCheck = conn.prepareStatement(checkSql);
@@ -97,6 +104,12 @@ public class HanhKiemDAO {
     
 
     public boolean deleteHanhKiem(String maHS, String namHoc, int hocKy) {
+        // Kiểm tra quyền
+        if (!Auth.canEditData(maHS)) {
+            System.out.println("Bạn không có quyền xóa hạnh kiểm cho học sinh này!");
+            return false;
+        }
+
         String sql = "DELETE FROM HanhKiem WHERE MaHS = ? AND NamHoc = ? AND HocKy = ?";
         try (Connection conn = ConnectDB.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -159,6 +172,15 @@ public class HanhKiemDAO {
         }
 
         return list;
+    }
+
+    // Lấy hạnh kiểm với kiểm tra quyền
+    public List<HanhKiem> getHanhKiemByMaHSWithPermission(String maHS) {
+        // Kiểm tra quyền xem hạnh kiểm
+        if (!Auth.canViewHocSinh(maHS)) {
+            return new ArrayList<>();
+        }
+        return getHanhKiemByMaHS(maHS);
     }
 
     public List<HanhKiem> searchHanhKiemByMaHS(String maHS, String keyword) {

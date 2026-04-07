@@ -1,7 +1,6 @@
 package View.Tien;
 
 import Model.Diem;
-import Model.MonHoc;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
@@ -10,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.util.List;
 import TienIch.ButtonStyleHelper;
-import TienIch.TableSortHelper;
 
 public class QuanLyDiemPanel extends JPanel {
 
@@ -19,9 +17,6 @@ public class QuanLyDiemPanel extends JPanel {
     private JComboBox<String> cboLocMaLop, cboLocMon, cboLocHocKy;
     private JButton btnLocDuLieu;
     
-    // Mapping: TenMH -> MaMH (để lấy mã khi cần)
-    private java.util.Map<String, String> monHocMap = new java.util.HashMap<>();
-    
     // Bảng hiển thị điểm
     private JTable tableDiem;
     private DefaultTableModel tableModel;
@@ -29,13 +24,10 @@ public class QuanLyDiemPanel extends JPanel {
     // Form nhập liệu / Cập nhật điểm
     private JTextField txtMaHS, txtTenHS, txtDiem15p, txtDiem1Tiet, txtDiemGiuaKy, txtDiemCuoiKy;
     private JButton btnCapNhat;
-
+    
     // Tìm kiếm & Tiện ích
     private JTextField txtTimKiem;
     private JButton btnTimKiem;
-    
-    // Nút chuẩn (Thêm, Sửa, Xóa, Lưu, Hủy)
-    private JButton btnThem, btnSua, btnXoa, btnLuu, btnHuy;
     private JButton btnXuatExcel;
 
     public QuanLyDiemPanel() {
@@ -101,7 +93,6 @@ public class QuanLyDiemPanel extends JPanel {
         String[] columnNames = {"Mã HS", "Họ Tên", "Môn", "HK", "Điểm 15p", "1 Tiết", "Giữa Kỳ", "Cuối Kỳ", "Tổng Kết"};
         tableModel = new DefaultTableModel(columnNames, 0);
         tableDiem = new JTable(tableModel);
-        TableSortHelper.enableTableSorting(tableDiem);
         tableDiem.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         tableDiem.setRowHeight(25);
         tableDiem.getTableHeader().setDefaultRenderer(new TienIch.CustomTableHeaderRenderer());
@@ -144,34 +135,12 @@ public class QuanLyDiemPanel extends JPanel {
         ButtonStyleHelper.styleButtonSave(btnCapNhat);
         btnCapNhat.setPreferredSize(new Dimension(200, 40));
         pnlButton.add(btnCapNhat);
-        btnThem = new JButton("Thêm");
-        ButtonStyleHelper.styleButtonAdd(btnThem);
-        btnSua = new JButton("Sửa");
-        ButtonStyleHelper.styleButtonEdit(btnSua);
-        btnXoa = new JButton("Xóa");
-        ButtonStyleHelper.styleButtonDelete(btnXoa);
-        btnLuu = new JButton("Lưu");
-        ButtonStyleHelper.styleButtonSave(btnLuu);
-        btnHuy = new JButton("Hủy");
-        ButtonStyleHelper.styleButtonCancel(btnHuy);
-
-        Dimension sz = new Dimension(90, 35);
-        btnThem.setPreferredSize(sz);
-        btnSua.setPreferredSize(sz);
-        btnXoa.setPreferredSize(sz);
-        btnLuu.setPreferredSize(sz);
-        btnHuy.setPreferredSize(sz);
-
-        pnlButton.add(btnThem);
-        pnlButton.add(btnSua);
-        pnlButton.add(btnXoa);
-        pnlButton.add(btnLuu);
-        pnlButton.add(btnHuy);
         
         // Nút Xuất Excel (Style xanh lá)
         btnXuatExcel = new JButton("Xuất Excel");
         ButtonStyleHelper.styleButtonExport(btnXuatExcel);
-        btnXuatExcel.setPreferredSize(new Dimension(120, 35));
+
+        btnXuatExcel.setPreferredSize(new Dimension(130, 40));
         pnlButton.add(btnXuatExcel);
         
         pnlSouth.add(pnlButton, BorderLayout.SOUTH);
@@ -187,12 +156,7 @@ public class QuanLyDiemPanel extends JPanel {
         return cboLocMaLop.getSelectedItem() != null ? cboLocMaLop.getSelectedItem().toString() : ""; 
     }
     public String getMaMonFilter() { 
-        Object selected = cboLocMon.getSelectedItem();
-        if (selected == null || selected.toString().isEmpty()) {
-            return ""; // Trống = tìm tất cả
-        }
-        String tenMH = selected.toString();
-        return monHocMap.getOrDefault(tenMH, ""); // Lấy mã từ mapping
+        return cboLocMon.getSelectedItem() != null ? cboLocMon.getSelectedItem().toString() : ""; 
     }
     public int getHocKyFilter() { 
         try {
@@ -206,38 +170,22 @@ public class QuanLyDiemPanel extends JPanel {
     // --- Các hàm Setter dữ liệu cho ComboBox ---
     public void setMaLopData(List<String> lops) {
         cboLocMaLop.removeAllItems();
-        cboLocMaLop.addItem(""); // Thêm option rỗng
         for (String lop : lops) {
             cboLocMaLop.addItem(lop);
         }
-        if (cboLocMaLop.getItemCount() > 0) {
-            cboLocMaLop.setSelectedIndex(0);
-        }
     }
 
-    public void setMonHocData(List<MonHoc> mons) {
+    public void setMonHocData(List<String> mons) {
         cboLocMon.removeAllItems();
-        cboLocMon.addItem(""); // Thêm option rỗng để tìm tất cả
-        monHocMap.clear();
-        for (MonHoc m : mons) {
-            String tenMH = m.getTenMH();
-            String maMH = m.getMaMH();
-            cboLocMon.addItem(tenMH);
-            monHocMap.put(tenMH, maMH); // Lưu mapping
-        }
-        if (cboLocMon.getItemCount() > 0) {
-            cboLocMon.setSelectedIndex(0);
+        for (String mon : mons) {
+            cboLocMon.addItem(mon);
         }
     }
 
     public void setHocKyData(List<Integer> hks) {
         cboLocHocKy.removeAllItems();
-        cboLocHocKy.addItem(""); // Thêm option rỗng
         for (Integer hk : hks) {
             cboLocHocKy.addItem(hk.toString());
-        }
-        if (cboLocHocKy.getItemCount() > 0) {
-            cboLocHocKy.setSelectedIndex(0);
         }
     }
 
@@ -264,13 +212,10 @@ public class QuanLyDiemPanel extends JPanel {
         for (Diem d : list) {
             // Làm tròn điểm trung bình 2 chữ số thập phân
             double dtb = Math.round(d.getDiemTongKet() * 100.0) / 100.0;
-            String tenMH = (d.getTenMH() != null && !d.getTenMH().isEmpty()) 
-                         ? d.getTenMH() 
-                         : d.getMaMH(); // Fallback to MaMH if TenMH is empty
             tableModel.addRow(new Object[]{
                 d.getMaHS(), 
                 d.getTenHS(), 
-                tenMH,  // Hiển thị tên môn
+                d.getMaMH(), 
                 d.getHocKy(),
                 d.getDiem15p(), 
                 d.getDiem1Tiet(),   
@@ -279,15 +224,6 @@ public class QuanLyDiemPanel extends JPanel {
                 dtb               
             });
         }
-    }
-
-    public void clearForm() {
-        txtMaHS.setText("");
-        txtTenHS.setText("");
-        txtDiem15p.setText("");
-        txtDiem1Tiet.setText("");
-        txtDiemGiuaKy.setText("");
-        txtDiemCuoiKy.setText("");
     }
 
     // Click vào dòng -> Đổ ngược dữ liệu vào form nhập
@@ -308,29 +244,17 @@ public class QuanLyDiemPanel extends JPanel {
     public JTable getTable() { return tableDiem; }
 
     public void addBtnXemListener(ActionListener action) { btnLocDuLieu.addActionListener(action); }
-    public void addBtnTimKiemListener(ActionListener action) { btnTimKiem.addActionListener(action); }
+    public void addBtnTimKiemListener(ActionListener action) { btnTimKiem.addActionListener(action); } 
     public void addBtnCapNhatListener(ActionListener action) { btnCapNhat.addActionListener(action); }
-    public void addBtnThemListener(ActionListener action) { btnThem.addActionListener(action); }
-    public void addBtnSuaListener(ActionListener action) { btnSua.addActionListener(action); }
-    public void addBtnXoaListener(ActionListener action) { btnXoa.addActionListener(action); }
-    public void addBtnLuuListener(ActionListener action) { btnLuu.addActionListener(action); }
-    public void addBtnHuyListener(ActionListener action) { btnHuy.addActionListener(action); }
     public void addTableMouseListener(MouseAdapter adapter) { tableDiem.addMouseListener(adapter); }
     public void addBtnXuatExcelListener(ActionListener ac) { btnXuatExcel.addActionListener(ac); }
-    
-    public JButton getBtnThem() { return btnThem; }
-    public JButton getBtnSua() { return btnSua; }
-    public JButton getBtnXoa() { return btnXoa; }
-    public JButton getBtnLuu() { return btnLuu; }
-    public JButton getBtnHuy() { return btnHuy; }
-
     // Cấp quyền truy cập cái Bảng cho Controller
-    public javax.swing.table.DefaultTableModel getTableModel() {
+    public DefaultTableModel getTableModel() {
         // Tùy theo việc bạn đặt tên bảng là gì lúc thiết kế (ví dụ: jTable1, tblDiem, v.v.)
         // Hãy sửa chữ "tblDiem" thành tên biến đúng của bạn.
-        return (javax.swing.table.DefaultTableModel) tableDiem.getModel();
+        return (DefaultTableModel) tableDiem.getModel();
     }
-    public javax.swing.JButton getBtnCapNhat() {
+    public JButton getBtnCapNhat() {
         return btnCapNhat;
     }
 }

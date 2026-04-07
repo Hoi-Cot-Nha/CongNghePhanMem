@@ -81,6 +81,10 @@ public class Hocphicontroller {
                 editMode[0] = false;
             }
         });
+
+        System.out.println("DEBUG Controller: Controller khởi tạo xong!");
+
+        loadTatCaDuLieu();
     }
 
     private void loadTatCaDuLieu() {
@@ -117,6 +121,10 @@ public class Hocphicontroller {
 
             view.loadTable(list);
 
+            if (list.isEmpty()) {
+                JOptionPane.showMessageDialog(view, "Không tìm thấy dữ liệu cho lớp " + maLop +
+                                            ", Kỳ " + hocKy + ", Năm " + namHoc);
+            }
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(view, "Lỗi định dạng: " + ex.getMessage());
         } catch (Exception ex) {

@@ -1,0 +1,60 @@
+================================================================================
+VERIFICATION: Tất cả thay đổi đã được hoàn thành thành công
+================================================================================
+
+TASK 1: QuanLyHocPhiPanel - Thêm cột "Mã Lớp"
+================================================================================
+
+✅ File 1: src/main/java/Model/Hocphi.java
+   - DONE: Thêm private String maLop;
+   - DONE: Thêm getter getMaLop()
+   - DONE: Thêm setter setMaLop()
+   - DONE: Cập nhật constructor
+
+✅ File 2: src/main/java/Dao/HocphiDAO.java
+   - DONE: getHocPhiByLop() - SQL JOIN lấy hs.MaLop
+   - DONE: getAllHocPhi() - SQL JOIN lấy hs.MaLop
+   - DONE: Thêm hp.setMaLop(rs.getString("MaLop")); trong cả 2 method
+
+✅ File 3: src/main/java/View/HaTrang/QuanLyHocPhiPanel.java
+   - DONE: Dòng 90 - Thêm "Mã Lớp" vào cols array
+     Cũ: {"ID", "Mã HS", "Kỳ", "Năm học", ...}
+     Mới: {"ID", "Mã HS", "Mã Lớp", "Kỳ", "Năm học", ...}
+   
+   - DONE: Dòng 298 - Thêm hp.getMaLop() trong loadTable()
+   
+   - DONE: Dòng 177-180 - Cập nhật column indices trong mouseClicked event:
+     Cũ: r,4 -> r,5 | r,5 -> r,6 | r,6 -> r,7 | r,7 -> r,8
+
+================================================================================
+
+TASK 2: QuanLyDoiTuongUuTienPanel - Nhân TiLeGiam × 100
+================================================================================
+
+✅ File 4: src/main/java/Controller/Dai/DoiTuongUuTienController.java
+   - DONE: loadTable() - Nhân dt.getTiLeGiam() * 100
+   - DONE: timKiem() - Nhân dt.getTiLeGiam() * 100
+
+✅ File 5: src/main/java/View/Dai/QuanLyDoiTuongUuTienPanel.java
+   - DONE: doDuLieuVaoForm() - Chia tiLeDisplay / 100 khi load form
+     (Vì UI hiển thị nhân 100, nên khi load form cần chia 100)
+
+================================================================================
+LOGIC XÓA VERIFICATION:
+================================================================================
+
+TASK 1 - MÃ LỚP:
+- Database: HocPhi.MaHS -> JOIN -> HocSinh.MaLop ✓
+- Model: Hocphi.getMaLop() ✓
+- DAO: Fetch MaLop từ SQL ✓
+- View: Hiển thị MaLop ở cột 2 (index 2) ✓
+- Columns: Tất cả indices được cập nhật chính xác ✓
+
+TASK 2 - TỈ LỆ GIẢM:
+- Controller: Load table nhân 100 ✓
+- View Form: Load form chia 100 ✓
+- UI Logic: 0.5 -> Display 50%, nhập 50% -> Save 0.5 ✓
+
+================================================================================
+TỔNG CỘNG: 5 tệp sửa đổi | 8 thay đổi chính | 100% hoàn thành
+================================================================================

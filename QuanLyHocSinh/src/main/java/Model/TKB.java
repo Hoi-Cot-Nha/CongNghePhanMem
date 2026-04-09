@@ -12,6 +12,7 @@ public class TKB {
     private int maTKB;
     private String maLop;
     private String maMH;
+    private String tenMH;
     private String maGV;
     private String maPhong;
     private int thu;
@@ -21,15 +22,36 @@ public class TKB {
     public TKB() {
     }
 
-    public TKB(int maTKB, String maLop, String maMH, String maGV, String maPhong, int thu, int tietBatDau, int tietKetThuc) {
+    public TKB(int maTKB, String maLop, String maMH, String tenMH, String maGV, String maPhong, int thu, int tietBatDau, int tietKetThuc) {
         this.maTKB = maTKB;
         this.maLop = maLop;
         this.maMH = maMH;
+        this.tenMH = tenMH;
         this.maGV = maGV;
         this.maPhong = maPhong;
         this.thu = thu;
         this.tietBatDau = tietBatDau;
         this.tietKetThuc = tietKetThuc;
+    }
+
+    public TKB(int maTKB, String maLop, String maMH, String maGV, String maPhong, int thu, int tietBatDau, int tietKetThuc) {
+        this.maTKB = maTKB;
+        this.maLop = maLop;
+        this.maMH = maMH;
+        this.tenMH = "";
+        this.maGV = maGV;
+        this.maPhong = maPhong;
+        this.thu = thu;
+        this.tietBatDau = tietBatDau;
+        this.tietKetThuc = tietKetThuc;
+    }
+
+    public String getTenMH() {
+        return tenMH;
+    }
+
+    public void setTenMH(String tenMH) {
+        this.tenMH = tenMH;
     }
 
     public int getMaTKB() {

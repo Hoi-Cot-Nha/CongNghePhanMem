@@ -10,6 +10,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import TienIch.TableSortHelper;
 
 public class QuanLyTaiKhoanPanel extends JPanel {
 
@@ -73,6 +74,7 @@ public class QuanLyTaiKhoanPanel extends JPanel {
         String[] columns = {"Tên đăng nhập", "Mật khẩu", "Quyền", "Mã người dùng"};
         tableModel = new DefaultTableModel(columns, 0);
         tableTK = new JTable(tableModel);
+        TableSortHelper.enableTableSorting(tableTK);
         tableTK.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         tableTK.setRowHeight(25);
         tableTK.getTableHeader().setDefaultRenderer(new TienIch.CustomTableHeaderRenderer());
@@ -111,7 +113,8 @@ public class QuanLyTaiKhoanPanel extends JPanel {
         gbc.gridx = 0; gbc.gridy = 2;
         pnlInput.add(new JLabel("Quyền:"), gbc);
         gbc.gridx = 1;
-        cboQuyen = new JComboBox<>(new String[]{"Admin", "GiaoVien", "HocSinh"});
+        cboQuyen = new JComboBox<>(new String[]{"", "Admin", "GiaoVien", "HocSinh"});
+        cboQuyen.setSelectedIndex(0);
         pnlInput.add(cboQuyen, gbc);
 
         gbc.gridx = 0; gbc.gridy = 3;

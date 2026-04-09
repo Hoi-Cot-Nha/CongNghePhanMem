@@ -15,15 +15,17 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 import javax.swing.border.TitledBorder;
 import TienIch.ButtonStyleHelper;
+import TienIch.TableSortHelper;
 import Dao.LopDAO;
 
 public class QuanLyHocPhiPanel extends JPanel {
     private JComboBox<String> cboMaLop, cboNamHoc;
     private JComboBox<String> cboHocKy;
-    private JButton btnLoc, btnThem, btnLuu, btnXoa, btnLamMoi;
+    private JButton btnLoc, btnThem, btnSua, btnXoa, btnLuu, btnHuy;
     private JTable tableHocPhi;
     private DefaultTableModel tableModel;
-    private JTextField txtMaHS, txtTongTien, txtMienGiam, txtPhaiDong, txtTrangThai;
+    private JTextField txtMaHS, txtTongTien, txtMienGiam, txtPhaiDong;
+    private JComboBox<String> cboTrangThai;
 
     public QuanLyHocPhiPanel() {
         initComponents();
@@ -70,7 +72,7 @@ public class QuanLyHocPhiPanel extends JPanel {
         pnlFilter.add(cboMaLop);
 
         pnlFilter.add(new JLabel("Học Kỳ:"));
-        cboHocKy = new JComboBox<>(new String[]{"1", "2"});
+        cboHocKy = new JComboBox<>(new String[]{"", "1", "2"});
         cboHocKy.setSelectedIndex(0);
         pnlFilter.add(cboHocKy);
 
@@ -101,6 +103,7 @@ public class QuanLyHocPhiPanel extends JPanel {
             public boolean isCellEditable(int row, int column) { return false; }
         };
         tableHocPhi = new JTable(tableModel);
+        TableSortHelper.enableTableSorting(tableHocPhi);
         tableHocPhi.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         tableHocPhi.setRowHeight(30);
         tableHocPhi.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
@@ -147,9 +150,8 @@ public class QuanLyHocPhiPanel extends JPanel {
         pnlInput.add(txtPhaiDong);
 
         pnlInput.add(new JLabel("Trạng Thái:"));
-        txtTrangThai = new JTextField();
-        txtTrangThai.setEditable(false);
-        pnlInput.add(txtTrangThai);
+        cboTrangThai = new JComboBox<>(new String[]{"Chưa đóng", "Đã đóng", "Bảo lưu"});
+        pnlInput.add(cboTrangThai);
 
         pnlSouth.add(pnlInput, BorderLayout.CENTER);
 
@@ -157,19 +159,29 @@ public class QuanLyHocPhiPanel extends JPanel {
         JPanel pnlButtons = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         pnlButtons.setOpaque(false);
 
-        btnThem = createStyledButton("Thêm Mới", new Color(224, 255, 255));
+        btnThem = new JButton("Thêm");
         ButtonStyleHelper.styleButtonAdd(btnThem);
-        btnLuu = createStyledButton("Cập Nhật", new Color(255, 250, 205));
-        ButtonStyleHelper.styleButtonEdit(btnLuu);
-        btnXoa = createStyledButton("Xóa Bỏ", new Color(255, 228, 225));
+        btnSua = new JButton("Sửa");
+        ButtonStyleHelper.styleButtonEdit(btnSua);
+        btnXoa = new JButton("Xóa");
         ButtonStyleHelper.styleButtonDelete(btnXoa);
-        btnLamMoi = createStyledButton("Làm Mới", new Color(220, 220, 220));
-        ButtonStyleHelper.styleButtonView(btnLamMoi);
+        btnLuu = new JButton("Lưu");
+        ButtonStyleHelper.styleButtonSave(btnLuu);
+        btnHuy = new JButton("Hủy");
+        ButtonStyleHelper.styleButtonCancel(btnHuy);
+
+        Dimension sz = new Dimension(90, 35);
+        btnThem.setPreferredSize(sz);
+        btnSua.setPreferredSize(sz);
+        btnXoa.setPreferredSize(sz);
+        btnLuu.setPreferredSize(sz);
+        btnHuy.setPreferredSize(sz);
 
         pnlButtons.add(btnThem);
-        pnlButtons.add(btnLuu);
+        pnlButtons.add(btnSua);
         pnlButtons.add(btnXoa);
-        pnlButtons.add(btnLamMoi);
+        pnlButtons.add(btnLuu);
+        pnlButtons.add(btnHuy);
 
         pnlSouth.add(pnlButtons, BorderLayout.SOUTH);
         add(pnlSouth, BorderLayout.SOUTH);
@@ -185,7 +197,12 @@ public class QuanLyHocPhiPanel extends JPanel {
                     txtTongTien.setText(tableModel.getValueAt(r, 5).toString());
                     txtMienGiam.setText(tableModel.getValueAt(r, 6).toString());
                     txtPhaiDong.setText(tableModel.getValueAt(r, 7).toString());
-                    txtTrangThai.setText(tableModel.getValueAt(r, 8).toString());
+                    
+                    Object trangThaiValue = tableModel.getValueAt(r, 8);
+                    String trangThai = (trangThaiValue == null || trangThaiValue.toString().trim().isEmpty()) 
+                                     ? "Chưa đóng" 
+                                     : trangThaiValue.toString();
+                    cboTrangThai.setSelectedItem(trangThai);
                 }
             }
         });
@@ -335,6 +352,9 @@ public class QuanLyHocPhiPanel extends JPanel {
         tableModel.setRowCount(0);
         int stt = 1; 
         for (Hocphi hp : list) {
+            String trangThai = (hp.getTrangThai() == null || hp.getTrangThai().trim().isEmpty()) 
+                            ? "Chưa đóng" 
+                            : hp.getTrangThai();
             tableModel.addRow(new Object[]{
                 stt++, // ID hiển thị là STT
                 hp.getMaHS(), 
@@ -344,7 +364,7 @@ public class QuanLyHocPhiPanel extends JPanel {
                 hp.getTongTien(), 
                 hp.getMienGiam(), 
                 hp.getPhaiDong(), 
-                hp.getTrangThai()
+                trangThai
             });
         }
     }
@@ -355,7 +375,7 @@ public class QuanLyHocPhiPanel extends JPanel {
         txtTongTien.setText("");
         txtMienGiam.setText("");
         txtPhaiDong.setText("");
-        txtTrangThai.setText("");
+        cboTrangThai.setSelectedIndex(0);
         tableHocPhi.clearSelection();
     }
 
@@ -365,11 +385,13 @@ public class QuanLyHocPhiPanel extends JPanel {
     public JComboBox<String> getCboNamHoc() { return cboNamHoc; }
     public JButton getBtnLoc() { return btnLoc; }
     public JButton getBtnThem() { return btnThem; }
-    public JButton getBtnLuu() { return btnLuu; }
+    public JButton getBtnSua() { return btnSua; }
     public JButton getBtnXoa() { return btnXoa; }
-    public JButton getBtnLamMoi() { return btnLamMoi; }
+    public JButton getBtnLuu() { return btnLuu; }
+    public JButton getBtnHuy() { return btnHuy; }
     public JTable getTableHocPhi() { return tableHocPhi; }
     public JTextField getTxtMaHS() { return txtMaHS; }
     public JTextField getTxtTongTien() { return txtTongTien; }
     public JTextField getTxtMienGiam() { return txtMienGiam; }
+    public JComboBox<String> getCboTrangThai() { return cboTrangThai; }
 }

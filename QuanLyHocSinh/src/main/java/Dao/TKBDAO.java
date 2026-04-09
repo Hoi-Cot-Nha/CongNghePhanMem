@@ -21,36 +21,36 @@ import java.util.List;
 public class TKBDAO {
 
     public List<TKB> getAll() {
-    List<TKB> list = new ArrayList<>();
-    String sql = "SELECT * FROM ThoiKhoaBieu";
-
-    try (
-        Connection c = ConnectDB.getConnection();
-        PreparedStatement ps = c.prepareStatement(sql);
-        ResultSet rs = ps.executeQuery()
-    ) {
-        while (rs.next()) {
-            list.add(new TKB(
-                rs.getInt("MaTKB"),
-                rs.getString("MaLop"),
-                rs.getString("MaMH"),
-                rs.getString("MaGV"),
-                rs.getString("MaPhong"),
-                rs.getInt("Thu"),
-                rs.getInt("TietBatDau"),
-                rs.getInt("TietKetThuc")
-            ));
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return list;
-}
-
-
-        public List<TKB> getByLop(String maLop) {
         List<TKB> list = new ArrayList<>();
-        String sql = "SELECT * FROM ThoiKhoaBieu WHERE MaLop = ?";
+        String sql = "SELECT T.*, M.TenMH FROM ThoiKhoaBieu T LEFT JOIN MonHoc M ON T.MaMH = M.MaMH";
+
+        try (
+            Connection c = ConnectDB.getConnection();
+            PreparedStatement ps = c.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery()
+        ) {
+            while (rs.next()) {
+                list.add(new TKB(
+                    rs.getInt("MaTKB"),
+                    rs.getString("MaLop"),
+                    rs.getString("MaMH"),
+                    rs.getString("TenMH"),
+                    rs.getString("MaGV"),
+                    rs.getString("MaPhong"),
+                    rs.getInt("Thu"),
+                    rs.getInt("TietBatDau"),
+                    rs.getInt("TietKetThuc")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<TKB> getByLop(String maLop) {
+        List<TKB> list = new ArrayList<>();
+        String sql = "SELECT T.*, M.TenMH FROM ThoiKhoaBieu T LEFT JOIN MonHoc M ON T.MaMH = M.MaMH WHERE T.MaLop = ?";
 
         try (
             Connection c = ConnectDB.getConnection();
@@ -64,6 +64,7 @@ public class TKBDAO {
                     rs.getInt("MaTKB"),
                     rs.getString("MaLop"),
                     rs.getString("MaMH"),
+                    rs.getString("TenMH"),
                     rs.getString("MaGV"),
                     rs.getString("MaPhong"),
                     rs.getInt("Thu"),

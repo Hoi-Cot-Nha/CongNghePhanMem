@@ -1,535 +1,416 @@
-    package com.qlhs.main;
+package com.qlhs.main;
 
-    import javax.swing.*;
-    import javax.swing.border.EmptyBorder;
-    import java.awt.*;
-    import java.awt.event.MouseAdapter;
-    import java.awt.event.MouseEvent;
-    import java.awt.image.BufferedImage;
-    import java.io.File;
-    import javax.imageio.ImageIO;
-    import java.awt.AlphaComposite;
-    import java.awt.RenderingHints;
-    import java.awt.FontMetrics;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import javax.imageio.ImageIO;
+import java.awt.AlphaComposite;
+import java.awt.RenderingHints;
+import java.awt.FontMetrics;
 
-    import Model.Auth;
-    import view.LoginView;
-    import Controller.Dai.LoginController;
+// Gộp các Import từ cả 2 bản
+import Model.Auth;
+import View.Tien.HanhKiemPanel;
+import view.LoginView;
+import Controller.Dai.LoginController;
+import View.Tien.QuanLyDiemPanel;
+import Controller.Tien.DiemController;
+import Controller.Tien.HanhKiemController;
+import View.Tien.LichThiPanel;
+import Controller.Tien.LichThiController;
+import View.ThuTrang.FrmMonHoc;
+import View.ThuTrang.FrmPhongHoc;
+import View.ThuTrang.FrmTKB;
+import View.Dai.QuanLyDoiTuongUuTienPanel;
+import View.Dai.QuanLyHocSinhPanel;
+import View.Dai.QuanLyTaiKhoanPanel;
+import View.Dat.QuanLyGiaoVienPanel;
+import View.Dat.QuanLyLopPanel;
+import View.Dat.QuanLyToBoMonPanel;
+import Controller.Dat.GiaoVienController;
+import Controller.Dat.LopController;
+import Controller.ThuTrang.MonHocController;
+import Controller.ThuTrang.PhongHocController;
+import Controller.ThuTrang.TKBController;
+import View.HaTrang.QuanLyHocPhiPanel;
+import View.HaTrang.QuanLyPhucKhaoPanel;
+import View.HaTrang.QuanlyThongbaoPanel;
 
-    import View.Tien.QuanLyDiemPanel;
-    import Controller.Tien.DiemController;
-    import View.Tien.HanhKiemPanel;
-    import Controller.Tien.HanhKiemController;
-    import View.Tien.LichThiPanel;
-    import Controller.Tien.LichThiController;
+public class MainFormNew extends JFrame {
 
-    import View.ThuTrang.FrmMonHoc;
-    import View.ThuTrang.FrmPhongHoc;
-    import View.ThuTrang.FrmTKB;
+    // Giữ nguyên bộ màu và biến giao diện của bạn
+    private final Color SIDEBAR_BG = new Color(34, 45, 50);
+    private final Color SIDEBAR_HOVER = new Color(44, 59, 65);
+    private final Color SIDEBAR_ACTIVE = new Color(52, 152, 219);
+    private final Color TEXT_COLOR = new Color(220, 220, 220);
+    private final Color HEADER_COLOR = new Color(100, 150, 200);
 
-    import View.Dai.QuanLyDoiTuongUuTienPanel;
-    import View.Dai.QuanLyHocSinhPanel;
-    import View.Dai.QuanLyTaiKhoanPanel;
+    private JPanel mainPanel;
+    private JPanel sidebarContainer;
+    private JButton btnToggle;
+    private boolean isCollapsed = false;
+    private JButton lastActiveButton = null;
+    private JPanel sidebarPanel;
 
-    import View.Dat.QuanLyGiaoVienPanel;
-    import View.Dat.QuanLyLopPanel;
-    import View.Dat.QuanLyToBoMonPanel;
+    public MainFormNew() {
+        // Thêm dòng debug phân quyền của bạn mình
+        System.out.println("QUYỀN ĐANG ĐĂNG NHẬP LÀ: [" + Auth.currentRole + "]");
+        System.out.println("IS HOC SINH = " + Auth.isHocSinh());
+        initUI();
+    }
 
-    import Controller.Dat.GiaoVienController;
-    import Controller.Dat.LopController;
-    import Controller.ThuTrang.MonHocController;
-    import Controller.ThuTrang.PhongHocController;
-    import Controller.ThuTrang.TKBController;
+    private void initUI() {
+        setTitle("HỆ THỐNG QUẢN LÝ TRƯỜNG HỌC THPT - DASHBOARD");
+        setSize(1400, 800);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
 
-    import View.HaTrang.QuanLyHocPhiPanel;
-    import View.HaTrang.QuanLyPhucKhaoPanel;
-    import View.HaTrang.QuanlyThongbaoPanel;
+        JPanel westPanel = new JPanel(new BorderLayout());
 
-    public class MainFormNew extends JFrame {
+        btnToggle = new JButton("═");
+        btnToggle.setFont(new Font("Arial", Font.BOLD, 20));
+        btnToggle.setPreferredSize(new Dimension(50, 50));
+        btnToggle.setBackground(new Color(25, 35, 40));
+        btnToggle.setForeground(TEXT_COLOR);
+        btnToggle.setBorder(null);
+        btnToggle.setFocusPainted(false);
+        btnToggle.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnToggle.addActionListener(e -> toggleSidebar());
+        westPanel.add(btnToggle, BorderLayout.NORTH);
 
-        // Màu sắc chủ đạo cho Sidebar
-        private final Color SIDEBAR_BG = new Color(34, 45, 50);
-        private final Color SIDEBAR_HOVER = new Color(44, 59, 65);
-        private final Color SIDEBAR_ACTIVE = new Color(52, 152, 219); // ✅ Màu highlight
-        private final Color TEXT_COLOR = new Color(220, 220, 220);
-        private final Color HEADER_COLOR = new Color(100, 150, 200);
+        sidebarContainer = new JPanel(new BorderLayout());
+        sidebarPanel = createSidebar(); // Hàm này đã được gộp logic phân quyền
+        JScrollPane scrollSidebar = new JScrollPane(sidebarPanel);
+        scrollSidebar.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollSidebar.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollSidebar.setBorder(null);
 
-        private JPanel mainPanel;
-        private JPanel sidebarContainer; // ✅ Container cho sidebar
-        private JButton btnToggle; // ✅ Button toggle collapse/expand
-        private boolean isCollapsed = false; // ✅ Trạng thái collapse
-        private JButton lastActiveButton = null; // ✅ Lưu button active
-        private JPanel sidebarPanel; // ✅ Lưu reference sidebar
-
-        public MainFormNew() {
-
-            System.out.println("QUYỀN ĐANG ĐĂNG NHẬP LÀ: [" + Auth.currentRole + "]");
-            System.out.println("IS HOC SINH = " + Auth.isHocSinh());
-            initUI();
-        }
-
-        private void initUI() {
-            setTitle("HỆ THỐNG QUẢN LÝ TRƯỜNG HỌC THPT - DASHBOARD");
-            setSize(1400, 800);
-            setLocationRelativeTo(null);
-            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-            setLayout(new BorderLayout());
-
-            // ✅ Panel WEST chứa toggle button + sidebar
-            JPanel westPanel = new JPanel(new BorderLayout());
-
-            // ✅ Toggle Button (dùng text thông thường, không emoji)
-            btnToggle = new JButton("═");  // ✅ Dấu bằng gạch (═) - dễ hơn ≡
-            btnToggle.setFont(new Font("Arial", Font.BOLD, 20));
-            btnToggle.setPreferredSize(new Dimension(50, 50));
-            btnToggle.setBackground(new Color(25, 35, 40));
-            btnToggle.setForeground(TEXT_COLOR);
-            btnToggle.setBorder(null);
-            btnToggle.setFocusPainted(false);
-            btnToggle.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            btnToggle.addActionListener(e -> toggleSidebar());
-            westPanel.add(btnToggle, BorderLayout.NORTH);
-
-            // ✅ Sidebar container
-            sidebarContainer = new JPanel(new BorderLayout());
-            sidebarPanel = createSidebar();
-            JScrollPane scrollSidebar = new JScrollPane(sidebarPanel);
-            scrollSidebar.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-            scrollSidebar.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); // ✅ ALWAYS show scrollbar
-            scrollSidebar.setBorder(null);
-
-            // ✅ Style scrollbar để match sidebar theme - rõ ràng hơn
-            scrollSidebar.getVerticalScrollBar().setBackground(SIDEBAR_BG);
-            scrollSidebar.getVerticalScrollBar().setPreferredSize(new Dimension(12, 0)); // ✅ Thicker scrollbar (12px)
-            scrollSidebar.getVerticalScrollBar().setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
-                @Override
-                protected void configureScrollBarColors() {
-                    this.thumbColor = new Color(100, 150, 200);  // ✅ Xanh sáng, dễ nhìn
-                    this.trackColor = SIDEBAR_BG;
-                    this.thumbDarkShadowColor = new Color(52, 152, 219);
-                }
-
-                @Override
-                protected JButton createDecreaseButton(int orientation) {
-                    JButton btn = super.createDecreaseButton(orientation);
-                    btn.setPreferredSize(new Dimension(0, 0)); // Hide arrow buttons
-                    return btn;
-                }
-
-                @Override
-                protected JButton createIncreaseButton(int orientation) {
-                    JButton btn = super.createIncreaseButton(orientation);
-                    btn.setPreferredSize(new Dimension(0, 0)); // Hide arrow buttons
-                    return btn;
-                }
-            });
-
-            sidebarContainer.add(scrollSidebar, BorderLayout.CENTER);
-
-            westPanel.add(sidebarContainer, BorderLayout.CENTER);
-            add(westPanel, BorderLayout.WEST);
-
-            mainPanel = new JPanel(new BorderLayout());
-            mainPanel.setBackground(Color.WHITE);
-
-            showWelcomeScreen();
-            add(mainPanel, BorderLayout.CENTER);
-        }
-
-        private void toggleSidebar() {
-            isCollapsed = !isCollapsed;
-
-            if (isCollapsed) {
-                btnToggle.setText(">");  // ✅ Dấu > đơn giản, rõ ràng
-                sidebarContainer.setPreferredSize(new Dimension(80, 0));
-            } else {
-                btnToggle.setText("═");  // ✅ Dấu ═ để expand
-                sidebarContainer.setPreferredSize(new Dimension(250, 0));
+        // Style scrollbar xịn của bạn[cite: 1]
+        scrollSidebar.getVerticalScrollBar().setBackground(SIDEBAR_BG);
+        scrollSidebar.getVerticalScrollBar().setPreferredSize(new Dimension(12, 0));
+        scrollSidebar.getVerticalScrollBar().setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
+            @Override
+            protected void configureScrollBarColors() {
+                this.thumbColor = new Color(100, 150, 200);
+                this.trackColor = SIDEBAR_BG;
             }
+            @Override
+            protected JButton createDecreaseButton(int orientation) {
+                JButton btn = super.createDecreaseButton(orientation);
+                btn.setPreferredSize(new Dimension(0, 0));
+                return btn;
+            }
+            @Override
+            protected JButton createIncreaseButton(int orientation) {
+                JButton btn = super.createIncreaseButton(orientation);
+                btn.setPreferredSize(new Dimension(0, 0));
+                return btn;
+            }
+        });
 
-            // ✅ Update tất cả button text
-            updateAllButtonTexts();
+        sidebarContainer.add(scrollSidebar, BorderLayout.CENTER);
+        westPanel.add(sidebarContainer, BorderLayout.CENTER);
+        add(westPanel, BorderLayout.WEST);
 
-            sidebarContainer.revalidate();
-            sidebarContainer.repaint();
+        mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBackground(Color.WHITE);
+
+        showWelcomeScreen();
+        add(mainPanel, BorderLayout.CENTER);
+    }
+
+    // Giữ nguyên các hàm bổ trợ giao diện của bạn[cite: 1]
+    private void toggleSidebar() {
+        isCollapsed = !isCollapsed;
+        if (isCollapsed) {
+            btnToggle.setText(">");
+            sidebarContainer.setPreferredSize(new Dimension(80, 0));
+        } else {
+            btnToggle.setText("═");
+            sidebarContainer.setPreferredSize(new Dimension(250, 0));
         }
+        updateAllButtonTexts();
+        sidebarContainer.revalidate();
+        sidebarContainer.repaint();
+    }
 
-        private void updateAllButtonTexts() {
-            Component[] components = sidebarPanel.getComponents();
-            for (Component comp : components) {
-                if (comp instanceof JButton) {
-                    JButton btn = (JButton) comp;
-                    if (btn.getClientProperty("formCode") != null) {
-                        String title = (String) btn.getClientProperty("title");
-                        String iconName = (String) btn.getClientProperty("iconName");
-
-                        if (isCollapsed) {
-                            btn.setText("");
-                        } else {
-                            btn.setText(" " + title);
-                        }
-                    }
+    private void updateAllButtonTexts() {
+        Component[] components = sidebarPanel.getComponents();
+        for (Component comp : components) {
+            if (comp instanceof JButton) {
+                JButton btn = (JButton) comp;
+                if (btn.getClientProperty("formCode") != null) {
+                    String title = (String) btn.getClientProperty("title");
+                    if (isCollapsed) btn.setText("");
+                    else btn.setText(" " + title);
                 }
             }
-        }
-
-        // ✅ Phương thức load ImageIcon từ file
-        private ImageIcon loadIcon(String iconFileName, int size) {
-            try {
-                String resourcePath = "src/main/resources/icons/" + iconFileName;
-                File iconFile = new File(resourcePath);
-
-                if (!iconFile.exists()) {
-                    // Nếu file không tìm thấy, tạo icon động từ mapping
-                    return createDynamicIcon(iconFileName, size);
-                }
-
-                BufferedImage img = ImageIO.read(iconFile);
-                if (img == null) {
-                    System.err.println("❌ Không thể đọc icon: " + iconFileName);
-                    return createDynamicIcon(iconFileName, size);
-                }
-
-                // Resize ảnh
-                Image scaledImg = img.getScaledInstance(size, size, Image.SCALE_SMOOTH);
-                return new ImageIcon(scaledImg);
-
-            } catch (Exception ex) {
-                System.err.println("⚠️ Lỗi load icon " + iconFileName + ", dùng dynamic icon: " + ex.getMessage());
-                return createDynamicIcon(iconFileName, size);
-            }
-        }
-
-        // ✅ Tạo icon động nếu file không tìm thấy (fallback)
-        private ImageIcon createDynamicIcon(String iconFileName, int size) {
-            // Map filename -> emoji
-            java.util.Map<String, String> iconMap = new java.util.HashMap<>();
-            iconMap.put("logout.png", "🚪");
-            iconMap.put("exit.png", "❌");
-            iconMap.put("class.png", "📚");
-            iconMap.put("teacher.png", "👨‍🏫");
-            iconMap.put("group.png", "👥");
-            iconMap.put("subject.png", "📖");
-            iconMap.put("schedule.png", "📅");
-            iconMap.put("room.png", "🏫");
-            iconMap.put("score.png", "📊");
-            iconMap.put("conduct.png", "⭐");
-            iconMap.put("exam.png", "📝");
-            iconMap.put("fee.png", "💰");
-            iconMap.put("notification.png", "📢");
-            iconMap.put("review.png", "⚖️");
-            iconMap.put("student.png", "👤");
-            iconMap.put("user.png", "🔐");
-            iconMap.put("policy.png", "📋");
-
-            String emoji = iconMap.getOrDefault(iconFileName, "•");
-
-            BufferedImage img = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g2d = img.createGraphics();
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-            // Nền transparent
-            g2d.setComposite(AlphaComposite.Clear);
-            g2d.fillRect(0, 0, size, size);
-            g2d.setComposite(AlphaComposite.SrcOver);
-
-            // Vẽ emoji
-            g2d.setFont(new Font("Segoe UI Emoji", Font.PLAIN, size - 8));
-            FontMetrics fm = g2d.getFontMetrics();
-            int x = (size - fm.stringWidth(emoji)) / 2;
-            int y = ((size - fm.getHeight()) / 2) + fm.getAscent();
-            g2d.setColor(Color.WHITE);  // ✅ Đổi thành WHITE để hiển thị sáng hơn
-            g2d.drawString(emoji, x, y);
-
-            g2d.dispose();
-            return new ImageIcon(img);
-        }
-
-        // ✅ Icon mặc định (fallback - deprecated)
-        @Deprecated
-        private ImageIcon getDefaultIcon(int size) {
-            BufferedImage defaultImg = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
-            Graphics2D g2d = defaultImg.createGraphics();
-            g2d.setColor(new Color(100, 100, 100));
-            g2d.fillRect(0, 0, size, size);
-            g2d.dispose();
-            return new ImageIcon(defaultImg);
-        }
-
-        private void showWelcomeScreen() {
-            mainPanel.removeAll();
-
-            // ✅ Tạo panel center với GridBagLayout để center cả chiều ngang và dọc
-            JPanel centerPanel = new JPanel(new GridBagLayout());
-            centerPanel.setBackground(Color.WHITE);
-
-            JLabel lblWelcome = new JLabel("<html><center>CHÀO MỪNG ĐẾN VỚI<br>HỆ THỐNG QUẢN LÝ<br>TRƯỜNG THCS CHƯƠNG MỸ A</center></html>");
-            lblWelcome.setFont(new Font("Segoe UI", Font.BOLD, 32));
-            lblWelcome.setForeground(new Color(0, 102, 204));
-
-            GridBagConstraints gbc = new GridBagConstraints();
-            gbc.gridx = 0;
-            gbc.gridy = 0;
-            gbc.weightx = 1.0;
-            gbc.weighty = 1.0;
-            gbc.anchor = GridBagConstraints.CENTER;
-
-            centerPanel.add(lblWelcome, gbc);
-            mainPanel.add(centerPanel, BorderLayout.CENTER);
-            mainPanel.revalidate();
-            mainPanel.repaint();
-        }
-
-        private JPanel createSidebar() {
-            JPanel sidebar = new JPanel();
-            sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
-            sidebar.setBackground(SIDEBAR_BG);
-            sidebar.setBorder(new EmptyBorder(10, 0, 10, 0));
-
-            // -- HỆ THỐNG (Ai cũng thấy) --
-            addSideHeader(sidebar, "Hệ thống");
-            addSideButton(sidebar, "Đăng xuất", "DangXuat", "logout.png");
-            sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
-
-            // -- HỒ SƠ & CƠ CẤU (Học sinh KHÔNG được xem) --
-            // -- HỒ SƠ & CƠ CẤU --
-            if (!Auth.isHocSinh()) {
-
-                addSideHeader(sidebar, "Hồ sơ & cơ cấu");
-
-                // ADMIN thấy tất cả
-                if (Auth.isAdmin()) {
-                    addSideButton(sidebar, "Quản lý lớp học", "FormLopHoc", "class.png");
-                    addSideButton(sidebar, "Quản lý giáo viên", "FormGiaoVien", "teacher.png");
-                    addSideButton(sidebar, "Quản lý tổ bộ môn", "FormToBoMon", "group.png");
-                }
-                // GIÁO VIÊN chỉ thấy 2 cái
-                else if (Auth.isGiaoVien()) {
-                    addSideButton(sidebar, "Quản lý lớp học", "FormLopHoc", "class.png");
-                    addSideButton(sidebar, "Quản lý tổ bộ môn", "FormToBoMon", "group.png");
-                }
-
-                sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
-            }
-
-
-            // -- ĐÀO TẠO --
-            addSideHeader(sidebar, "Đào tạo");
-
-            // ADMIN
-            if (Auth.isAdmin()) {
-                addSideButton(sidebar, "Quản lý môn học", "FormMonHoc", "subject.png");
-                addSideButton(sidebar, "Thời khóa biểu / Lịch dạy", "FormTKB", "schedule.png");
-                addSideButton(sidebar, "Phòng học & Thiết bị", "FormPhongHoc", "room.png");
-            }
-
-            // GIÁO VIÊN
-            else if (Auth.isGiaoVien()) {
-                addSideButton(sidebar, "Lịch dạy", "FormTKB", "schedule.png");
-            }
-
-            // HỌC SINH
-            else if (Auth.isHocSinh()) {
-                addSideButton(sidebar, "Thời khóa biểu", "FormTKB", "schedule.png");
-            }
-
-            sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
-            // -- KHẢO THÍ & KẾT QUẢ --
-            addSideHeader(sidebar, "Khảo thí & kết quả");
-
-            // ===== HỌC SINH =====
-            if (Auth.isHocSinh()) {
-
-                addSideButton(sidebar, "Xem điểm số", "FormDiemSo", "score.png"); // Sửa "Diem" thành "FormDiemSo"
-                addSideButton(sidebar, "Xem hạnh kiểm", "FormHanhKiem", "conduct.png"); // Sửa "HanhKiem" thành "FormHanhKiem"
-                addSideButton(sidebar, "Lịch thi", "FormLichThi", "exam.png"); // Sửa "LichThi" thành "FormLichThi"
-
-            } else {
-
-                // ===== ADMIN / GIÁO VIÊN =====
-                addSideButton(sidebar, "Quản lý điểm số", "FormDiemSo", "score.png"); // Sửa "Diem" thành "FormDiemSo"
-                addSideButton(sidebar, "Quản lý hạnh kiểm", "FormHanhKiem", "conduct.png"); // Sửa "HanhKiem" thành "FormHanhKiem"
-                addSideButton(sidebar, "Quản lý lịch thi", "FormLichThi", "exam.png"); // Sửa "LichThi" thành "FormLichThi"
-
-            }
-
-            // -- HÀNH CHÍNH & TÀI VỤ --
-            addSideHeader(sidebar, "Hành chính & tài vụ");
-            addSideButton(sidebar, "Quản lý học phí", "FormHocPhi", "fee.png"); // Học sinh được xem
-            // THÔNG BÁO (phân quyền)
-            if (Auth.isHocSinh() || Auth.isGiaoVien()) {
-                addSideButton(sidebar, "Thông báo", "FormThongBao", "notification.png");
-            } else {
-                addSideButton(sidebar, "Quản lý thông báo", "FormThongBao", "notification.png");
-            }
-            if (!Auth.isHocSinh()) {
-                addSideButton(sidebar, "Quản lý phúc khảo", "FormPhucKhao", "review.png");
-            }
-            sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
-
-            // -- HỆ THỐNG & CHÍNH SÁCH --
-            addSideHeader(sidebar, "Hệ thống & chính sách");
-
-            // Ai cũng có thể xem hồ sơ (nếu bạn muốn)
-            addSideButton(sidebar, "Hồ sơ học sinh (Chi tiết)", "FormHocSinh", "student.png");
-
-            // CHỈ ADMIN
-            if (Auth.isAdmin()) {
-                addSideButton(sidebar, "Quản lý tài khoản user", "FormTaiKhoan", "user.png");
-                addSideButton(sidebar, "Đối tượng chính sách", "FormChinhSach", "policy.png");
-            }
-
-            return sidebar;
-        }
-
-        private void addSideHeader(JPanel panel, String title) {
-            JLabel lblHeader = new JLabel(title);
-            lblHeader.setForeground(HEADER_COLOR);
-            lblHeader.setFont(new Font("Segoe UI", Font.BOLD, 14));
-            lblHeader.setBorder(new EmptyBorder(5, 15, 5, 10));
-            lblHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
-            lblHeader.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35)); // ✅ Set max width
-            panel.add(lblHeader);
-        }
-
-        private void addSideButton(JPanel panel, String title, String formCode, String iconFileName) {
-            JButton btn = new JButton();
-
-            // ✅ Load icon từ file PNG (24x24 pixels)
-            ImageIcon icon = loadIcon(iconFileName, 24);
-            btn.setIcon(icon);
-            btn.setText(" " + title);
-
-            btn.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-            btn.setForeground(TEXT_COLOR);
-            btn.setBackground(SIDEBAR_BG);
-            btn.setHorizontalAlignment(SwingConstants.LEFT);
-            btn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
-            btn.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-            btn.setFocusPainted(false);
-            btn.setBorderPainted(false);
-            btn.setOpaque(true);
-            btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-            btn.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                    if (btn != lastActiveButton) {
-                        btn.setBackground(SIDEBAR_HOVER);
-                    }
-                }
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    if (btn != lastActiveButton) {
-                        btn.setBackground(SIDEBAR_BG);
-                    }
-                }
-            });
-
-            btn.addActionListener(e -> {
-                setActiveButton(btn);
-                switchPanel(title, formCode);
-            });
-
-            btn.putClientProperty("formCode", formCode);
-            btn.putClientProperty("title", title);
-            btn.putClientProperty("iconName", iconFileName);
-
-            panel.add(btn);
-        }
-
-        private void setActiveButton(JButton btn) {
-            if (lastActiveButton != null) {
-                lastActiveButton.setBackground(SIDEBAR_BG);
-            }
-            btn.setBackground(SIDEBAR_ACTIVE);
-            lastActiveButton = btn;
-        }
-
-        private void switchPanel(String title, String formCode) {
-            if (formCode.equals("DangXuat")) {
-                int choice = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn đăng xuất?", "Xác nhận", JOptionPane.YES_NO_OPTION);
-                if (choice == JOptionPane.YES_OPTION) {
-                    this.dispose();
-                    try {
-                        LoginView view = new LoginView();
-                        new LoginController(view);
-                    } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(null, "Lỗi không tìm thấy màn hình đăng nhập!");
-                    }
-                }
-                return;
-            }
-
-            Component viewToShow = null;
-
-            if (formCode.equals("FormDiemSo")) {
-                QuanLyDiemPanel view = new QuanLyDiemPanel();
-                new DiemController(view); viewToShow = view;
-            } else if (formCode.equals("FormHanhKiem")) {
-                HanhKiemPanel view = new HanhKiemPanel();
-                new HanhKiemController(view); viewToShow = view;
-            } else if (formCode.equals("FormLichThi")) {
-                LichThiPanel view = new LichThiPanel();
-                new LichThiController(view); viewToShow = view;
-            } else if (formCode.equals("FormHocPhi")) {
-                viewToShow = new QuanLyHocPhiPanel();
-            } else if (formCode.equals("FormThongBao")) {
-                viewToShow = new QuanlyThongbaoPanel();
-            } else if (formCode.equals("FormPhucKhao")) {
-                viewToShow = new QuanLyPhucKhaoPanel();
-            } else if (formCode.equals("FormMonHoc")) {
-                FrmMonHoc panel = new FrmMonHoc();
-                new MonHocController(panel);
-                viewToShow = panel;
-            } else if (formCode.equals("FormPhongHoc")) {
-                FrmPhongHoc panel = new FrmPhongHoc();
-                new PhongHocController(panel);
-                viewToShow = panel;
-            } else if (formCode.equals("FormTKB")) {
-                FrmTKB panel = new FrmTKB();
-                new TKBController(panel);
-                viewToShow = panel;
-            } else if (formCode.equals("FormGiaoVien")) {
-                QuanLyGiaoVienPanel view = new QuanLyGiaoVienPanel();
-                new GiaoVienController(view); viewToShow = view;
-            } else if (formCode.equals("FormLopHoc")) {
-                QuanLyLopPanel view = new QuanLyLopPanel();
-                new LopController(view); viewToShow = view;
-            } else if (formCode.equals("FormToBoMon")) {
-                viewToShow = new QuanLyToBoMonPanel();
-            } else if (formCode.equals("FormHocSinh")) {
-                viewToShow = new QuanLyHocSinhPanel();
-            } else if (formCode.equals("FormTaiKhoan")) {
-                viewToShow = new QuanLyTaiKhoanPanel();
-            } else if (formCode.equals("FormChinhSach")) {
-                viewToShow = new QuanLyDoiTuongUuTienPanel();
-            }
-
-            mainPanel.removeAll();
-
-            if (viewToShow != null) {
-                mainPanel.add(viewToShow, BorderLayout.CENTER);
-            } else {
-                JLabel lblDemo = new JLabel("Chức năng đang phát triển: " + title, SwingConstants.CENTER);
-                lblDemo.setFont(new Font("Arial", Font.BOLD, 18));
-                mainPanel.add(lblDemo, BorderLayout.CENTER);
-            }
-
-            mainPanel.revalidate();
-            mainPanel.repaint();
-        }
-
-        public static void main(String[] args) {
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            SwingUtilities.invokeLater(() -> {
-                new MainFormNew().setVisible(true);
-            });
         }
     }
+
+    private ImageIcon loadIcon(String iconFileName, int size) {
+        try {
+            String resourcePath = "src/main/resources/icons/" + iconFileName;
+            File iconFile = new File(resourcePath);
+            if (!iconFile.exists()) return createDynamicIcon(iconFileName, size);
+            BufferedImage img = ImageIO.read(iconFile);
+            if (img == null) return createDynamicIcon(iconFileName, size);
+            Image scaledImg = img.getScaledInstance(size, size, Image.SCALE_SMOOTH);
+            return new ImageIcon(scaledImg);
+        } catch (Exception ex) {
+            return createDynamicIcon(iconFileName, size);
+        }
+    }
+
+    private ImageIcon createDynamicIcon(String iconFileName, int size) {
+        java.util.Map<String, String> iconMap = new java.util.HashMap<>();
+        iconMap.put("logout.png", "🚪"); iconMap.put("class.png", "📚");
+        iconMap.put("teacher.png", "👨‍🏫"); iconMap.put("group.png", "👥");
+        iconMap.put("subject.png", "📖"); iconMap.put("schedule.png", "📅");
+        iconMap.put("room.png", "🏫"); iconMap.put("score.png", "📊");
+        iconMap.put("conduct.png", "⭐"); iconMap.put("exam.png", "📝");
+        iconMap.put("fee.png", "💰"); iconMap.put("notification.png", "📢");
+        iconMap.put("review.png", "⚖️"); iconMap.put("student.png", "👤");
+        iconMap.put("user.png", "🔐"); iconMap.put("policy.png", "📋");
+
+        String emoji = iconMap.getOrDefault(iconFileName, "•");
+        BufferedImage img = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = img.createGraphics();
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setComposite(AlphaComposite.Clear);
+        g2d.fillRect(0, 0, size, size);
+        g2d.setComposite(AlphaComposite.SrcOver);
+        g2d.setFont(new Font("Segoe UI Emoji", Font.PLAIN, size - 8));
+        FontMetrics fm = g2d.getFontMetrics();
+        int x = (size - fm.stringWidth(emoji)) / 2;
+        int y = ((size - fm.getHeight()) / 2) + fm.getAscent();
+        g2d.setColor(Color.WHITE);
+        g2d.drawString(emoji, x, y);
+        g2d.dispose();
+        return new ImageIcon(img);
+    }
+
+    private void showWelcomeScreen() {
+        mainPanel.removeAll();
+        JPanel centerPanel = new JPanel(new GridBagLayout());
+        centerPanel.setBackground(Color.WHITE);
+        JLabel lblWelcome = new JLabel("<html><center>CHÀO MỪNG ĐẾN VỚI<br>HỆ THỐNG QUẢN LÝ<br>TRƯỜNG THCS CHƯƠNG MỸ A</center></html>");
+        lblWelcome.setFont(new Font("Segoe UI", Font.BOLD, 32));
+        lblWelcome.setForeground(new Color(0, 102, 204));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0; gbc.gridy = 0;
+        gbc.weightx = 1.0; gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.CENTER;
+        centerPanel.add(lblWelcome, gbc);
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
+        mainPanel.revalidate();
+        mainPanel.repaint();
+    }
+
+    // ĐÂY LÀ PHẦN QUAN TRỌNG: Gộp logic phân quyền vào Sidebar của bạn
+    private JPanel createSidebar() {
+        JPanel sidebar = new JPanel();
+        sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
+        sidebar.setBackground(SIDEBAR_BG);
+        sidebar.setBorder(new EmptyBorder(10, 0, 10, 0));
+
+        // -- HỆ THỐNG (Mọi người đều thấy)[cite: 2] --
+        addSideHeader(sidebar, "Hệ thống");
+        addSideButton(sidebar, "Đăng xuất", "DangXuat", "logout.png");
+        sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
+
+        // -- HỒ SƠ & CƠ CẤU (Ẩn với Học sinh)[cite: 2] --
+        if (!Auth.isHocSinh()) {
+            addSideHeader(sidebar, "Hồ sơ & cơ cấu");
+            if (Auth.isAdmin()) {
+                addSideButton(sidebar, "Quản lý lớp học", "FormLopHoc", "class.png");
+                addSideButton(sidebar, "Quản lý giáo viên", "FormGiaoVien", "teacher.png");
+                addSideButton(sidebar, "Quản lý tổ bộ môn", "FormToBoMon", "group.png");
+            } else if (Auth.isGiaoVien()) {
+                addSideButton(sidebar, "Quản lý lớp học", "FormLopHoc", "class.png");
+                addSideButton(sidebar, "Quản lý tổ bộ môn", "FormToBoMon", "group.png");
+            }
+            sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
+        }
+
+        // -- ĐÀO TẠO (Phân quyền chi tiết)[cite: 2] --
+        addSideHeader(sidebar, "Đào tạo");
+        if (Auth.isAdmin()) {
+            addSideButton(sidebar, "Quản lý môn học", "FormMonHoc", "subject.png");
+            addSideButton(sidebar, "Thời khóa biểu / Lịch dạy", "FormTKB", "schedule.png");
+            addSideButton(sidebar, "Phòng học & Thiết bị", "FormPhongHoc", "room.png");
+        } else if (Auth.isGiaoVien()) {
+            addSideButton(sidebar, "Lịch dạy", "FormTKB", "schedule.png");
+        } else if (Auth.isHocSinh()) {
+            addSideButton(sidebar, "Thời khóa biểu", "FormTKB", "schedule.png");
+        }
+        sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
+
+        // -- KHẢO THÍ & KẾT QUẢ (Đổi tên nút tùy theo quyền)[cite: 2] --
+        addSideHeader(sidebar, "Khảo thí & kết quả");
+        if (Auth.isHocSinh()) {
+            addSideButton(sidebar, "Xem điểm số", "FormDiemSo", "score.png");
+            addSideButton(sidebar, "Xem hạnh kiểm", "FormHanhKiem", "conduct.png");
+            addSideButton(sidebar, "Lịch thi", "FormLichThi", "exam.png");
+        } else {
+            addSideButton(sidebar, "Quản lý điểm số", "FormDiemSo", "score.png");
+            addSideButton(sidebar, "Quản lý hạnh kiểm", "FormHanhKiem", "conduct.png");
+            addSideButton(sidebar, "Quản lý lịch thi", "FormLichThi", "exam.png");
+        }
+        sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
+
+        // -- HÀNH CHÍNH & TÀI VỤ[cite: 2] --
+        addSideHeader(sidebar, "Hành chính & tài vụ");
+        addSideButton(sidebar, "Quản lý học phí", "FormHocPhi", "fee.png");
+        if (Auth.isHocSinh() || Auth.isGiaoVien()) {
+            addSideButton(sidebar, "Thông báo", "FormThongBao", "notification.png");
+        } else {
+            addSideButton(sidebar, "Quản lý thông báo", "FormThongBao", "notification.png");
+        }
+        if (!Auth.isHocSinh()) {
+            addSideButton(sidebar, "Quản lý phúc khảo", "FormPhucKhao", "review.png");
+        }
+        sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
+
+        // -- HỆ THỐNG & CHÍNH SÁCH[cite: 2] --
+        addSideHeader(sidebar, "Hệ thống & chính sách");
+        addSideButton(sidebar, "Hồ sơ học sinh (Chi tiết)", "FormHocSinh", "student.png");
+        if (Auth.isAdmin()) {
+            addSideButton(sidebar, "Quản lý tài khoản user", "FormTaiKhoan", "user.png");
+            addSideButton(sidebar, "Đối tượng chính sách", "FormChinhSach", "policy.png");
+        }
+
+        return sidebar;
+    }
+
+    private void addSideHeader(JPanel panel, String title) {
+        JLabel lblHeader = new JLabel(title);
+        lblHeader.setForeground(HEADER_COLOR);
+        lblHeader.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        lblHeader.setBorder(new EmptyBorder(5, 15, 5, 10));
+        lblHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
+        lblHeader.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        panel.add(lblHeader);
+    }
+
+    private void addSideButton(JPanel panel, String title, String formCode, String iconFileName) {
+        JButton btn = new JButton();
+        ImageIcon icon = loadIcon(iconFileName, 24);
+        btn.setIcon(icon);
+        btn.setText(" " + title);
+        btn.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        btn.setForeground(TEXT_COLOR);
+        btn.setBackground(SIDEBAR_BG);
+        btn.setHorizontalAlignment(SwingConstants.LEFT);
+        btn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
+        btn.setAlignmentX(Component.LEFT_ALIGNMENT);
+        btn.setFocusPainted(false); btn.setBorderPainted(false);
+        btn.setOpaque(true); btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        btn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                if (btn != lastActiveButton) btn.setBackground(SIDEBAR_HOVER);
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if (btn != lastActiveButton) btn.setBackground(SIDEBAR_BG);
+            }
+        });
+
+        btn.addActionListener(e -> {
+            setActiveButton(btn);
+            switchPanel(title, formCode);
+        });
+
+        btn.putClientProperty("formCode", formCode);
+        btn.putClientProperty("title", title);
+        btn.putClientProperty("iconName", iconFileName);
+        panel.add(btn);
+    }
+
+    private void setActiveButton(JButton btn) {
+        if (lastActiveButton != null) lastActiveButton.setBackground(SIDEBAR_BG);
+        btn.setBackground(SIDEBAR_ACTIVE);
+        lastActiveButton = btn;
+    }
+
+    // Giữ nguyên logic chuyển Panel của cả 2 bản[cite: 1, 2]
+    private void switchPanel(String title, String formCode) {
+        if (formCode.equals("DangXuat")) {
+            int choice = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn đăng xuất?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION) {
+                this.dispose();
+                try {
+                    LoginView view = new LoginView();
+                    new LoginController(view);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Lỗi màn hình đăng nhập!");
+                }
+            }
+            return;
+        }
+
+        Component viewToShow = null;
+        // Logic gán Controller & Panel (Giữ nguyên từ bản gốc của bạn)[cite: 1]
+        if (formCode.equals("FormDiemSo")) {
+            QuanLyDiemPanel view = new QuanLyDiemPanel();
+            new DiemController(view); viewToShow = view;
+        } else if (formCode.equals("FormHanhKiem")) {
+            HanhKiemPanel view = new HanhKiemPanel();
+            new HanhKiemController(view); viewToShow = view;
+        } else if (formCode.equals("FormLichThi")) {
+            LichThiPanel view = new LichThiPanel();
+            new LichThiController(view); viewToShow = view;
+        } else if (formCode.equals("FormHocPhi")) {
+            viewToShow = new QuanLyHocPhiPanel();
+        } else if (formCode.equals("FormThongBao")) {
+            viewToShow = new QuanlyThongbaoPanel();
+        } else if (formCode.equals("FormPhucKhao")) {
+            viewToShow = new QuanLyPhucKhaoPanel();
+        } else if (formCode.equals("FormMonHoc")) {
+            FrmMonHoc panel = new FrmMonHoc();
+            new MonHocController(panel); viewToShow = panel;
+        } else if (formCode.equals("FormPhongHoc")) {
+            FrmPhongHoc panel = new FrmPhongHoc();
+            new PhongHocController(panel); viewToShow = panel;
+        } else if (formCode.equals("FormTKB")) {
+            FrmTKB panel = new FrmTKB();
+            new TKBController(panel); viewToShow = panel;
+        } else if (formCode.equals("FormGiaoVien")) {
+            QuanLyGiaoVienPanel view = new QuanLyGiaoVienPanel();
+            new GiaoVienController(view); viewToShow = view;
+        } else if (formCode.equals("FormLopHoc")) {
+            QuanLyLopPanel view = new QuanLyLopPanel();
+            new LopController(view); viewToShow = view;
+        } else if (formCode.equals("FormToBoMon")) {
+            viewToShow = new QuanLyToBoMonPanel();
+        } else if (formCode.equals("FormHocSinh")) {
+            viewToShow = new QuanLyHocSinhPanel();
+        } else if (formCode.equals("FormTaiKhoan")) {
+            viewToShow = new QuanLyTaiKhoanPanel();
+        } else if (formCode.equals("FormChinhSach")) {
+            viewToShow = new QuanLyDoiTuongUuTienPanel();
+        }
+
+        mainPanel.removeAll();
+        if (viewToShow != null) mainPanel.add(viewToShow, BorderLayout.CENTER);
+        else {
+            JLabel lblDemo = new JLabel("Chức năng đang phát triển: " + title, SwingConstants.CENTER);
+            lblDemo.setFont(new Font("Arial", Font.BOLD, 18));
+            mainPanel.add(lblDemo, BorderLayout.CENTER);
+        }
+        mainPanel.revalidate(); mainPanel.repaint();
+    }
+
+    public static void main(String[] args) {
+        try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); }
+        catch (Exception e) { e.printStackTrace(); }
+        SwingUtilities.invokeLater(() -> { new MainFormNew().setVisible(true); });
+    }
+}

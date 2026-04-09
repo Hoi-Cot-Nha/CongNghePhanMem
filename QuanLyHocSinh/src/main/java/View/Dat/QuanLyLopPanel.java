@@ -6,6 +6,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import TienIch.ButtonStyleHelper;
+import TienIch.TableSortHelper;
 
 public class QuanLyLopPanel extends JPanel {
 
@@ -69,6 +70,7 @@ public class QuanLyLopPanel extends JPanel {
         String[] cols = {"Mã Lớp", "Tên Lớp", "Niên Khóa", "GVCN"};
         tableModel = new DefaultTableModel(cols, 0);
         tableLop = new JTable(tableModel);
+        TableSortHelper.enableTableSorting(tableLop);
         tableLop.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         tableLop.setRowHeight(25);
         tableLop.getTableHeader().setDefaultRenderer(new TienIch.CustomTableHeaderRenderer());

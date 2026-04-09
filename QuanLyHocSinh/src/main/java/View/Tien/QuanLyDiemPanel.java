@@ -249,12 +249,12 @@ public class QuanLyDiemPanel extends JPanel {
     public void addTableMouseListener(MouseAdapter adapter) { tableDiem.addMouseListener(adapter); }
     public void addBtnXuatExcelListener(ActionListener ac) { btnXuatExcel.addActionListener(ac); }
     // Cấp quyền truy cập cái Bảng cho Controller
-    public javax.swing.table.DefaultTableModel getTableModel() {
+    public DefaultTableModel getTableModel() {
         // Tùy theo việc bạn đặt tên bảng là gì lúc thiết kế (ví dụ: jTable1, tblDiem, v.v.)
         // Hãy sửa chữ "tblDiem" thành tên biến đúng của bạn.
-        return (javax.swing.table.DefaultTableModel) tableDiem.getModel();
+        return (DefaultTableModel) tableDiem.getModel();
     }
-    public javax.swing.JButton getBtnCapNhat() {
+    public JButton getBtnCapNhat() {
         return btnCapNhat;
     }
 }

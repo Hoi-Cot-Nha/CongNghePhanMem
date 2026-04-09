@@ -42,7 +42,7 @@ public class LoginController {
                 Auth.maNguoiDung = tk.getMaNguoiDung();
                 System.out.println("ROLE = " + Auth.currentRole);
                 view.showMessage("Đăng nhập thành công! Quyền: " + role);
-                view.dispose();
+                view.dispose(); 
 
                 MainFormNew main = new MainFormNew();
                 main.setVisible(true);

@@ -5,6 +5,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
 import view.LoginView; 
 import Controller.Dai.LoginController;
@@ -69,6 +71,19 @@ public class MainForm extends JFrame {
         JScrollPane scrollSidebar = new JScrollPane(sidebar);
         scrollSidebar.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollSidebar.setBorder(null);
+        
+        // Tăng tốc độ scroll menu
+        scrollSidebar.addMouseWheelListener(new MouseWheelListener() {
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                JScrollBar verticalBar = scrollSidebar.getVerticalScrollBar();
+                int scrollAmount = e.getWheelRotation() * 150; // Tăng từ ~10 lên 50
+                int newValue = verticalBar.getValue() + scrollAmount;
+                newValue = Math.max(0, Math.min(newValue, verticalBar.getMaximum() - verticalBar.getVisibleAmount()));
+                verticalBar.setValue(newValue);
+            }
+        });
+        
         add(scrollSidebar, BorderLayout.WEST);
 
         // 2. Nội dung chính ở giữa

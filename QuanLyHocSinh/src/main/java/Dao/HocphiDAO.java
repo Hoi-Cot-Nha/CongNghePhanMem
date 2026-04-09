@@ -17,11 +17,40 @@ public class HocphiDAO {
         List<Hocphi> list = new ArrayList<>();
 
         System.out.println("\n=== HocphiDAO.getHocPhiByLop ===");
-        System.out.println("Tham số: maLop=" + maLop + ", hocKy=" + hocKy + ", namHoc=" + namHoc);
+        System.out.println("Tham số: maLop=" + (maLop == null || maLop.isEmpty() ? "ALL" : maLop) + 
+                          ", hocKy=" + (hocKy == 0 ? "ALL" : hocKy) + 
+                          ", namHoc=" + (namHoc == null || namHoc.isEmpty() ? "ALL" : namHoc));
+
+        // Build dynamic WHERE clause based on parameters
+        StringBuilder whereClause = new StringBuilder();
+        ArrayList<Object> params = new ArrayList<>();
+
+        if (maLop != null && !maLop.isEmpty()) {
+            if (whereClause.length() > 0) whereClause.append(" AND ");
+            whereClause.append("hs.MaLop = ?");
+            params.add(maLop);
+        }
+
+        if (hocKy != 0) {
+            if (whereClause.length() > 0) whereClause.append(" AND ");
+            whereClause.append("hp.HocKy = ?");
+            params.add(hocKy);
+        }
+
+        if (namHoc != null && !namHoc.isEmpty()) {
+            if (whereClause.length() > 0) whereClause.append(" AND ");
+            whereClause.append("hp.NamHoc = ?");
+            params.add(namHoc);
+        }
 
         String sql = "SELECT hp.*, hs.MaLop FROM HocPhi hp " +
-                     "JOIN HocSinh hs ON hp.MaHS = hs.MaHS " +
-                     "WHERE hs.MaLop = ? AND hp.HocKy = ? AND hp.NamHoc = ?";
+                     "JOIN HocSinh hs ON hp.MaHS = hs.MaHS";
+        
+        if (whereClause.length() > 0) {
+            sql += " WHERE " + whereClause.toString();
+        }
+        
+        sql += " ORDER BY hs.MaLop, hp.HocKy, hp.NamHoc";
 
         try {
             Connection cons = ConnectDB.getConnection();
@@ -31,11 +60,14 @@ public class HocphiDAO {
             }
             
             System.out.println("✓ Kết nối thành công");
+            System.out.println("✓ SQL: " + sql);
             
             PreparedStatement ps = cons.prepareStatement(sql);
-            ps.setString(1, maLop);
-            ps.setInt(2, hocKy);
-            ps.setString(3, namHoc);
+            
+            // Set parameters
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
 
             System.out.println("✓ PreparedStatement tạo thành công");
 

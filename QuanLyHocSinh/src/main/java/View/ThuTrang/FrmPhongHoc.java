@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.util.List;
 import TienIch.ButtonStyleHelper;
+import TienIch.TableSortHelper;
 
 /**
  *
@@ -32,7 +33,7 @@ public class FrmPhongHoc extends JPanel {
     private JTextField txtMaPhong, txtTenPhong, txtSucChua;
     private JComboBox<String> cboLoaiPhong, cboTinhTrang;
 
-    private JButton btnLuu, btnXoa, btnMoi;
+    private JButton btnThem, btnSua, btnXoa, btnLuu, btnHuy;
 
     public FrmPhongHoc() {
         initComponents();
@@ -76,14 +77,16 @@ public class FrmPhongHoc extends JPanel {
 
         pnlSearch.add(new JLabel("Loại phòng:"));
         cboLoaiPhongTim = new JComboBox<>(new String[]{
-            "Tất cả", "Lý thuyết", "Thực hành"
+            "", "Tất cả", "Lý thuyết", "Thực hành"
         });
+        cboLoaiPhongTim.setSelectedIndex(0);
         pnlSearch.add(cboLoaiPhongTim);
 
         pnlSearch.add(new JLabel("Tình trạng:"));
         cboTinhTrangTim = new JComboBox<>(new String[]{
-            "Tất cả", "Trống", "Đang học", "Bảo trì"
+            "", "Tất cả", "Trống", "Đang học", "Bảo trì"
         });
+        cboTinhTrangTim.setSelectedIndex(0);
         pnlSearch.add(cboTinhTrangTim);
 
         btnTim = new JButton("Tìm");
@@ -103,6 +106,7 @@ public class FrmPhongHoc extends JPanel {
                 new String[]{"Mã phòng", "Tên phòng", "Sức chứa", "Loại", "Tình trạng"}, 0
         );
         table = new JTable(model);
+        TableSortHelper.enableTableSorting(table);
         table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         table.setRowHeight(25);
         table.getTableHeader().setDefaultRenderer(new TienIch.CustomTableHeaderRenderer());
@@ -123,12 +127,14 @@ public class FrmPhongHoc extends JPanel {
         txtSucChua = new JTextField(15);
 
         cboLoaiPhong = new JComboBox<>(new String[]{
-            "Lý thuyết", "Thực hành"
+            "", "Lý thuyết", "Thực hành"
         });
+        cboLoaiPhong.setSelectedIndex(0);
 
         cboTinhTrang = new JComboBox<>(new String[]{
-            "Trống", "Đang học", "Bảo trì"
+            "", "Trống", "Đang học", "Bảo trì"
         });
+        cboTinhTrang.setSelectedIndex(0);
 
         gbc.gridx = 0; gbc.gridy = 0;
         pnlInput.add(new JLabel("Mã phòng"), gbc);
@@ -157,17 +163,30 @@ public class FrmPhongHoc extends JPanel {
 
         pnlSouth.add(pnlInput, BorderLayout.CENTER);
 
-        JPanel pnlBtn = new JPanel();
-        btnLuu = new JButton("Lưu");
-        ButtonStyleHelper.styleButtonSave(btnLuu);
+        JPanel pnlBtn = new JPanel(new FlowLayout());
+        btnThem = new JButton("Thêm");
+        ButtonStyleHelper.styleButtonAdd(btnThem);
+        btnSua = new JButton("Sửa");
+        ButtonStyleHelper.styleButtonEdit(btnSua);
         btnXoa = new JButton("Xóa");
         ButtonStyleHelper.styleButtonDelete(btnXoa);
-        btnMoi = new JButton("Mới");
-        ButtonStyleHelper.styleButtonView(btnMoi);
+        btnLuu = new JButton("Lưu");
+        ButtonStyleHelper.styleButtonSave(btnLuu);
+        btnHuy = new JButton("Hủy");
+        ButtonStyleHelper.styleButtonCancel(btnHuy);
 
-        pnlBtn.add(btnLuu);
+        Dimension sz = new Dimension(90, 35);
+        btnThem.setPreferredSize(sz);
+        btnSua.setPreferredSize(sz);
+        btnXoa.setPreferredSize(sz);
+        btnLuu.setPreferredSize(sz);
+        btnHuy.setPreferredSize(sz);
+
+        pnlBtn.add(btnThem);
+        pnlBtn.add(btnSua);
         pnlBtn.add(btnXoa);
-        pnlBtn.add(btnMoi);
+        pnlBtn.add(btnLuu);
+        pnlBtn.add(btnHuy);
 
         pnlSouth.add(pnlBtn, BorderLayout.SOUTH);
         add(pnlSouth, BorderLayout.SOUTH);
@@ -246,6 +265,12 @@ public class FrmPhongHoc extends JPanel {
     }
 
     // ===== EVENTS =====
+    public JButton getBtnThem() { return btnThem; }
+    public JButton getBtnSua() { return btnSua; }
+    public JButton getBtnXoa() { return btnXoa; }
+    public JButton getBtnLuu() { return btnLuu; }
+    public JButton getBtnHuy() { return btnHuy; }
+    
     public void addBtnXemListener(ActionListener l) {
         btnXem.addActionListener(l);
     }
@@ -254,16 +279,24 @@ public class FrmPhongHoc extends JPanel {
         btnTim.addActionListener(l);
     }
 
-    public void addBtnLuuListener(ActionListener l) {
-        btnLuu.addActionListener(l);
+    public void addBtnThemListener(ActionListener l) {
+        btnThem.addActionListener(l);
+    }
+
+    public void addBtnSuaListener(ActionListener l) {
+        btnSua.addActionListener(l);
     }
 
     public void addBtnXoaListener(ActionListener l) {
         btnXoa.addActionListener(l);
     }
 
-    public void addBtnMoiListener(ActionListener l) {
-        btnMoi.addActionListener(l);
+    public void addBtnLuuListener(ActionListener l) {
+        btnLuu.addActionListener(l);
+    }
+
+    public void addBtnHuyListener(ActionListener l) {
+        btnHuy.addActionListener(l);
     }
 
     public void addTableMouseListener(MouseAdapter l) {

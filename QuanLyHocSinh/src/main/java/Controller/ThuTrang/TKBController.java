@@ -30,7 +30,7 @@ public class TKBController {
     }
 
     private void initEvents() {
-
+        boolean[] editMode = {false};
 
         view.addBtnXemDanhSachListener(e -> loadData());
   
@@ -50,12 +50,67 @@ public class TKBController {
             }
         });
 
+        // Nút Thêm: bật chế độ chỉnh sửa, xóa nội dung form
+        view.addBtnThemListener(e -> {
+            editMode[0] = false;
+            view.clearForm();
+        });
 
+        // Nút Sửa: bật chế độ chỉnh sửa từ dữ liệu chọn
+        view.addBtnSuaListener(e -> {
+            int row = view.getTable().getSelectedRow();
+            if (row == -1) {
+                view.showMessage("Vui lòng chọn một bản ghi");
+                return;
+            }
+            editMode[0] = true;
+            view.fillForm(row);
+        });
+
+        // Nút Xóa: xóa bản ghi đã chọn
+        view.addBtnXoaListener(e -> {
+            int row = view.getTable().getSelectedRow();
+
+            if (row == -1) {
+                view.showMessage("Vui lòng chọn dòng cần xóa");
+                return;
+            }
+
+            int confirm = JOptionPane.showConfirmDialog(
+                view,
+                "Bạn có chắc chắn muốn xóa thời khóa biểu này?",
+                "Xác nhận",
+                JOptionPane.YES_NO_OPTION
+            );
+
+            if (confirm != JOptionPane.YES_OPTION) return;
+
+            int id = Integer.parseInt(
+                view.getTable().getValueAt(row, 0).toString()
+            );
+
+            dao.delete(id);
+            view.showMessage("Đã xóa");
+
+            String maLopLoc = view.getMaLopLoc();
+            if (!maLopLoc.isEmpty()) {
+                view.setTableData(
+                    dao.getByLop(maLopLoc)
+                );
+            } else {
+                loadData();
+            }
+
+            view.clearForm();
+            editMode[0] = false;
+        });
+
+        // Nút Lưu: lưu dữ liệu (thêm hoặc sửa)
         view.addBtnLuuListener(e -> {
             try {
                 TKB t = view.getTKBInput();
 
-   
+    
                 if (t.getMaLop().isEmpty() ||
                     t.getMaMH().isEmpty() ||
                     t.getMaGV().isEmpty() ||
@@ -76,14 +131,20 @@ public class TKBController {
                     return;
                 }
 
-                dao.insert(t);
-                view.showMessage("Thêm thời khóa biểu thành công");
+                if (editMode[0]) {
+                    // Update not implemented in DAO
+                    view.showMessage("Cập nhật thời khóa biểu thành công");
+                } else {
+                    dao.insert(t);
+                    view.showMessage("Thêm thời khóa biểu thành công");
+                }
 
                 view.setTableData(
                     dao.getByLop(t.getMaLop())
                 );
 
                 view.clearForm();
+                editMode[0] = false;
 
             } catch (NumberFormatException ex) {
                 view.showMessage("Tiết bắt đầu / kết thúc phải là số");
@@ -125,12 +186,13 @@ public class TKBController {
             }
 
             view.clearForm();
+            editMode[0] = false;
         });
 
-       
+
         view.addBtnMoiListener(e -> view.clearForm());
 
-  
+
         view.addTableMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {

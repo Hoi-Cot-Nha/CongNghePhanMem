@@ -10,6 +10,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import TienIch.TableSortHelper;
 
 public class QuanLyDoiTuongUuTienPanel extends JPanel {
 
@@ -74,6 +75,7 @@ public class QuanLyDoiTuongUuTienPanel extends JPanel {
         String[] cols = {"Mã Đối Tượng", "Tên Đối Tượng", "Tỉ Lệ Giảm (%)"};
         tableModel = new DefaultTableModel(cols, 0);
         tableDT = new JTable(tableModel);
+        TableSortHelper.enableTableSorting(tableDT);
         tableDT.setRowHeight(25);
         tableDT.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         tableDT.getTableHeader().setDefaultRenderer(new TienIch.CustomTableHeaderRenderer());

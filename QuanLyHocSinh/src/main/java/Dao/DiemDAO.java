@@ -162,9 +162,9 @@ public class DiemDAO {
         // Lưu ý: Tên bảng "Diem" có thể khác trong SQL của bạn, hãy sửa cho khớp
         String sql = "SELECT * FROM Diem";
 
-        try (java.sql.Connection con = ConnectDB.getConnection();
-             java.sql.PreparedStatement ps = con.prepareStatement(sql);
-             java.sql.ResultSet rs = ps.executeQuery()) {
+        try (Connection con = ConnectDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Diem d = new Diem();

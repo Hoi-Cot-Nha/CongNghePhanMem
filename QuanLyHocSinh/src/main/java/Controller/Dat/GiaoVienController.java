@@ -58,7 +58,8 @@ public class GiaoVienController {
     }
 
     private void loadTable() {
-        List<Giaovien> list = dao.getAll();
+        // Sử dụng phương thức mới với kiểm tra quyền
+        List<Giaovien> list = dao.getAllWithPermission();
         view.getTableModel().setRowCount(0);
         for (Giaovien gv : list) {
             view.getTableModel().addRow(new Object[]{

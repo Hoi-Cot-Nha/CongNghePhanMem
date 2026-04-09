@@ -21,85 +21,127 @@ public class Phuckhaocontroller {
     public Phuckhaocontroller(QuanLyPhucKhaoPanel view) {
         this.view = view;
         this.dao = new PhuckhaoDAO();
+        initEvents();
         loadData();
+    }
 
+    private void initEvents() {
+        boolean[] editMode = {false};
 
+        // Table click - select row and fill form
         view.getTable().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int row = view.getTable().getSelectedRow();
-                if (row != -1) view.fillForm(row);
+                if (row >= 0) {
+                    editMode[0] = true;
+                    view.fillForm(row);
+                }
             }
         });
 
-
+        // Add button - clear form for new entry
         view.getBtnThem().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (validateForm()) {
-                    Phuckhao pk = getForm();
-         
-                    System.out.println("Đang thêm: " + pk.getMaHS()); 
-                    if (dao.insert(pk)) {
-                        JOptionPane.showMessageDialog(view, "Gửi yêu cầu thành công!");
-                        loadData(); 
-                        view.refresh();
+                editMode[0] = false;
+                view.refresh();
+            }
+        });
+
+        // Edit button - enable edit mode
+        view.getBtnSua().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int row = view.getTable().getSelectedRow();
+                if (row != -1) {
+                    editMode[0] = true;
+                    view.fillForm(row);
+                } else {
+                    JOptionPane.showMessageDialog(view, "Chọn dòng cần sửa!");
+                }
+            }
+        });
+
+        // Save button (handles both add and edit)
+        view.getBtnLuu().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (editMode[0]) {
+                    // Edit mode: update existing
+                    int row = view.getTable().getSelectedRow();
+                    if (row != -1 && validateForm()) {
+                        Phuckhao pk = getForm();
+                        pk.setMaPK(listCurrent.get(row).getMaPK());
+                        if (dao.update(pk)) {
+                            JOptionPane.showMessageDialog(view, "Cập nhật thành công!");
+                            loadData();
+                            editMode[0] = false;
+                        }
                     } else {
-                        JOptionPane.showMessageDialog(view, "Thêm thất bại! Kiểm tra lại Mã HS/MH có tồn tại không.");
+                        JOptionPane.showMessageDialog(view, "Chọn dòng cần sửa!");
+                    }
+                } else {
+                    // Add mode: insert new
+                    if (validateForm()) {
+                        Phuckhao pk = getForm();
+                        if (dao.insert(pk)) {
+                            JOptionPane.showMessageDialog(view, "Gửi yêu cầu thành công!");
+                            loadData(); 
+                            view.refresh();
+                            editMode[0] = false;
+                        } else {
+                            JOptionPane.showMessageDialog(view, "Thêm thất bại! Kiểm tra lại Mã HS/MH có tồn tại không.");
+                        }
                     }
                 }
             }
         });
 
-   
-        view.getBtnSua().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int row = view.getTable().getSelectedRow();
-                if (row != -1 && validateForm()) {
-                    Phuckhao pk = getForm();
-                    pk.setMaPK(listCurrent.get(row).getMaPK());
-                    if (dao.update(pk)) {
-                        JOptionPane.showMessageDialog(view, "Cập nhật thành công!");
-                        loadData();
-                    }
-                } else { JOptionPane.showMessageDialog(view, "Chọn dòng cần sửa!"); }
-            }
-        });
-
-
+        // Delete button with confirmation
         view.getBtnXoa().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int row = view.getTable().getSelectedRow();
                 if (row != -1) {
                     int id = listCurrent.get(row).getMaPK();
-                    if (JOptionPane.showConfirmDialog(view, "Xóa bản ghi này?") == 0) {
-                        if (dao.delete(id)) { loadData(); view.refresh(); }
+                    int confirm = JOptionPane.showConfirmDialog(
+                        view, "Bạn có chắc chắn muốn xóa?", "Xác nhận",
+                        JOptionPane.YES_NO_OPTION
+                    );
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        if (dao.delete(id)) {
+                            loadData();
+                            view.refresh();
+                            editMode[0] = false;
+                        }
                     }
+                } else {
+                    JOptionPane.showMessageDialog(view, "Vui lòng chọn dòng cần xóa!");
                 }
             }
         });
 
-
+        // Search/Filter button
         view.getBtnLoc().addActionListener(new ActionListener() {
             @Override 
             public void actionPerformed(ActionEvent e) {
                 String tuKhoa = view.getLocKeyword().trim();
-
                 listCurrent = dao.search(tuKhoa); 
                 view.loadTable(listCurrent);
-
                 if (listCurrent.isEmpty()) {
                     JOptionPane.showMessageDialog(view, "Không tìm thấy kết quả nào!");
                 }
             }
         });
-        view.getBtnLamMoi().addActionListener(new ActionListener() {
+
+        // Reset/Cancel button
+        view.getBtnHuy().addActionListener(new ActionListener() {
             @Override 
             public void actionPerformed(ActionEvent e) { 
                 view.refresh(); 
-                loadData();   
+                loadData();
+                editMode[0] = false;
             }
         });
     }

@@ -29,7 +29,15 @@ public class Hocphicontroller {
         }
 
         System.out.println("DEBUG Controller: Khởi tạo controller...");
-        
+
+        initEvents();
+        loadTatCaDuLieu();
+    }
+
+    private void initEvents() {
+        boolean[] editMode = {false};
+
+        // Filter button
         view.getBtnLoc().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -37,38 +45,43 @@ public class Hocphicontroller {
             }
         });
 
-       
+
         view.getBtnThem().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                xuLyLuu(true); 
+                editMode[0] = false;
+                view.refreshForm();
+                xuLyLuu(true);
             }
         });
 
-      
+        // Save button (handles both add and update)
         view.getBtnLuu().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                xuLyLuu(false); 
+                xuLyLuu(editMode[0]);
+                editMode[0] = false;
             }
         });
 
-        
+        // Delete button with confirmation
         view.getBtnXoa().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 xoaHocPhi();
+                editMode[0] = false;
             }
         });
 
-      
-        view.getBtnLamMoi().addActionListener(new ActionListener() {
+        // Cancel/Reset button
+        view.getBtnHuy().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 view.refreshForm();
+                editMode[0] = false;
             }
         });
-        
+
         System.out.println("DEBUG Controller: Controller khởi tạo xong!");
 
         loadTatCaDuLieu();
@@ -89,16 +102,18 @@ public class Hocphicontroller {
             Object cboHocKySelected = view.getCboHocKy().getSelectedItem();
             Object cboNamHocSelected = view.getCboNamHoc().getSelectedItem();
 
-            if (cboMaLopSelected == null || cboHocKySelected == null || cboNamHocSelected == null) {
-                JOptionPane.showMessageDialog(view, "Vui lòng chọn mã lớp, học kỳ và năm học!");
-                return;
-            }
+            // Nếu có selection (không null) thì lấy giá trị, nếu trống thì pass empty string
+            String maLop = (cboMaLopSelected != null) ? cboMaLopSelected.toString().trim() : "";
+            String hocKyStr = (cboHocKySelected != null) ? cboHocKySelected.toString().trim() : "";
+            String namHoc = (cboNamHocSelected != null) ? cboNamHocSelected.toString().trim() : "";
 
-            String maLop = cboMaLopSelected.toString().trim();
-            int hocKy = Integer.parseInt(cboHocKySelected.toString());
-            String namHoc = cboNamHocSelected.toString().trim();
-
-            System.out.println("DEBUG: Lọc dữ liệu - Lớp: " + maLop + ", Kỳ: " + hocKy + ", Năm: " + namHoc);
+            // Nếu tất cả đều trống → load toàn bộ dữ liệu
+            // Nếu có ít nhất một giá trị → filter theo giá trị đó
+            int hocKy = hocKyStr.isEmpty() ? 0 : Integer.parseInt(hocKyStr);
+            
+            System.out.println("DEBUG: Lọc dữ liệu - Lớp: " + (maLop.isEmpty() ? "Tất cả" : maLop) + 
+                             ", Kỳ: " + (hocKy == 0 ? "Tất cả" : hocKy) + 
+                             ", Năm: " + (namHoc.isEmpty() ? "Tất cả" : namHoc));
 
             List<Hocphi> list = dao.getHocPhiByLop(maLop, hocKy, namHoc);
             
@@ -107,7 +122,7 @@ public class Hocphicontroller {
             view.loadTable(list);
 
             if (list.isEmpty()) {
-                JOptionPane.showMessageDialog(view, "Không tìm thấy dữ liệu cho lớp " + maLop + 
+                JOptionPane.showMessageDialog(view, "Không tìm thấy dữ liệu cho lớp " + maLop +
                                             ", Kỳ " + hocKy + ", Năm " + namHoc);
             }
         } catch (NumberFormatException ex) {
@@ -118,22 +133,24 @@ public class Hocphicontroller {
         }
     }
 
-    private void xuLyLuu(boolean isThemMoi) {
+    private void xuLyLuu(boolean isUpdate) {
         try {
            
             String maHS = view.getTxtMaHS().getText().trim();
             String tongTienStr = view.getTxtTongTien().getText().trim();
             String mienGiamStr = view.getTxtMienGiam().getText().trim();
+            String hocKyStr = view.getCboHocKy().getSelectedItem().toString().trim();
+            String trangThaiStr = view.getCboTrangThai().getSelectedItem().toString().trim();
 
             
-            if (maHS.isEmpty() || tongTienStr.isEmpty()) {
-                JOptionPane.showMessageDialog(view, "Mã học sinh và Tổng tiền không được để trống!");
+            if (maHS.isEmpty() || tongTienStr.isEmpty() || hocKyStr.isEmpty()) {
+                JOptionPane.showMessageDialog(view, "Mã học sinh, Tổng tiền và Học kỳ không được để trống!");
                 return;
             }
 
             Hocphi hp = new Hocphi();
             hp.setMaHS(maHS);
-            hp.setHocKy(Integer.parseInt(view.getCboHocKy().getSelectedItem().toString()));
+            hp.setHocKy(Integer.parseInt(hocKyStr));
             hp.setNamHoc(view.getCboNamHoc().getSelectedItem().toString().trim());
             
             long tongTien = Long.parseLong(tongTienStr);
@@ -143,11 +160,11 @@ public class Hocphicontroller {
             hp.setTongTien(tongTien);
             hp.setMienGiam(mienGiam);
             hp.setPhaiDong(phaiDong);
-            hp.setTrangThai(phaiDong <= 0 ? "Đã đóng" : "Chưa đóng");
+            hp.setTrangThai(trangThaiStr.isEmpty() ? "Chưa đóng" : trangThaiStr);
 
             
             if (dao.saveHocPhi(hp)) {
-                String thongBao = isThemMoi ? "Thêm mới học phí thành công!" : "Cập nhật học phí thành công!";
+                String thongBao = isUpdate ? "Cập nhật học phí thành công!" : "Thêm mới học phí thành công!";
                 JOptionPane.showMessageDialog(view, thongBao);
                 locDuLieu();
                 view.refreshForm(); 

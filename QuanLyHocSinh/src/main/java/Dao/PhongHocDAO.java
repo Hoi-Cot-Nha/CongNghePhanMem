@@ -19,7 +19,10 @@ public class PhongHocDAO {
 
     public List<PhongHoc> getAll() {
         List<PhongHoc> list = new ArrayList<>();
-        String sql = "SELECT * FROM PhongHoc";
+        String sql = """
+            SELECT MaPhong, TenPhong, SucChua, LoaiPhong, TinhTrang
+            FROM PhongHoc
+        """;
 
         try (Connection c = ConnectDB.getConnection();
              PreparedStatement ps = c.prepareStatement(sql);
@@ -43,7 +46,7 @@ public class PhongHocDAO {
    
     public List<PhongHoc> search(String maPhong, String loai, String tinhTrang) {
         List<PhongHoc> list = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT * FROM PhongHoc WHERE 1=1");
+        StringBuilder sql = new StringBuilder("SELECT MaPhong, TenPhong, SucChua, LoaiPhong, TinhTrang FROM PhongHoc WHERE 1=1 ");
 
         if (!maPhong.isEmpty()) sql.append(" AND MaPhong LIKE ?");
         if (!loai.equals("Tất cả")) sql.append(" AND LoaiPhong = ?");

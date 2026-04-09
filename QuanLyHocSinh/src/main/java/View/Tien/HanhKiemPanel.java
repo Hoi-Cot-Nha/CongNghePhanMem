@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.util.List;
 import TienIch.ButtonStyleHelper;
+import TienIch.TableSortHelper;
 
 public class HanhKiemPanel extends JPanel {
     
@@ -23,8 +24,7 @@ public class HanhKiemPanel extends JPanel {
     private DefaultTableModel model;
     
     // Nút chức năng
-    private JButton btnXem, btnTimKiem, btnLuu, btnXoa, btnMoi; 
-
+    private JButton btnXem, btnTimKiem, btnThem, btnSua, btnXoa, btnLuu, btnHuy, btnMoi;
     // Form nhập liệu chi tiết
     private JTextField txtMaHS, txtTenHS;
     private JTextArea txtNhanXet;
@@ -54,13 +54,21 @@ public class HanhKiemPanel extends JPanel {
         pnlFilter.setBorder(new TitledBorder("Lọc theo lớp (Mặc định)"));
         
         pnlFilter.add(new JLabel("Mã Lớp:"));
-        cboLocMaLop = new JComboBox<>(); pnlFilter.add(cboLocMaLop); 
+        cboLocMaLop = new JComboBox<>();
+        cboLocMaLop.addItem("");
+        cboLocMaLop.setSelectedIndex(0);
+        pnlFilter.add(cboLocMaLop); 
         
         pnlFilter.add(new JLabel("Năm Học:"));
-        cboLocNamHoc = new JComboBox<>(); pnlFilter.add(cboLocNamHoc);
+        cboLocNamHoc = new JComboBox<>();
+        cboLocNamHoc.addItem("");
+        cboLocNamHoc.setSelectedIndex(0);
+        pnlFilter.add(cboLocNamHoc);
         
         pnlFilter.add(new JLabel("Học Kỳ:"));
-        cboHocKy = new JComboBox<>(new String[]{"1", "2"}); pnlFilter.add(cboHocKy);
+        cboHocKy = new JComboBox<>(new String[]{"", "1", "2"}); 
+        cboHocKy.setSelectedIndex(0);
+        pnlFilter.add(cboHocKy);
         
         btnXem = new JButton("Lọc Danh Sách");
         ButtonStyleHelper.styleButtonFilter(btnXem);
@@ -91,6 +99,7 @@ public class HanhKiemPanel extends JPanel {
         String[] cols = {"Mã HS", "Tên HS", "Năm Học", "Học Kỳ", "Xếp Loại", "Nhận Xét"};
         model = new DefaultTableModel(cols, 0);
         table = new JTable(model);
+        TableSortHelper.enableTableSorting(table);
         table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         table.setRowHeight(25);
         table.getTableHeader().setDefaultRenderer(new TienIch.CustomTableHeaderRenderer());
@@ -115,7 +124,7 @@ public class HanhKiemPanel extends JPanel {
         // Dòng 2: Xếp loại
         gbc.gridx=0; gbc.gridy=1; pnlInput.add(new JLabel("Xếp Loại:"), gbc);
         gbc.gridx=1; gbc.gridy=1; 
-        cboXepLoai = new JComboBox<>(new String[]{"Tot", "Kha", "Trung Binh", "Yeu"}); 
+        cboXepLoai = new JComboBox<>(new String[]{"", "Tốt", "Khá", "Trung bình", "Yếu"}); 
         pnlInput.add(cboXepLoai, gbc);
         
         // Dòng 3: Nhận xét mở rộng
@@ -128,28 +137,44 @@ public class HanhKiemPanel extends JPanel {
 
         pnlSouth.add(pnlInput, BorderLayout.CENTER);
 
-        // Panel chứa các nút bấm cuối cùng
-        JPanel pnlBtn = new JPanel();
-        btnLuu = new JButton("Lưu / Cập Nhật");
-        ButtonStyleHelper.styleButtonSave(btnLuu);
-        btnLuu.setPreferredSize(new Dimension(150, 35));
-        
+        // Panel chứa các nút bấm chuẩn
+        JPanel pnlBtn = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        btnThem = new JButton("Thêm");
+        ButtonStyleHelper.styleButtonAdd(btnThem);
+        btnSua = new JButton("Sửa");
+        ButtonStyleHelper.styleButtonEdit(btnSua);
         btnXoa = new JButton("Xóa");
         ButtonStyleHelper.styleButtonDelete(btnXoa);
-        btnXoa.setPreferredSize(new Dimension(100, 35));
+        btnLuu = new JButton("Lưu");
+        ButtonStyleHelper.styleButtonSave(btnLuu);
+        btnHuy = new JButton("Hủy");
+        ButtonStyleHelper.styleButtonCancel(btnHuy);
+
+        Dimension sz = new Dimension(90, 35);
+        btnThem.setPreferredSize(sz);
+        btnSua.setPreferredSize(sz);
+        btnXoa.setPreferredSize(sz);
+        btnLuu.setPreferredSize(sz);
+        btnHuy.setPreferredSize(sz);
+
+        pnlBtn.add(btnThem);
+        pnlBtn.add(btnSua);
+        pnlBtn.add(btnXoa);
+        pnlBtn.add(btnLuu);
+        pnlBtn.add(btnHuy);
         
-        btnMoi = new JButton("Làm Mới Form");
-        ButtonStyleHelper.styleButtonView(btnMoi);
-        
+        // Nút Xuất Excel (Style xanh lá)
+        btnXuatExcel = new JButton("Xuất Excel");
+        ButtonStyleHelper.styleButtonExport(btnXuatExcel);
+        btnXuatExcel.setPreferredSize(new Dimension(120, 35));
         pnlBtn.add(btnXuatExcel);
-        pnlBtn.add(btnLuu); pnlBtn.add(btnXoa); pnlBtn.add(btnMoi);
+        
         pnlSouth.add(pnlBtn, BorderLayout.SOUTH);
         
         add(pnlSouth, BorderLayout.SOUTH);
     }
 
-    // --- CÁC HÀM GETTER DỮ LIỆU TỪ FORM (ĐỂ CONTROLLER GỌI) ---
-    public String getMaLopFilter() { 
+    public String getMaLopFilter() {
         return cboLocMaLop.getSelectedItem() != null ? cboLocMaLop.getSelectedItem().toString() : ""; 
     }
     public String getNamHocFilter() { 
@@ -177,19 +202,16 @@ public class HanhKiemPanel extends JPanel {
         }
     }
 
-    // Đóng gói dữ liệu từ form nhập thành Object HanhKiem
     public HanhKiem getHanhKiemInput() {
         HanhKiem hk = new HanhKiem();
         hk.setMaHS(txtMaHS.getText());
-        hk.setNamHoc(getNamHocFilter()); // Lấy năm từ ô lọc
-        hk.setHocKy(getHocKyFilter());   // Lấy kỳ từ ô lọc
+        hk.setNamHoc(getNamHocFilter());
+        hk.setHocKy(getHocKyFilter());
         hk.setXepLoai(cboXepLoai.getSelectedItem().toString());
         hk.setNhanXet(txtNhanXet.getText());
         return hk;
     }
 
-    // --- CÁC HÀM SETTER (HIỂN THỊ DỮ LIỆU) ---
-    // Đổ danh sách Hạnh kiểm lên bảng
     public void setTableData(List<HanhKiem> list) {
         model.setRowCount(0);
         for (HanhKiem hk : list) {
@@ -204,16 +226,43 @@ public class HanhKiemPanel extends JPanel {
         if(row >= 0) {
             txtMaHS.setText(model.getValueAt(row, 0).toString());
             txtTenHS.setText(model.getValueAt(row, 1).toString());
-     
-            cboXepLoai.setSelectedItem(model.getValueAt(row, 4).toString());
+            
+            String namHoc = model.getValueAt(row, 2).toString();
+            String hocKy = model.getValueAt(row, 3).toString();
+            cboLocNamHoc.setSelectedItem(namHoc);
+            cboHocKy.setSelectedItem(hocKy);
+            
+            String xepLoai = model.getValueAt(row, 4).toString();
+            if(xepLoai != null && !xepLoai.isEmpty()) {
+                cboXepLoai.setSelectedItem(xepLoai);
+            } else {
+                cboXepLoai.setSelectedIndex(0);
+            }
             Object nx = model.getValueAt(row, 5);
             txtNhanXet.setText(nx != null ? nx.toString() : "");
         }
     }
     
-    // Reset trắng form nhập
     public void clearForm() {
-        txtMaHS.setText(""); txtTenHS.setText(""); txtNhanXet.setText("");
+        txtMaHS.setText("");
+        txtTenHS.setText("");
+        txtNhanXet.setText("");
+        
+        // Set ComboBox về giá trị mặc định (index 0)
+        if (cboLocNamHoc.getItemCount() > 0) {
+            cboLocNamHoc.setSelectedIndex(0);
+        }
+        if (cboHocKy.getItemCount() > 0) {
+            cboHocKy.setSelectedIndex(0);
+        }
+        if (cboXepLoai.getItemCount() > 0) {
+            cboXepLoai.setSelectedIndex(0);
+        }
+        
+        // Bỏ chọn bảng
+        if (table != null) {
+            table.clearSelection();
+        }
     }
     
     // Tiện ích hiện thông báo
@@ -223,11 +272,20 @@ public class HanhKiemPanel extends JPanel {
     // --- GÁN SỰ KIỆN (Controller sẽ dùng các hàm này) ---
     public void addBtnXemListener(ActionListener log) { btnXem.addActionListener(log); }
     public void addBtnTimKiemListener(ActionListener log) { btnTimKiem.addActionListener(log); }
-    public void addBtnLuuListener(ActionListener log) { btnLuu.addActionListener(log); }
+    public void addBtnThemListener(ActionListener log) { btnThem.addActionListener(log); }
+    public void addBtnSuaListener(ActionListener log) { btnSua.addActionListener(log); }
     public void addBtnXoaListener(ActionListener log) { btnXoa.addActionListener(log); }
+    public void addBtnLuuListener(ActionListener log) { btnLuu.addActionListener(log); }
+    public void addBtnHuyListener(ActionListener log) { btnHuy.addActionListener(log); }
     public void addBtnMoiListener(ActionListener log) { btnMoi.addActionListener(log); }
     public void addTableMouseListener(MouseAdapter log) { table.addMouseListener(log); }
     public void addBtnXuatExcelListener(ActionListener log) { btnXuatExcel.addActionListener(log); }
+    
+    public JButton getBtnThem() { return btnThem; }
+    public JButton getBtnSua() { return btnSua; }
+    public JButton getBtnXoa() { return btnXoa; }
+    public JButton getBtnLuu() { return btnLuu; }
+    public JButton getBtnHuy() { return btnHuy; }
 
     public void hideButtonForStudent() {
         btnLuu.setVisible(false);

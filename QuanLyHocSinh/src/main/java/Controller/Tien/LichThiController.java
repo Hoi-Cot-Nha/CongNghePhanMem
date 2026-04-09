@@ -18,6 +18,7 @@ public class LichThiController {
     public LichThiController(LichThiPanel view) {
         this.view = view;
         this.dao = new LichThiDAO();
+        
         // Gán sự kiện cho các nút bấm
         initEvents();
         
@@ -26,89 +27,121 @@ public class LichThiController {
     }
 
     private void initEvents() {
+        boolean[] editMode = {false};
 
-        // 1. Nút Tìm kiếm
+        // Search button
         view.addBtnTimKiemListener(e -> {
             String kw = view.getKeyword();
+            
+            // If keyword empty → load all data
             if(kw.isEmpty()) { 
-                view.showMessage("Nhập Môn hoặc Tên kỳ thi để tìm!"); 
+                loadAll();
                 return; 
             }
+            
             List<LichThi> list = dao.searchLichThi(kw);
             view.setTableData(list);
             
             if(list.isEmpty()) view.showMessage("Không tìm thấy kết quả nào!");
         });
 
-        // 2. Nút Xem Tất Cả (Reset bộ lọc)
+        // View all button (reset filter)
         view.addBtnXemTatCaListener(e -> loadAll());
 
-        // 3. Nút Thêm Mới
+        // Add button
         view.addBtnThemListener(e -> {
+            editMode[0] = false;
+            view.clearForm();
+        });
+
+        // Edit button
+        view.addBtnSuaListener(e -> {
+            int row = view.getTable().getSelectedRow();
+            if (row == -1) {
+                view.showMessage("Vui lòng chọn một bản ghi");
+                return;
+            }
+            editMode[0] = true;
+            view.fillForm(row);
+        });
+
+        // Save button (handles both add and edit)
+        view.addBtnLuuListener(e -> {
             LichThi lt = view.getLichThiInput();
             
-            // Validate sơ bộ: Mã môn và ngày thi là bắt buộc
+            // Validate: MaMH and NgayThi are required
             if (lt.getMaMH().isEmpty() || lt.getNgayThi().isEmpty()) {
                 view.showMessage("Vui lòng nhập Mã môn và Ngày thi!");
                 return;
             }
             
-            // Gọi DAO thêm vào DB
-            if(dao.addLichThi(lt)) {
-                view.showMessage("Thêm lịch thi thành công!");
-                loadAll();      // Load lại bảng
-                view.clearForm(); // Xóa trắng form nhập
+            // Save or update based on edit mode
+            if (editMode[0]) {
+                if(dao.updateLichThi(lt)) {
+                    view.showMessage("Cập nhật thành công!");
+                    loadAll();
+                    editMode[0] = false;
+                } else {
+                    view.showMessage("Cập nhật thất bại!");
+                }
             } else {
-                view.showMessage("Thêm thất bại! (Kiểm tra xem Mã Môn/Mã Phòng có tồn tại chưa)");
+                if(dao.addLichThi(lt)) {
+                    view.showMessage("Thêm lịch thi thành công!");
+                    loadAll();
+                    view.clearForm();
+                    editMode[0] = false;
+                } else {
+                    view.showMessage("Thêm thất bại! (Kiểm tra xem Mã Môn/Mã Phòng có tồn tại chưa)");
+                }
             }
         });
 
-        // 4. Nút Cập Nhật (Sửa)
-        view.addBtnSuaListener(e -> {
-            LichThi lt = view.getLichThiInput();
-            // Gọi DAO update dựa trên khóa chính MaLT (đã ẩn trong object)
-            if(dao.updateLichThi(lt)) {
-                view.showMessage("Cập nhật thành công!");
-                loadAll();
-            } else {
-                view.showMessage("Cập nhật thất bại!");
-            }
-        });
-
-        // 5. Nút Xóa
+        // Delete button with confirmation
         view.addBtnXoaListener(e -> {
             LichThi lt = view.getLichThiInput();
             
-            // Check xem đã chọn dòng nào chưa (MaLT = 0 nghĩa là chưa chọn)
+            // Check if row is selected (MaLT = 0 means not selected)
             if(lt.getMaLT() == 0) {
                  view.showMessage("Vui lòng chọn dòng cần xóa!"); 
                  return;
             }
             
-            // Hỏi chắc chắn trước khi xóa
-            int cf = JOptionPane.showConfirmDialog(view, "Bạn có chắc muốn xóa lịch thi này?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+            // Confirm deletion
+            int cf = JOptionPane.showConfirmDialog(
+                view, "Bạn có chắc muốn xóa lịch thi này?", "Xác nhận",
+                JOptionPane.YES_NO_OPTION
+            );
+            
             if(cf == JOptionPane.YES_OPTION) {
                 if(dao.deleteLichThi(lt.getMaLT())) {
                     view.showMessage("Xóa thành công!");
                     loadAll();
                     view.clearForm();
-                } else view.showMessage("Xóa thất bại!");
+                    editMode[0] = false;
+                } else {
+                    view.showMessage("Xóa thất bại!");
+                }
             }
         });
-        
-        // 6. Nút Làm Mới (Reset form nhập)
-        view.addBtnMoiListener(e -> view.clearForm());
 
-        // 7. Sự kiện Click bảng -> Đổ dữ liệu lên form nhập
+        // Cancel button
+        view.addBtnHuyListener(e -> {
+            view.clearForm();
+            editMode[0] = false;
+        });
+
+        // Table click - select row and fill form
         view.addTableMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int row = view.getTable().getSelectedRow();
-                view.fillForm(row);
+                if (row >= 0) {
+                    view.fillForm(row);
+                }
             }
         });
         
-        // 8. Xuất Excel (Dùng tiện ích chung)
+        // Excel export button
         view.addBtnXuatExcelListener(e -> {
             XuatExcel.xuatFileExcel(view.getTable(), view);
         });

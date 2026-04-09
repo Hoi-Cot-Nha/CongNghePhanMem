@@ -26,11 +26,10 @@ public class MonHocController {
     }
 
     private void initEvents() {
+        boolean[] editMode = {false};  // Biến theo dõi chế độ chỉnh sửa
 
-        
         view.addBtnXemListener(e -> loadData());
 
-       
         view.addBtnTimKiemListener(e -> {
             String key = view.getTuKhoa();
             if (key.isEmpty()) {
@@ -46,7 +45,47 @@ public class MonHocController {
             }
         });
 
-       
+        // Nút Thêm: bật chế độ chỉnh sửa, xóa nội dung form
+        view.addBtnThemListener(e -> {
+            editMode[0] = false;
+            view.clearForm();
+            view.getTxtTimKiem().setText("");
+        });
+
+        // Nút Sửa: bật chế độ chỉnh sửa từ dữ liệu chọn
+        view.addBtnSuaListener(e -> {
+            int row = view.getTable().getSelectedRow();
+            if (row == -1) {
+                view.showMessage("Vui lòng chọn một bản ghi");
+                return;
+            }
+            editMode[0] = true;
+            view.fillForm(row);
+        });
+
+        // Nút Xóa: xóa bản ghi đã chọn
+        view.addBtnXoaListener(e -> {
+            int row = view.getTable().getSelectedRow();
+            if (row == -1) {
+                view.showMessage("Vui lòng chọn một bản ghi");
+                return;
+            }
+
+            String ma = view.getTable().getValueAt(row, 0).toString();
+            int confirm = javax.swing.JOptionPane.showConfirmDialog(
+                view, "Bạn có chắc chắn muốn xóa?", "Xác nhận", 
+                javax.swing.JOptionPane.YES_NO_OPTION
+            );
+            if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+                dao.delete(ma);
+                view.showMessage("Đã xoá");
+                loadData();
+                view.clearForm();
+                editMode[0] = false;
+            }
+        });
+
+        // Nút Lưu: lưu dữ liệu (thêm hoặc sửa)
         view.addBtnLuuListener(e -> {
             MonHoc m = view.getMonHocInput();
             if (m.getMaMH().isEmpty()) {
@@ -54,7 +93,12 @@ public class MonHocController {
                 return;
             }
 
-            if (dao.exists(m.getMaMH())) {
+            if (dao.exists(m.getMaMH()) && !editMode[0]) {
+                view.showMessage("Mã môn đã tồn tại");
+                return;
+            }
+
+            if (editMode[0]) {
                 dao.update(m);
             } else {
                 dao.insert(m);
@@ -63,22 +107,14 @@ public class MonHocController {
             view.showMessage("Lưu thành công");
             loadData();
             view.clearForm();
+            editMode[0] = false;
         });
 
-    
-        view.addBtnXoaListener(e -> {
-            int row = view.getTable().getSelectedRow();
-            if (row == -1) return;
-
-            String ma = view.getTable().getValueAt(row, 0).toString();
-            dao.delete(ma);
-            view.showMessage("Đã xoá");
-            loadData();
+        view.addBtnHuyListener(e -> {
             view.clearForm();
+            loadData();
+            editMode[0] = false;
         });
-
-
-        view.addBtnMoiListener(e -> view.clearForm());
 
 
         view.addTableMouseListener(new MouseAdapter() {

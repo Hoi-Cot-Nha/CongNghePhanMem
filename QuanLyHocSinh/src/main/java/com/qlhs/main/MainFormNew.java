@@ -11,8 +11,6 @@ import javax.imageio.ImageIO;
 import java.awt.AlphaComposite;
 import java.awt.RenderingHints;
 import java.awt.FontMetrics;
-
-// Gộp các Import từ cả 2 bản
 import Model.Auth;
 import View.Tien.HanhKiemPanel;
 import view.LoginView;
@@ -42,7 +40,6 @@ import View.HaTrang.QuanlyThongbaoPanel;
 
 public class MainFormNew extends JFrame {
 
-    // Giữ nguyên bộ màu và biến giao diện của bạn
     private final Color SIDEBAR_BG = new Color(34, 45, 50);
     private final Color SIDEBAR_HOVER = new Color(44, 59, 65);
     private final Color SIDEBAR_ACTIVE = new Color(52, 152, 219);
@@ -199,7 +196,7 @@ public class MainFormNew extends JFrame {
         mainPanel.removeAll();
         JPanel centerPanel = new JPanel(new GridBagLayout());
         centerPanel.setBackground(Color.WHITE);
-        JLabel lblWelcome = new JLabel("<html><center>CHÀO MỪNG ĐẾN VỚI<br>HỆ THỐNG QUẢN LÝ<br>TRƯỜNG THCS CHƯƠNG MỸ A</center></html>");
+        JLabel lblWelcome = new JLabel("<html><center>CHÀO MỪNG ĐẾN VỚI<br>HỆ THỐNG QUẢN LÝ<br>TRƯỜNG THPT CHƯƠNG MỸ A</center></html>");
         lblWelcome.setFont(new Font("Segoe UI", Font.BOLD, 32));
         lblWelcome.setForeground(new Color(0, 102, 204));
         GridBagConstraints gbc = new GridBagConstraints();
@@ -231,7 +228,7 @@ public class MainFormNew extends JFrame {
                 addSideButton(sidebar, "Quản lý lớp học", "FormLopHoc", "class.png");
                 addSideButton(sidebar, "Quản lý giáo viên", "FormGiaoVien", "teacher.png");
                 addSideButton(sidebar, "Quản lý tổ bộ môn", "FormToBoMon", "group.png");
-            } else if (Auth.isGiaoVien()) {
+            } else if (!Auth.isGiaoVien()) {
                 addSideButton(sidebar, "Quản lý lớp học", "FormLopHoc", "class.png");
                 addSideButton(sidebar, "Quản lý tổ bộ môn", "FormToBoMon", "group.png");
             }
@@ -267,16 +264,15 @@ public class MainFormNew extends JFrame {
         // -- HÀNH CHÍNH & TÀI VỤ[cite: 2] --
         addSideHeader(sidebar, "Hành chính & tài vụ");
         if (Auth.isHocSinh()) {
+            addSideButton(sidebar, "Phúc khảo", "FormPhucKhao", "review.png");
             addSideButton(sidebar, "Xem học phí", "FormHocPhi", "fee.png");
         }
         if (Auth.isHocSinh() || Auth.isGiaoVien()) {
             addSideButton(sidebar, "Thông báo", "FormThongBao", "notification.png");
         } else {
+            addSideButton(sidebar, "Quản lý Phúc khảo", "FormPhucKhao", "review.png");
             addSideButton(sidebar, "Quản lý học phí", "FormHocPhi", "fee.png");
             addSideButton(sidebar, "Quản lý thông báo", "FormThongBao", "notification.png");
-        }
-        if (!Auth.isHocSinh()) {
-            addSideButton(sidebar, "Quản lý phúc khảo", "FormPhucKhao", "review.png");
         }
         sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
 

@@ -52,7 +52,7 @@ Sử dụng SQL Server 2025 (hoặc bản thấp hơn).
 Tạo Database tên: QuanLyHocSinh.
 Cấu hình tài khoản: user: sa, password: 123456.
 Môi trường Java:
-Clone dự án: git clone [URL_Github_Cua_Nhom]
+Clone dự án: git clone https://github.com/tranglee05/Demo-CNPM.git
 Mở dự án bằng IntelliJ IDEA.
 Cấu hình Project SDK là Java 17 hoặc cao hơn.
 Import thư viện mssql-jdbc vào Project Structure.

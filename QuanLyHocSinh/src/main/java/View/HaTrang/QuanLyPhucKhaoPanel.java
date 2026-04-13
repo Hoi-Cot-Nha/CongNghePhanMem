@@ -20,7 +20,8 @@ import TienIch.TableSortHelper;
 public class QuanLyPhucKhaoPanel extends JPanel{
     private JTable table;
     private DefaultTableModel model;
-    private JTextField txtMaHS, txtMaMH, txtTrangThai, txtLoc;
+    private JTextField txtMaHS, txtMaMH, txtLoc;
+    private JComboBox<String> cboTrangThai;
     private JTextArea txtLyDo;
     private JButton btnLoc, btnThem, btnSua, btnXoa, btnLuu, btnHuy;
 
@@ -78,7 +79,12 @@ public class QuanLyPhucKhaoPanel extends JPanel{
         gbc.gridx = 0; gbc.gridy = 1; pnlInput.add(new JLabel("Mã Môn Học:"), gbc);
         gbc.gridx = 1; txtMaMH = new JTextField(25); pnlInput.add(txtMaMH, gbc);
         gbc.gridx = 0; gbc.gridy = 2; pnlInput.add(new JLabel("Trạng Thái:"), gbc);
-        gbc.gridx = 1; txtTrangThai = new JTextField(25); pnlInput.add(txtTrangThai, gbc);
+        gbc.gridx = 1;
+        cboTrangThai = new JComboBox<>(new String[]{
+            "Chờ xử lý", "Đang xử lý", "Đã xử lý", "Từ chối"
+        });
+        cboTrangThai.setPreferredSize(new Dimension(250, 28));
+        pnlInput.add(cboTrangThai, gbc);
         gbc.gridx = 0; gbc.gridy = 3; pnlInput.add(new JLabel("Lý Do:"), gbc);
         gbc.gridx = 1; txtLyDo = new JTextArea(8, 25); 
         txtLyDo.setLineWrap(true);
@@ -115,6 +121,8 @@ public class QuanLyPhucKhaoPanel extends JPanel{
         pnlSouth.add(pnlInput, BorderLayout.CENTER);
         pnlSouth.add(pnlBtns, BorderLayout.SOUTH);
         add(pnlSouth, BorderLayout.SOUTH);
+
+        setCrudButtonState(true, false, false, false, false);
     }
 
     private JButton createBtn(String t, Color c) {
@@ -140,13 +148,35 @@ public class QuanLyPhucKhaoPanel extends JPanel{
     public void fillForm(int row) {
         txtMaHS.setText(table.getValueAt(row, 1).toString());
         txtMaMH.setText(table.getValueAt(row, 2).toString());
-        txtTrangThai.setText(table.getValueAt(row, 4).toString());
+        String trangThai = table.getValueAt(row, 4).toString();
+        if (!containsTrangThai(trangThai)) {
+            cboTrangThai.addItem(trangThai);
+        }
+        cboTrangThai.setSelectedItem(trangThai);
         txtLyDo.setText(table.getValueAt(row, 5).toString());
     }
 
     public void refresh() {
-        txtMaHS.setText(""); txtMaMH.setText(""); txtTrangThai.setText(""); txtLyDo.setText(""); txtLoc.setText("");
+        txtMaHS.setText("");
+        txtMaMH.setText("");
+        if (cboTrangThai.getItemCount() > 0) {
+            cboTrangThai.setSelectedIndex(0);
+        }
+        txtLyDo.setText("");
+        txtLoc.setText("");
         table.clearSelection();
+    }
+
+    private boolean containsTrangThai(String value) {
+        if (value == null) {
+            return false;
+        }
+        for (int i = 0; i < cboTrangThai.getItemCount(); i++) {
+            if (value.equals(cboTrangThai.getItemAt(i))) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -178,13 +208,21 @@ public class QuanLyPhucKhaoPanel extends JPanel{
         return txtMaMH.getText(); 
     }
     public String getTrangThai() { 
-        return txtTrangThai.getText(); 
+        Object value = cboTrangThai.getSelectedItem();
+        return value == null ? "" : value.toString();
     }
     public String getLyDo() { 
         return txtLyDo.getText(); 
     }
     public String getLocKeyword() { 
         return txtLoc.getText(); 
+    }
+    public void setCrudButtonState(boolean them, boolean sua, boolean xoa, boolean luu, boolean huy) {
+        btnThem.setEnabled(them);
+        btnSua.setEnabled(sua);
+        btnXoa.setEnabled(xoa);
+        btnLuu.setEnabled(luu);
+        btnHuy.setEnabled(huy);
     }
     
     public void addBtnThemListener(java.awt.event.ActionListener ac) { btnThem.addActionListener(ac); }

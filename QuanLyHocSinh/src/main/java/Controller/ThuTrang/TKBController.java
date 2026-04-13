@@ -31,6 +31,11 @@ public class TKBController {
 
     private void initEvents() {
         boolean[] editMode = {false};
+        Runnable setIdleState = () -> view.setCrudButtonState(true, false, false, false, false);
+        Runnable setAddState = () -> view.setCrudButtonState(false, false, false, true, true);
+        Runnable setSelectedState = () -> view.setCrudButtonState(false, true, true, false, true);
+        Runnable setEditState = () -> view.setCrudButtonState(false, true, true, true, true);
+        setIdleState.run();
 
         view.addBtnXemDanhSachListener(e -> loadData());
   
@@ -54,6 +59,8 @@ public class TKBController {
         view.addBtnThemListener(e -> {
             editMode[0] = false;
             view.clearForm();
+            view.getTable().clearSelection();
+            setAddState.run();
         });
 
         // Nút Sửa: bật chế độ chỉnh sửa từ dữ liệu chọn
@@ -65,6 +72,7 @@ public class TKBController {
             }
             editMode[0] = true;
             view.fillForm(row);
+            setEditState.run();
         });
 
         // Nút Xóa: xóa bản ghi đã chọn
@@ -103,6 +111,7 @@ public class TKBController {
 
             view.clearForm();
             editMode[0] = false;
+            setIdleState.run();
         });
 
         // Nút Lưu: lưu dữ liệu (thêm hoặc sửa)
@@ -145,6 +154,7 @@ public class TKBController {
 
                 view.clearForm();
                 editMode[0] = false;
+                setIdleState.run();
 
             } catch (NumberFormatException ex) {
                 view.showMessage("Tiết bắt đầu / kết thúc phải là số");
@@ -154,43 +164,12 @@ public class TKBController {
         });
 
 
-        view.addBtnXoaListener(e -> {
-            int row = view.getTable().getSelectedRow();
-
-            if (row == -1) {
-                view.showMessage("Vui lòng chọn dòng cần xóa");
-                return;
-            }
-
-            int confirm = JOptionPane.showConfirmDialog(
-                view,
-                "Bạn có chắc chắn muốn xóa thời khóa biểu này?",
-                "Xác nhận",
-                JOptionPane.YES_NO_OPTION
-            );
-
-            if (confirm != JOptionPane.YES_OPTION) return;
-
-            int id = Integer.parseInt(
-                view.getTable().getValueAt(row, 0).toString()
-            );
-
-            dao.delete(id);
-            view.showMessage("Đã xóa");
-
-            String maLopLoc = view.getMaLopLoc();
-            if (!maLopLoc.isEmpty()) {
-                view.setTableData(
-                    dao.getByLop(maLopLoc)
-                );
-            }
-
+        view.addBtnMoiListener(e -> {
             view.clearForm();
             editMode[0] = false;
+            view.getTable().clearSelection();
+            setIdleState.run();
         });
-
-
-        view.addBtnMoiListener(e -> view.clearForm());
 
 
         view.addTableMouseListener(new MouseAdapter() {
@@ -198,7 +177,9 @@ public class TKBController {
             public void mouseClicked(MouseEvent e) {
                 int row = view.getTable().getSelectedRow();
                 if (row >= 0) {
+                    editMode[0] = true;
                     view.fillForm(row);
+                    setSelectedState.run();
                 }
             }
         });

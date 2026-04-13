@@ -15,7 +15,8 @@ public class QuanLyLopPanel extends JPanel {
     private DefaultTableModel tableModel;
 
     
-    private JTextField txtMaLop, txtTenLop, txtNienKhoa;
+    private JTextField txtMaLop, txtTenLop;
+    private JComboBox<String> cboNienKhoa;
     private JComboBox<Giaovien> cboGVCN;
 
   
@@ -101,8 +102,9 @@ public class QuanLyLopPanel extends JPanel {
         gbc.gridx = 0; gbc.gridy = 1;
         pnlInput.add(new JLabel("Niên Khóa:"), gbc);
         gbc.gridx = 1;
-        txtNienKhoa = new JTextField(15);
-        pnlInput.add(txtNienKhoa, gbc);
+        cboNienKhoa = new JComboBox<>();
+        cboNienKhoa.setPrototypeDisplayValue("2024-2025");
+        pnlInput.add(cboNienKhoa, gbc);
 
         gbc.gridx = 2;
         pnlInput.add(new JLabel("GV Chủ Nhiệm:"), gbc);
@@ -152,7 +154,7 @@ public class QuanLyLopPanel extends JPanel {
 
     public JTextField getTxtMaLop() { return txtMaLop; }
     public JTextField getTxtTenLop() { return txtTenLop; }
-    public JTextField getTxtNienKhoa() { return txtNienKhoa; }
+    public JComboBox<String> getCboNienKhoa() { return cboNienKhoa; }
 
     public JComboBox<Giaovien> getCboGVCN() { return cboGVCN; }
 

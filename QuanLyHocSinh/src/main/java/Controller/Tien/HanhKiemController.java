@@ -48,6 +48,11 @@ public class HanhKiemController {
 
     private void initEvents() {
         boolean[] editMode = {false};
+        Runnable setIdleState = () -> view.setCrudButtonState(true, false, false, false, false);
+        Runnable setAddState = () -> view.setCrudButtonState(false, false, false, true, true);
+        Runnable setSelectedState = () -> view.setCrudButtonState(false, true, true, false, true);
+        Runnable setEditState = () -> view.setCrudButtonState(false, true, true, true, true);
+        setIdleState.run();
 
         // View button - load filter
         view.addBtnXemListener(e -> loadData());
@@ -59,6 +64,19 @@ public class HanhKiemController {
         view.addBtnThemListener(e -> {
             editMode[0] = false;
             view.clearForm();
+            view.getTable().clearSelection();
+            setAddState.run();
+        });
+
+        view.addBtnSuaListener(e -> {
+            int row = view.getTable().getSelectedRow();
+            if (row == -1) {
+                view.showMessage("Vui lòng chọn một bản ghi");
+                return;
+            }
+            editMode[0] = true;
+            view.fillFormInput(row);
+            setEditState.run();
         });
 
         // Save/Update button (handles both add and edit)
@@ -75,7 +93,9 @@ public class HanhKiemController {
             if (dao.saveHanhKiem(hk)) {
                 view.showMessage("Lưu hạnh kiểm thành công!");
                 loadData();
+                view.clearForm();
                 editMode[0] = false;
+                setIdleState.run();
             } else {
                 view.showMessage("Lưu thất bại! Có lỗi xảy ra.");
             }
@@ -103,6 +123,7 @@ public class HanhKiemController {
                     loadData();
                     view.clearForm();
                     editMode[0] = false;
+                    setIdleState.run();
                 } else {
                     view.showMessage("Xóa thất bại!");
                 }
@@ -117,6 +138,7 @@ public class HanhKiemController {
                 if (row >= 0) {
                     editMode[0] = true;
                     view.fillFormInput(row);
+                    setSelectedState.run();
                 }
             }
         });
@@ -125,6 +147,8 @@ public class HanhKiemController {
         view.addBtnHuyListener(e -> {
             view.clearForm();
             editMode[0] = false;
+            view.getTable().clearSelection();
+            setIdleState.run();
         });
         
         // Excel export button
@@ -183,5 +207,6 @@ public class HanhKiemController {
         if(list.isEmpty()) {
             view.showMessage("Không tìm thấy kết quả nào cho: " + keyword);
         }
+        view.setTableData(list);
     }
 }

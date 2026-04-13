@@ -3,6 +3,7 @@ package Model;
 public class HanhKiem {
     private String maHS;
     private String tenHS; 
+    private String maLop;
     private int hocKy;
     private String namHoc;
     private String xepLoai;
@@ -25,6 +26,9 @@ public class HanhKiem {
 
     public String getTenHS() { return tenHS; }
     public void setTenHS(String tenHS) { this.tenHS = tenHS; }
+
+    public String getMaLop() { return maLop; }
+    public void setMaLop(String maLop) { this.maLop = maLop; }
 
     public int getHocKy() { return hocKy; }
     public void setHocKy(int hocKy) { this.hocKy = hocKy; }

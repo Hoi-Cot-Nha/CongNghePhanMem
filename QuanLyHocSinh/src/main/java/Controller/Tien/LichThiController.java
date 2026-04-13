@@ -28,6 +28,11 @@ public class LichThiController {
 
     private void initEvents() {
         boolean[] editMode = {false};
+        Runnable setIdleState = () -> view.setCrudButtonState(true, false, false, false, false);
+        Runnable setAddState = () -> view.setCrudButtonState(false, false, false, true, true);
+        Runnable setSelectedState = () -> view.setCrudButtonState(false, true, true, false, true);
+        Runnable setEditState = () -> view.setCrudButtonState(false, true, true, true, true);
+        setIdleState.run();
 
         // Search button
         view.addBtnTimKiemListener(e -> {
@@ -52,6 +57,8 @@ public class LichThiController {
         view.addBtnThemListener(e -> {
             editMode[0] = false;
             view.clearForm();
+            view.getTable().clearSelection();
+            setAddState.run();
         });
 
         // Edit button
@@ -63,6 +70,7 @@ public class LichThiController {
             }
             editMode[0] = true;
             view.fillForm(row);
+            setEditState.run();
         });
 
         // Save button (handles both add and edit)
@@ -80,7 +88,9 @@ public class LichThiController {
                 if(dao.updateLichThi(lt)) {
                     view.showMessage("Cập nhật thành công!");
                     loadAll();
+                    view.clearForm();
                     editMode[0] = false;
+                    setIdleState.run();
                 } else {
                     view.showMessage("Cập nhật thất bại!");
                 }
@@ -90,6 +100,7 @@ public class LichThiController {
                     loadAll();
                     view.clearForm();
                     editMode[0] = false;
+                    setIdleState.run();
                 } else {
                     view.showMessage("Thêm thất bại! (Kiểm tra xem Mã Môn/Mã Phòng có tồn tại chưa)");
                 }
@@ -118,6 +129,7 @@ public class LichThiController {
                     loadAll();
                     view.clearForm();
                     editMode[0] = false;
+                    setIdleState.run();
                 } else {
                     view.showMessage("Xóa thất bại!");
                 }
@@ -128,6 +140,8 @@ public class LichThiController {
         view.addBtnHuyListener(e -> {
             view.clearForm();
             editMode[0] = false;
+            view.getTable().clearSelection();
+            setIdleState.run();
         });
 
         // Table click - select row and fill form
@@ -136,7 +150,9 @@ public class LichThiController {
             public void mouseClicked(MouseEvent e) {
                 int row = view.getTable().getSelectedRow();
                 if (row >= 0) {
+                    editMode[0] = true;
                     view.fillForm(row);
+                    setSelectedState.run();
                 }
             }
         });

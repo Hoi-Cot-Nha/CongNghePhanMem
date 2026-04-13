@@ -18,8 +18,7 @@ public class CustomTableHeaderRenderer extends DefaultTableCellRenderer {
     public Component getTableCellRendererComponent(javax.swing.JTable table, Object value,
             boolean isSelected, boolean hasFocus, int row, int column) {
         super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        
-        // Force colors every time
+
         setBackground(new Color(100, 150, 200));
         setForeground(Color.WHITE);
         setOpaque(true);

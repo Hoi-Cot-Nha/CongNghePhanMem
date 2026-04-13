@@ -98,7 +98,7 @@ public class HanhKiemPanel extends JPanel {
         btnXuatExcel.setPreferredSize(new Dimension(120, 35));
 
         // 2. PHẦN GIỮA (CENTER): Bảng dữ liệu
-        String[] cols = {"Mã HS", "Tên HS", "Năm Học", "Học Kỳ", "Xếp Loại", "Nhận Xét"};
+        String[] cols = {"Mã HS", "Tên HS", "Lớp", "Năm Học", "Học Kỳ", "Xếp Loại", "Nhận Xét"};
         model = new DefaultTableModel(cols, 0);
         table = new JTable(model);
         TableSortHelper.enableTableSorting(table);
@@ -179,6 +179,8 @@ public class HanhKiemPanel extends JPanel {
             pnlSearch.setVisible(false);
             pnlSouth.setVisible(false);
         }
+
+        setCrudButtonState(true, false, false, false, false);
     }
 
     public String getMaLopFilter() {
@@ -223,7 +225,7 @@ public class HanhKiemPanel extends JPanel {
         model.setRowCount(0);
         for (HanhKiem hk : list) {
             model.addRow(new Object[]{
-                hk.getMaHS(), hk.getTenHS(), hk.getNamHoc(), hk.getHocKy(), hk.getXepLoai(), hk.getNhanXet()
+                hk.getMaHS(), hk.getTenHS(), hk.getMaLop(), hk.getNamHoc(), hk.getHocKy(), hk.getXepLoai(), hk.getNhanXet()
             });
         }
     }
@@ -234,18 +236,18 @@ public class HanhKiemPanel extends JPanel {
             txtMaHS.setText(model.getValueAt(row, 0).toString());
             txtTenHS.setText(model.getValueAt(row, 1).toString());
             
-            String namHoc = model.getValueAt(row, 2).toString();
-            String hocKy = model.getValueAt(row, 3).toString();
+            String namHoc = model.getValueAt(row, 3).toString();
+            String hocKy = model.getValueAt(row, 4).toString();
             cboLocNamHoc.setSelectedItem(namHoc);
             cboHocKy.setSelectedItem(hocKy);
             
-            String xepLoai = model.getValueAt(row, 4).toString();
+            String xepLoai = model.getValueAt(row, 5).toString();
             if(xepLoai != null && !xepLoai.isEmpty()) {
                 cboXepLoai.setSelectedItem(xepLoai);
             } else {
                 cboXepLoai.setSelectedIndex(0);
             }
-            Object nx = model.getValueAt(row, 5);
+            Object nx = model.getValueAt(row, 6);
             txtNhanXet.setText(nx != null ? nx.toString() : "");
         }
     }
@@ -293,6 +295,13 @@ public class HanhKiemPanel extends JPanel {
     public JButton getBtnXoa() { return btnXoa; }
     public JButton getBtnLuu() { return btnLuu; }
     public JButton getBtnHuy() { return btnHuy; }
+    public void setCrudButtonState(boolean them, boolean sua, boolean xoa, boolean luu, boolean huy) {
+        btnThem.setEnabled(them);
+        btnSua.setEnabled(sua);
+        btnXoa.setEnabled(xoa);
+        btnLuu.setEnabled(luu);
+        btnHuy.setEnabled(huy);
+    }
 
     public void hideButtonForStudent() {
         btnLuu.setVisible(false);

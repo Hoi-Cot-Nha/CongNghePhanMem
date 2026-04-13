@@ -1,9 +1,8 @@
 ﻿USE QuanLyHocSinh;
 GO
-
--- 1. Thêm Đối tượng ưu tiên
 INSERT INTO DoiTuongUuTien (MaDT, TenDT, TiLeGiamHocPhi) 
 VALUES 
+('DT00', N'Thường', 0.0),
 ('DT01', N'Hộ nghèo', 0.5), 
 ('DT02', N'Con thương binh', 1.0);
 
@@ -11,118 +10,100 @@ VALUES
 INSERT INTO GiaoVien (MaGV, HoTen, NgaySinh, SDT) 
 VALUES 
 ('GV01', N'Nguyễn Bá Đạt', '1985-05-20', '0901234567'), 
-('GV02', N'Trần Thu Trang', '1990-11-15', '0912345678');
+('GV02', N'Trần Thu Trang', '1990-11-15', '0912345678'),
+('GV03', N'Phạm Minh Tuấn', '1988-02-10', '0987654321'),
+('GV04', N'Lê Thị Mai', '1992-07-25', '0977123456'),
+('GV05', N'Hoàng Văn Nam', '1980-12-30', '0966234567'),
+('GV06', N'Vũ Phương Thảo', '1995-04-12', '0955345678'),
+('GV07', N'Đặng Quốc Bảo', '1987-09-05', '0944456789'),
+('GV08', N'Bùi Tuyết Nhung', '1991-01-20', '0933567890'),
+('GV09', N'Ngô Gia Huy', '1984-06-15', '0922678901'),
+('GV10', N'Đỗ Thùy Linh', '1993-08-28', '0911789012'),
+('GV11', N'Trương Công Định', '1982-03-14', '0900890123'),
+('GV12', N'Phan Thanh Bình', '1989-10-10', '0899901234');
 
 -- 3. Thêm Lớp
 INSERT INTO Lop (MaLop, TenLop, NienKhoa, MaGVCN) 
 VALUES 
-('L10A1', N'10A1', '2023-2026', 'GV01'), 
-('L10A2', N'10A2', '2023-2026', 'GV02'),
-('L11A1', N'11A1', '2022-2025', 'GV01');
-GO
+-- Khối 10 (Niên khóa 2023-2026)
+('10A1', N'10A1', '2023-2026', 'GV01'), 
+('10A2', N'10A2', '2023-2026', 'GV02'),
+('10A3', N'10A3', '2023-2026', 'GV03'),
+('10A4', N'10A4', '2023-2026', 'GV04'),
+('10A5', N'10A5', '2023-2026', 'GV05'),
+('10A6', N'10A6', '2023-2026', 'GV06'),
+('10A7', N'10A7', '2023-2026', 'GV07'),
 
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS001', 'Paloma Ackwood', '2005-10-01', 'Nữ', '52 Summit Lane', 'L10A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS002', 'Dionne Gobeau', '2008-02-20', 'Nữ', '12 Hayes Hill', 'L10A2', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS003', 'Nero Stanworth', '2007-01-28', 'Nam', '77 Emmet Alley', 'L10A2', 'DT02');
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS004', 'Piotr Pinhorn', '2006-05-03', 'Nam', '82361 Birchwood Place', 'L10A2', 'DT02');
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS005', 'Wally Newbold', '2008-07-11', 'Nữ', '7993 Hazelcrest Drive', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS006', 'Dennie Wills', '2007-01-15', 'Nữ', '1708 Burning Wood Center', 'L11A1', 'DT02');
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS007', 'Emalia De Cruce', '2006-10-13', 'Nam', '5873 Debs Plaza', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS008', 'Fidelity Feitosa', '2007-05-24', 'Nam', '5453 Vidon Plaza', 'L10A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS009', 'Laina Aldrick', '2006-09-27', 'Nam', '09106 American Point', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS010', 'Nealson Driuzzi', '2008-07-08', 'Nữ', '82510 Hintze Parkway', 'L10A2', 'DT02');
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS011', 'Aubry Arger', '2008-04-19', 'Nữ', '8056 Westridge Court', 'L10A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS012', 'Stacy Golt', '2005-03-21', 'Nam', '78 Chinook Circle', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS013', 'Herb Domoney', '2005-05-26', 'Nam', '569 Lyons Center', 'L10A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS014', 'Solly Albion', '2006-04-01', 'Nam', '009 Westport Hill', 'L10A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS015', 'Doralynn Clarkin', '2008-05-22', 'Nam', '99545 Muir Junction', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS016', 'Gayleen Rawlingson', '2008-04-06', 'Nam', '11 Oak Point', 'L10A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS017', 'Sindee Obeney', '2006-11-26', 'Nữ', '78 Butternut Place', 'L10A2', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS018', 'Maggee Hamprecht', '2005-10-06', 'Nam', '2655 Reinke Trail', 'L10A1', 'DT02');
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS019', 'Carlin Dellenty', '2006-12-03', 'Nam', '44 Cherokee Plaza', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS020', 'Vilhelmina Bramhall', '2005-12-01', 'Nam', '07 Maryland Junction', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS021', 'Alis Paprotny', '2006-06-16', 'Nữ', '1301 Carberry Hill', 'L11A1', 'DT02');
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS022', 'Paco Harfoot', '2007-03-27', 'Nam', '50 Westerfield Pass', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS023', 'Doloritas Farthin', '2008-03-06', 'Nữ', '254 Columbus Junction', 'L10A1', 'DT02');
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS024', 'Skelly Bramwell', '2006-04-04', 'Nữ', '0714 Anniversary Park', 'L10A2', 'DT02');
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS025', 'Malvina Ventris', '2006-09-25', 'Nữ', '8358 Merrick Point', 'L11A1', 'DT02');
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS026', 'Modestia Gadsdon', '2008-03-20', 'Nữ', '7728 Roth Plaza', 'L10A2', 'DT01');
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS027', 'Sherrie Shmyr', '2005-11-30', 'Nam', '49063 Graedel Trail', 'L10A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS028', 'Fitz Kock', '2005-04-07', 'Nam', '4758 Maywood Pass', 'L10A1', 'DT01');
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS029', 'Loutitia Thurborn', '2005-06-15', 'Nữ', '4986 Spaight Lane', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS030', 'Theodor Belz', '2006-03-21', 'Nam', '89694 Bartelt Court', 'L10A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS031', 'Onfroi Francklyn', '2007-03-24', 'Nam', '9 Schiller Plaza', 'L10A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS032', 'Benedikta Arnely', '2006-02-11', 'Nam', '8 Becker Point', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS033', 'Hyacinthie Lillee', '2005-07-11', 'Nam', '64 Calypso Court', 'L10A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS034', 'Leyla Umney', '2006-07-21', 'Nữ', '3853 Debra Crossing', 'L10A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS035', 'Morganne Prattin', '2006-12-17', 'Nam', '4 Oneill Trail', 'L10A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS036', 'Tab Lubbock', '2005-12-05', 'Nam', '83742 Pleasure Alley', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS037', 'Silvio Mattis', '2007-05-17', 'Nam', '190 Bluestem Road', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS038', 'Sascha Goldbourn', '2008-08-23', 'Nam', '8 Anniversary Park', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS039', 'Susy Mingay', '2005-02-05', 'Nam', '98099 Ryan Place', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS040', 'Hermina Yerborn', '2007-11-23', 'Nam', '26 Jana Street', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS041', 'Coletta Fenelon', '2007-04-29', 'Nữ', '400 Union Plaza', 'L10A2', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS042', 'Sharia Zoephel', '2006-06-16', 'Nam', '32172 Iowa Lane', 'L10A2', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS043', 'Lindsy Willars', '2007-05-22', 'Nữ', '2042 Birchwood Alley', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS044', 'Loutitia Birchill', '2007-08-06', 'Nữ', '54 Pierstorff Terrace', 'L10A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS045', 'Helenka Brownsell', '2006-11-21', 'Nam', '8844 Montana Plaza', 'L10A2', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS046', 'Leelah Nunns', '2007-03-08', 'Nam', '985 Shoshone Junction', 'L10A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS047', 'Yves Bastin', '2006-05-29', 'Nam', '65 5th Parkway', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS048', 'Ted Jurs', '2007-09-22', 'Nam', '7 Eggendart Circle', 'L10A2', 'DT02');
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS049', 'Tandie Macauley', '2005-12-11', 'Nam', '0 Lillian Drive', 'L10A2', 'DT02');
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS050', 'Artemus Ramplee', '2007-06-25', 'Nữ', '46077 Twin Pines Crossing', 'L10A2', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS051', 'Laney Wixey', '2005-08-10', 'Nữ', '76189 Warrior Pass', 'L10A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS052', 'Atlante Bankhurst', '2006-03-14', 'Nam', '8720 Hintze Crossing', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS053', 'Vidovic Stangoe', '2005-12-05', 'Nam', '23131 Raven Plaza', 'L11A1', 'DT01');
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS054', 'Leonardo Aupol', '2006-06-14', 'Nữ', '5 Fulton Plaza', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS055', 'Lois Crellin', '2005-12-12', 'Nữ', '66975 Haas Parkway', 'L10A2', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS056', 'Whit Andrey', '2005-08-10', 'Nam', '4784 Old Gate Lane', 'L10A2', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS057', 'Hew Bohden', '2007-11-09', 'Nữ', '296 Nevada Court', 'L10A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS058', 'Latrena Littlefair', '2005-02-22', 'Nữ', '8 Bay Junction', 'L10A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS059', 'Joyan Pentony', '2008-02-15', 'Nam', '4 Farwell Trail', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS060', 'Inglis Arnaldy', '2007-10-13', 'Nữ', '768 Kropf Center', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS061', 'Odele Nudds', '2007-11-07', 'Nữ', '26627 Carioca Crossing', 'L11A1', 'DT02');
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS062', 'Annora Shadfourth', '2007-07-05', 'Nam', '60320 Bultman Street', 'L10A2', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS063', 'Jenny Paridge', '2005-10-08', 'Nam', '6211 Westend Drive', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS064', 'Grady Tunny', '2007-05-23', 'Nam', '530 Sauthoff Court', 'L10A2', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS065', 'Fleming Stringer', '2006-11-08', 'Nữ', '8 Kinsman Lane', 'L11A1', 'DT02');
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS066', 'Hugibert Starcks', '2005-06-04', 'Nữ', '873 Towne Pass', 'L10A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS067', 'Rafi Bradd', '2005-04-12', 'Nữ', '38 Veith Circle', 'L10A2', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS068', 'Flori Merchant', '2005-12-17', 'Nam', '04251 Fordem Point', 'L10A2', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS069', 'Barclay Han', '2006-07-14', 'Nam', '80442 Cardinal Court', 'L10A2', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS070', 'Gaylene Corfield', '2007-10-27', 'Nam', '55798 Vidon Way', 'L10A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS071', 'Kippie Cree', '2008-11-14', 'Nữ', '2 Roth Center', 'L10A2', 'DT02');
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS072', 'Curcio Shotton', '2005-08-08', 'Nữ', '107 Laurel Center', 'L10A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS073', 'Lucilia Wyer', '2007-09-16', 'Nữ', '70743 School Parkway', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS074', 'Winny Ambage', '2006-03-08', 'Nữ', '038 Birchwood Road', 'L10A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS075', 'Kai Chapling', '2005-03-22', 'Nam', '1 Larry Terrace', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS076', 'Tom Keilty', '2005-06-01', 'Nam', '5209 Steensland Parkway', 'L10A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS077', 'Berget Wearne', '2008-05-27', 'Nữ', '524 Schlimgen Way', 'L10A2', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS078', 'Verina Cicchillo', '2006-04-24', 'Nam', '7 Loomis Court', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS079', 'Dottie Ewers', '2008-10-21', 'Nữ', '2756 Starling Terrace', 'L10A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS080', 'Tabina Busfield', '2006-03-02', 'Nam', '191 Old Shore Pass', 'L10A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS081', 'Anna Jessel', '2008-09-20', 'Nam', '5 Dapin Trail', 'L10A2', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS082', 'Jessika Eby', '2007-05-29', 'Nữ', '431 Kennedy Court', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS083', 'Danette Leate', '2007-08-17', 'Nam', '38538 Reindahl Crossing', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS084', 'Erna Beaze', '2005-11-27', 'Nữ', '0045 Ridge Oak Trail', 'L10A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS085', 'Candis Gellett', '2006-01-15', 'Nữ', '6776 Graceland Street', 'L10A2', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS086', 'Kaitlin Hinners', '2005-04-01', 'Nam', '13 Fisk Center', 'L10A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS087', 'Nedda Anselmi', '2006-04-08', 'Nữ', '0841 Miller Center', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS088', 'Coreen Heggie', '2007-04-23', 'Nam', '927 Mccormick Drive', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS089', 'Ardyce Harnott', '2008-10-01', 'Nữ', '7713 Spenser Trail', 'L10A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS090', 'Dode Daymond', '2008-04-06', 'Nam', '01 Sutteridge Park', 'L10A1', 'DT02');
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS091', 'Osborne Radborne', '2008-05-30', 'Nữ', '43 Mayer Plaza', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS092', 'Eleen Jeanequin', '2007-05-20', 'Nam', '757 Talisman Pass', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS093', 'Jennine Stebbings', '2006-08-16', 'Nữ', '15829 Sheridan Trail', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS094', 'Fons Beecroft', '2005-03-02', 'Nam', '077 Valley Edge Plaza', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS095', 'Jorrie Owtram', '2006-02-06', 'Nữ', '395 Aberg Hill', 'L10A1', 'DT02');
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS096', 'Zebulon Branchett', '2005-08-15', 'Nam', '0902 Dakota Park', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS097', 'Elicia Bambery', '2007-05-16', 'Nữ', '6 Hauk Terrace', 'L10A2', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS098', 'Sal Heavyside', '2008-05-07', 'Nữ', '4413 Basil Center', 'L11A1', null);
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS099', 'Marlo Orlton', '2005-06-14', 'Nam', '880 Cody Drive', 'L10A1', 'DT02');
-insert into HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) values ('HS100', 'Darn Avieson', '2007-10-05', 'Nữ', '653 Bashford Circle', 'L10A1', null);
+-- Khối 11 (Niên khóa 2022-2025)
+('11A1', N'11A1', '2022-2025', 'GV08'),
+('11A2', N'11A2', '2022-2025', 'GV09'),
 
+-- Khối 12 (Niên khóa 2021-2024)
+('12A1', N'12A1', '2021-2024', 'GV10'),
+('12A2', N'12A2', '2021-2024', 'GV11'),
+('12A3', N'12A3', '2021-2024', 'GV12');
 go
+-- 4. THÊM HỌC SINH (50 học sinh phân bổ đều cho 12 lớp)
+-- Lưu ý: DT00 = Thường, DT01 = Hộ nghèo, DT02 = Con thương binh
+
+-- KHỐI 10 (Sinh năm 2008)
+INSERT INTO HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) VALUES 
+('HS001', N'Nguyễn Thị Mai', '2008-10-01', N'Nữ', N'Hà Nội', '10A1', 'DT00'),
+('HS002', N'Trần Thị Lan', '2008-02-20', N'Nữ', N'Bắc Ninh', '10A1', 'DT01'),
+('HS003', N'Lê Văn Tuấn', '2008-01-28', N'Nam', N'Thái Nguyên', '10A2', 'DT02'),
+('HS004', N'Phạm Văn Minh', '2008-05-03', N'Nam', N'Hải Phòng', '10A2', 'DT00'),
+('HS005', N'Hoàng Thị Thu', '2008-07-11', N'Nữ', N'Nam Định', '10A3', 'DT00'),
+('HS006', N'Vũ Thị Hoa', '2008-01-15', N'Nữ', N'Thái Bình', '10A3', 'DT02'),
+('HS007', N'Võ Văn Dũng', '2008-10-13', N'Nam', N'Hưng Yên', '10A4', 'DT00'),
+('HS008', N'Đặng Văn Thành', '2008-05-24', N'Nam', N'Hải Dương', '10A4', 'DT00'),
+('HS009', N'Bùi Văn Hùng', '2008-09-27', N'Nam', N'Vĩnh Phúc', '10A5', 'DT00'),
+('HS010', N'Đỗ Thị Hằng', '2008-07-08', N'Nữ', N'Hà Nam', '10A5', 'DT02'),
+('HS011', N'Nguyễn Thị Phương', '2008-04-19', N'Nữ', N'Hà Nội', '10A6', 'DT00'),
+('HS012', N'Trần Văn Đạt', '2008-03-21', N'Nam', N'Bắc Ninh', '10A6', 'DT01'),
+('HS013', N'Lê Văn Khoa', '2008-05-26', N'Nam', N'Thái Nguyên', '10A7', 'DT00'),
+('HS014', N'Phạm Văn Hải', '2008-04-01', N'Nam', N'Hải Phòng', '10A7', 'DT00'),
+('HS015', N'Hoàng Văn Nam', '2008-05-22', N'Nam', N'Nam Định', '10A1', 'DT00'),
+('HS016', N'Vũ Văn Phong', '2008-04-06', N'Nam', N'Thái Bình', '10A2', 'DT00'),
+('HS017', N'Võ Thị Ngọc', '2008-11-26', N'Nữ', N'Hưng Yên', '10A3', 'DT00');
+
+-- KHỐI 11 (Sinh năm 2007)
+INSERT INTO HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) VALUES 
+('HS018', N'Đặng Văn Sơn', '2007-10-06', N'Nam', N'Hải Dương', '11A1', 'DT02'),
+('HS019', N'Bùi Văn Thắng', '2007-12-03', N'Nam', N'Vĩnh Phúc', '11A1', 'DT00'),
+('HS020', N'Đỗ Văn Long', '2007-12-01', N'Nam', N'Hà Nam', '11A1', 'DT00'),
+('HS021', N'Nguyễn Thị Trâm', '2007-06-16', N'Nữ', N'Hà Nội', '11A1', 'DT02'),
+('HS022', N'Trần Văn Kiên', '2007-03-27', N'Nam', N'Bắc Ninh', '11A2', 'DT00'),
+('HS023', N'Lê Thị Hương', '2007-03-06', N'Nữ', N'Thái Nguyên', '11A2', 'DT02'),
+('HS024', N'Phạm Thị Oanh', '2007-04-04', N'Nữ', N'Hải Phòng', '11A2', 'DT02'),
+('HS025', N'Hoàng Thị Yến', '2007-09-25', N'Nữ', N'Nam Định', '11A2', 'DT02'),
+('HS026', N'Vũ Thị Hà', '2007-03-20', N'Nữ', N'Thái Bình', '11A1', 'DT01'),
+('HS027', N'Võ Văn Lâm', '2007-11-30', N'Nam', N'Hưng Yên', '11A2', 'DT00'),
+('HS028', N'Đặng Văn Tú', '2007-04-07', N'Nam', N'Hải Dương', '11A1', 'DT01'),
+('HS029', N'Bùi Thị Thảo', '2007-06-15', N'Nữ', N'Vĩnh Phúc', '11A2', 'DT00'),
+('HS030', N'Đỗ Văn Tiến', '2007-03-21', N'Nam', N'Hà Nam', '11A1', 'DT00'),
+('HS031', N'Nguyễn Văn Quân', '2007-03-24', N'Nam', N'Hà Nội', '11A2', 'DT00');
+
+-- KHỐI 12 (Sinh năm 2006)
+INSERT INTO HocSinh (MaHS, HoTen, NgaySinh, GioiTinh, DiaChi, MaLop, MaDT) VALUES 
+('HS032', N'Trần Văn Bình', '2006-02-11', N'Nam', N'Bắc Ninh', '12A1', 'DT00'),
+('HS033', N'Lê Văn Tâm', '2006-07-11', N'Nam', N'Thái Nguyên', '12A1', 'DT00'),
+('HS034', N'Phạm Thị Linh', '2006-07-21', N'Nữ', N'Hải Phòng', '12A1', 'DT00'),
+('HS035', N'Hoàng Văn Tùng', '2006-12-17', N'Nam', N'Nam Định', '12A2', 'DT00'),
+('HS036', N'Vũ Văn Toàn', '2006-12-05', N'Nam', N'Thái Bình', '12A2', 'DT00'),
+('HS037', N'Võ Văn Quyết', '2006-05-17', N'Nam', N'Hưng Yên', '12A2', 'DT00'),
+('HS038', N'Đặng Văn Nghĩa', '2006-08-23', N'Nam', N'Hải Dương', '12A3', 'DT00'),
+('HS039', N'Bùi Văn Trọng', '2006-02-05', N'Nam', N'Vĩnh Phúc', '12A3', 'DT00'),
+('HS040', N'Đỗ Văn Cường', '2006-11-23', N'Nam', N'Hà Nam', '12A3', 'DT00'),
+('HS041', N'Nguyễn Thị Quyên', '2006-04-29', N'Nữ', N'Hà Nội', '12A1', 'DT00'),
+('HS042', N'Trần Văn Hoàng', '2006-06-16', N'Nam', N'Bắc Ninh', '12A2', 'DT00'),
+('HS043', N'Lê Thị Thu', '2006-05-22', N'Nữ', N'Thái Nguyên', '12A3', 'DT00'),
+('HS044', N'Phạm Thị Tuyết', '2006-08-06', N'Nữ', N'Hải Phòng', '12A1', 'DT00'),
+('HS045', N'Hoàng Văn Khang', '2006-11-21', N'Nam', N'Nam Định', '12A2', 'DT00'),
+('HS046', N'Vũ Văn Hưng', '2006-03-08', N'Nam', N'Thái Bình', '12A3', 'DT00'),
+('HS047', N'Võ Văn Huy', '2006-05-29', N'Nam', N'Hưng Yên', '12A1', 'DT00'),
+('HS048', N'Đặng Văn Hiếu', '2006-09-22', N'Nam', N'Hải Dương', '12A2', 'DT02'),
+('HS049', N'Bùi Văn Hào', '2006-12-11', N'Nam', N'Vĩnh Phúc', '12A3', 'DT02'),
+('HS050', N'Đỗ Thị Trang', '2006-06-25', N'Nữ', N'Hà Nam', '12A1', 'DT00');
 
 USE QuanLyHocSinh;
 GO
@@ -141,6 +122,10 @@ VALUES
 ('MH09', N'Giáo dục công dân'),
 ('MH10', N'Tin học');
 
+
+ALTER TABLE PhongHoc 
+ALTER COLUMN TinhTrang NVARCHAR(50); -- Bạn có thể đổi số 50 thành độ dài mong muốn
+GO
 -- 2. Thêm dữ liệu cho bảng PHÒNG HỌC
 INSERT INTO PhongHoc (MaPhong, TenPhong, SucChua, LoaiPhong, TinhTrang)
 VALUES 
@@ -154,8 +139,8 @@ VALUES
 INSERT INTO ToHopMon (MaToHop, TenToHop)
 VALUES
 ('KHTN', N'Khoa học Tự nhiên (Lý, Hóa, Sinh)'),
-('KHXH', N'Khoa học Xã hội (Sử, Địa, GDCD)'),
-('CB', N'Cơ bản');
+('KHXH', N'Khoa học Xã hội (Sử, Địa, GDCD)');
+
 GO
 
 USE QuanLyHocSinh;
@@ -198,7 +183,9 @@ GO
 -- ==========================================
 DELETE FROM HanhKiem;
 GO
-
+ALTER TABLE HanhKiem 
+ALTER COLUMN XepLoai NVARCHAR(50); -- Bạn có thể đổi số 50 thành độ dài mong muốn
+GO
 INSERT INTO HanhKiem (MaHS, HocKy, NamHoc, XepLoai, NhanXet)
 SELECT 
     MaHS,
@@ -219,7 +206,7 @@ GO
 DELETE FROM HocPhi;
 GO
 
--- Đã xóa khoảng trắng, tên biến giờ là: @MucHocPhiGoc
+-- Khai báo mức học phí gốc
 DECLARE @MucHocPhiGoc DECIMAL(18,0) = 2000000;
 
 INSERT INTO HocPhi (MaHS, HocKy, NamHoc, TongTien, MienGiam, PhaiDong, TrangThai)
@@ -229,14 +216,14 @@ SELECT
     N'2025-2026' AS NamHoc,
     @MucHocPhiGoc AS TongTien,
     
-    -- Tính tiền miễn giảm
+    -- Tính tiền miễn giảm (Dùng ISNULL để ép về 0 nếu học sinh không thuộc đối tượng ưu tiên)
     ISNULL(dt.TiLeGiamHocPhi, 0) * @MucHocPhiGoc AS MienGiam,
     
     -- Tính tiền phải đóng
     @MucHocPhiGoc - (ISNULL(dt.TiLeGiamHocPhi, 0) * @MucHocPhiGoc) AS PhaiDong,
     
-    -- Trạng thái ngẫu nhiên
-    CHOOSE(ABS(CHECKSUM(NEWID())) % 2 + 1, N'Đã hoàn thành', N'Chưa đóng') AS TrangThai
+    -- Random 3 trạng thái: 1 = Chưa đóng, 2 = Đã đóng, 3 = Bảo lưu
+    CHOOSE(ABS(CHECKSUM(NEWID())) % 3 + 1, N'Chưa đóng', N'Đã đóng', N'Bảo lưu') AS TrangThai
 FROM 
     HocSinh hs
 LEFT JOIN 
@@ -271,8 +258,8 @@ VALUES
 DELETE FROM LichThi;
 INSERT INTO LichThi (TenKyThi, MaMH, NgayThi, GioBatDau, GioKetThuc, MaPhong) 
 VALUES
-(N'Thi Giữa Kỳ 1', 'MH01', '2025-10-15', '07:30', '09:00', 'P101'), -- Toán
-(N'Thi Giữa Kỳ 1', 'MH02', '2025-10-16', '07:30', '09:00', 'P102'); -- Văn
+(N'Thi Giữa Kỳ 1', 'MH01', '2026-10-15', '07:30', '09:00', 'P101'), -- Toán
+(N'Thi Giữa Kỳ 1', 'MH02', '2026-10-16', '07:30', '09:00', 'P102'); -- Văn
 
 -- ==========================================
 -- 4. BẢNG PHÚC KHẢO
@@ -289,8 +276,8 @@ VALUES
 DELETE FROM ThoiKhoaBieu;
 INSERT INTO ThoiKhoaBieu (MaLop, MaMH, MaGV, MaPhong, Thu, TietBatDau, TietKetThuc) 
 VALUES
-('L10A1', 'MH01', 'GV01', 'P101', 2, 1, 2), -- Lớp 10A1 học Toán (GV01) ở P101, Thứ 2, tiết 1 đến 2
-('L10A1', 'MH02', 'GV02', 'P102', 2, 3, 4), -- Lớp 10A1 học Văn (GV02) ở P102, Thứ 2, tiết 3 đến 4
-('L10A2', 'MH01', 'GV01', 'P101', 3, 1, 2), -- Lớp 10A2 học Toán (GV01) ở P101, Thứ 3, tiết 1 đến 2
-('L11A1', 'MH02', 'GV02', 'P201', 4, 1, 2); -- Lớp 11A1 học Văn (GV02) ở P201, Thứ 4, tiết 1 đến 2
+('10A1', 'MH01', 'GV01', 'P101', 2, 1, 2), -- Lớp 10A1 học Toán (GV01) ở P101, Thứ 2, tiết 1 đến 2
+('10A1', 'MH02', 'GV02', 'P102', 2, 3, 4), -- Lớp 10A1 học Văn (GV02) ở P102, Thứ 2, tiết 3 đến 4
+('10A2', 'MH01', 'GV01', 'P101', 3, 1, 2), -- Lớp 10A2 học Toán (GV01) ở P101, Thứ 3, tiết 1 đến 2
+('11A1', 'MH02', 'GV02', 'P201', 4, 1, 2); -- Lớp 11A1 học Văn (GV02) ở P201, Thứ 4, tiết 1 đến 2
 GO

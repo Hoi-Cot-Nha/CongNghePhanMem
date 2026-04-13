@@ -135,4 +135,19 @@ public class LopDAO {
     }
         return list;
     }
+
+    public List<String> getDistinctNienKhoa() {
+        List<String> list = new ArrayList<>();
+        String sql = "SELECT DISTINCT NienKhoa FROM Lop WHERE NienKhoa IS NOT NULL AND LTRIM(RTRIM(NienKhoa)) <> '' ORDER BY NienKhoa DESC";
+        try (Connection conn = ConnectDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                list.add(rs.getString("NienKhoa"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

@@ -11,8 +11,9 @@ public class DiemDAO {
     public List<Diem> getDiemByFilter(String maLop, String maMH, int hocKy) {
         List<Diem> list = new ArrayList<>();
  
-        String sql = "SELECT d.*, hs.HoTen FROM Diem d " +
+        String sql = "SELECT d.*, hs.HoTen, mh.TenMH FROM Diem d " +
                      "JOIN HocSinh hs ON d.MaHS = hs.MaHS " +
+                     "JOIN MonHoc mh ON d.MaMH = mh.MaMH " +
                      "WHERE hs.MaLop = ? AND d.MaMH = ? AND d.HocKy = ?";
         
         try (Connection conn = ConnectDB.getConnection();
@@ -28,6 +29,7 @@ public class DiemDAO {
                 d.setMaHS(rs.getString("MaHS"));
                 d.setTenHS(rs.getString("HoTen"));
                 d.setMaMH(rs.getString("MaMH"));
+                d.setTenMH(rs.getString("TenMH"));
                 d.setHocKy(rs.getInt("HocKy")); 
                 
      
@@ -70,8 +72,9 @@ public class DiemDAO {
     
     public List<Diem> searchDiem(String keyword) {
         List<Diem> list = new ArrayList<>();
-        String sql = "SELECT d.*, hs.HoTen FROM Diem d " +
+        String sql = "SELECT d.*, hs.HoTen, mh.TenMH FROM Diem d " +
                      "JOIN HocSinh hs ON d.MaHS = hs.MaHS " +
+                     "JOIN MonHoc mh ON d.MaMH = mh.MaMH " +
                      "WHERE d.MaHS LIKE ? OR hs.HoTen LIKE ?";
         
         try (Connection conn = ConnectDB.getConnection();
@@ -87,6 +90,7 @@ public class DiemDAO {
                 d.setMaHS(rs.getString("MaHS"));
                 d.setTenHS(rs.getString("HoTen"));
                 d.setMaMH(rs.getString("MaMH"));
+                d.setTenMH(rs.getString("TenMH"));
                 d.setHocKy(rs.getInt("HocKy"));
                 
                 d.setDiem15p(rs.getDouble("Diem15p"));
@@ -122,8 +126,9 @@ public class DiemDAO {
         List<Diem> list = new ArrayList<>();
 
         // ĐÃ SỬA: Thêm JOIN để lấy được cột HoTen từ bảng HocSinh
-        String sql = "SELECT d.*, hs.HoTen FROM Diem d " +
+        String sql = "SELECT d.*, hs.HoTen, mh.TenMH FROM Diem d " +
                 "JOIN HocSinh hs ON d.MaHS = hs.MaHS " +
+                "JOIN MonHoc mh ON d.MaMH = mh.MaMH " +
                 "WHERE d.MaHS = ?";
 
         try (Connection con = ConnectDB.getConnection();
@@ -142,6 +147,7 @@ public class DiemDAO {
                 d.setMaHS(rs.getString("MaHS"));
                 d.setTenHS(rs.getString("HoTen")); // Giờ thì lấy được HoTen bình thường nhé
                 d.setMaMH(rs.getString("MaMH"));
+                d.setTenMH(rs.getString("TenMH"));
                 d.setHocKy(rs.getInt("HocKy"));
                 d.setDiem15p(rs.getDouble("Diem15p"));
                 d.setDiem1Tiet(rs.getDouble("Diem1Tiet"));
@@ -160,7 +166,8 @@ public class DiemDAO {
     public List<Diem> getAll() {
         List<Diem> list = new ArrayList<>();
         // Lưu ý: Tên bảng "Diem" có thể khác trong SQL của bạn, hãy sửa cho khớp
-        String sql = "SELECT * FROM Diem";
+        String sql = "SELECT d.*, mh.TenMH FROM Diem d " +
+                     "JOIN MonHoc mh ON d.MaMH = mh.MaMH";
 
         try (Connection con = ConnectDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
@@ -170,6 +177,7 @@ public class DiemDAO {
                 Diem d = new Diem();
                 d.setMaHS(rs.getString("MaHS"));
                 d.setMaMH(rs.getString("MaMH"));
+                d.setTenMH(rs.getString("TenMH"));
                 d.setHocKy(rs.getInt("HocKy"));
                 d.setDiem15p(rs.getDouble("Diem15p"));
                 d.setDiem1Tiet(rs.getDouble("Diem1Tiet"));

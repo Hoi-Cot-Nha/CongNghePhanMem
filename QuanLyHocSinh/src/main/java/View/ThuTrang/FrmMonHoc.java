@@ -120,6 +120,8 @@ public class FrmMonHoc extends JPanel {
 
         pnlSouth.add(pnlBtn, BorderLayout.SOUTH);
         add(pnlSouth, BorderLayout.SOUTH);
+
+        setCrudButtonState(true, false, false, false, false);
     }
 
     // ===== DATA =====
@@ -171,6 +173,14 @@ public class FrmMonHoc extends JPanel {
     public JButton getBtnHuy() { return btnHuy; }
     public JButton getBtnXem() { return btnXem; }
     public JButton getBtnTimKiem() { return btnTimKiem; }
+
+    public void setCrudButtonState(boolean them, boolean sua, boolean xoa, boolean luu, boolean huy) {
+        btnThem.setEnabled(them);
+        btnSua.setEnabled(sua);
+        btnXoa.setEnabled(xoa);
+        btnLuu.setEnabled(luu);
+        btnHuy.setEnabled(huy);
+    }
 
     // ===== EVENTS =====
     public void addBtnXemListener(ActionListener l) {

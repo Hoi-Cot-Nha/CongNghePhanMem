@@ -180,6 +180,8 @@ public class LichThiPanel extends JPanel {
         if (Model.Auth.isHocSinh()) {
             pnlSouth.setVisible(false);
         }
+
+        setCrudButtonState(true, false, false, false, false);
     }
 
     // --- Getter lấy từ khóa tìm kiếm ---
@@ -249,4 +251,11 @@ public class LichThiPanel extends JPanel {
     public JButton getBtnXoa() { return btnXoa; }
     public JButton getBtnLuu() { return btnLuu; }
     public JButton getBtnHuy() { return btnHuy; }
+    public void setCrudButtonState(boolean them, boolean sua, boolean xoa, boolean luu, boolean huy) {
+        btnThem.setEnabled(them);
+        btnSua.setEnabled(sua);
+        btnXoa.setEnabled(xoa);
+        btnLuu.setEnabled(luu);
+        btnHuy.setEnabled(huy);
+    }
 }

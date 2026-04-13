@@ -26,6 +26,10 @@ public class QuanLyHocPhiPanel extends JPanel {
     private DefaultTableModel tableModel;
     private JTextField txtMaHS, txtTongTien, txtMienGiam, txtPhaiDong;
     private JComboBox<String> cboTrangThai;
+    
+    // Thêm các component UI mới cho học sinh
+    private JLabel lblTongTienVal, lblMienGiamVal, lblPhaiDongVal, lblTrangThaiBadge;
+    private JButton btnThanhToanHocSinh;
 
     public QuanLyHocPhiPanel() {
         initComponents();
@@ -189,7 +193,90 @@ public class QuanLyHocPhiPanel extends JPanel {
         add(pnlSouth, BorderLayout.SOUTH);
         //thêm nga 09/04/2026
         if (Model.Auth.isHocSinh()) {
-            pnlSouth.setVisible(false);
+            pnlSouth.removeAll(); // Xóa giao diện mặc định
+            
+            // Thiết kế giao diện Card mới
+            JPanel pnlCard = new JPanel(new GridLayout(1, 3, 20, 0));
+            pnlCard.setOpaque(false);
+            pnlCard.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
+
+            lblTongTienVal = new JLabel("0 đ", JLabel.CENTER);
+            lblTongTienVal.setFont(new Font("Segoe UI", Font.BOLD, 22));
+            lblTongTienVal.setForeground(new Color(41, 128, 185)); // Xanh dương
+            pnlCard.add(createInfoCard("TỔNG HỌC PHÍ", lblTongTienVal, new Color(236, 240, 241)));
+
+            lblMienGiamVal = new JLabel("0 đ", JLabel.CENTER);
+            lblMienGiamVal.setFont(new Font("Segoe UI", Font.BOLD, 22));
+            lblMienGiamVal.setForeground(new Color(39, 174, 96)); // Xanh lá
+            pnlCard.add(createInfoCard("ĐƯỢC MIỄN GIẢM", lblMienGiamVal, new Color(233, 247, 239)));
+
+            lblPhaiDongVal = new JLabel("0 đ", JLabel.CENTER);
+            lblPhaiDongVal.setFont(new Font("Segoe UI", Font.BOLD, 26));
+            lblPhaiDongVal.setForeground(new Color(192, 57, 43)); // Đỏ nổi bật
+            pnlCard.add(createInfoCard("THỰC TẾ PHẢI ĐÓNG", lblPhaiDongVal, new Color(250, 229, 211)));
+
+            pnlSouth.add(pnlCard, BorderLayout.CENTER);
+
+            // Nhóm Trạng thái & Nút Thanh Toán
+            JPanel pnlAction = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 10));
+            pnlAction.setOpaque(false);
+
+            lblTrangThaiBadge = new JLabel("CHƯA CHỌN KỲ", JLabel.CENTER);
+            lblTrangThaiBadge.setFont(new Font("Segoe UI", Font.BOLD, 18));
+            lblTrangThaiBadge.setOpaque(true);
+            lblTrangThaiBadge.setBackground(Color.LIGHT_GRAY);
+            lblTrangThaiBadge.setForeground(Color.WHITE);
+            lblTrangThaiBadge.setPreferredSize(new Dimension(200, 45));
+            pnlAction.add(lblTrangThaiBadge);
+
+            btnThanhToanHocSinh = new JButton("Thanh Toán Học Phí");
+            btnThanhToanHocSinh.setFont(new Font("Segoe UI", Font.BOLD, 16));
+            btnThanhToanHocSinh.setBackground(new Color(46, 204, 113));
+            btnThanhToanHocSinh.setForeground(Color.BLACK);
+            btnThanhToanHocSinh.setOpaque(true);
+            btnThanhToanHocSinh.setFocusPainted(false);
+            btnThanhToanHocSinh.setPreferredSize(new Dimension(220, 45));
+            btnThanhToanHocSinh.setVisible(false); // Ẩn khi chưa có dòng nào được chọn
+            pnlAction.add(btnThanhToanHocSinh);
+
+            pnlSouth.add(pnlAction, BorderLayout.SOUTH);
+
+            // Sự kiện click Nút Thanh toán
+            btnThanhToanHocSinh.addActionListener(e -> {
+                JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Mã QR Thanh Toán", true);
+                dialog.setSize(400, 450);
+                dialog.setLocationRelativeTo(this);
+                dialog.setLayout(new BorderLayout());
+                dialog.getContentPane().setBackground(Color.WHITE);
+                
+                JLabel lblTitleQR = new JLabel("Quét Mã QR Để Thanh Toán", JLabel.CENTER);
+                lblTitleQR.setFont(new Font("Segoe UI", Font.BOLD, 18));
+                lblTitleQR.setForeground(new Color(41, 128, 185));
+                lblTitleQR.setBorder(BorderFactory.createEmptyBorder(15, 0, 15, 0));
+                
+                JLabel lblQR = new JLabel();
+                lblQR.setHorizontalAlignment(JLabel.CENTER);
+                try {
+                    // Đọc trực tiếp từ đường dẫn file
+                    ImageIcon icon = new ImageIcon("src/main/java/TienIch/thanhToanHocPhi.png");
+                    // Tùy chỉnh kích thước ảnh QR (ví dụ 250x250)
+                    Image img = icon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
+                    lblQR.setIcon(new ImageIcon(img));
+                } catch (Exception ex) {
+                    lblQR.setText("Không thể tải ảnh QR");
+                }
+                
+                String maHsHienTai = txtMaHS.getText().isEmpty() ? Model.Auth.maNguoiDung : txtMaHS.getText();
+                JLabel lblGhiChu = new JLabel("Nội dung chuyển khoản: " + maHsHienTai + " - Nop hoc phi", JLabel.CENTER);
+                lblGhiChu.setFont(new Font("Segoe UI", Font.ITALIC, 14));
+                lblGhiChu.setBorder(BorderFactory.createEmptyBorder(10, 0, 15, 0));
+                
+                dialog.add(lblTitleQR, BorderLayout.NORTH);
+                dialog.add(lblQR, BorderLayout.CENTER);
+                dialog.add(lblGhiChu, BorderLayout.SOUTH);
+                
+                dialog.setVisible(true);
+            });
         }
 
         // Event click bảng
@@ -198,20 +285,106 @@ public class QuanLyHocPhiPanel extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 int r = tableHocPhi.getSelectedRow();
                 if (r >= 0) {
+                    // Vẫn update giá trị gốc cho Admin/Giáo viên (hoặc lưu ngầm)
                     txtMaHS.setText(tableModel.getValueAt(r, 1).toString());
                     txtMaHS.setEditable(false);
                     txtTongTien.setText(tableModel.getValueAt(r, 5).toString());
                     txtMienGiam.setText(tableModel.getValueAt(r, 6).toString());
                     txtPhaiDong.setText(tableModel.getValueAt(r, 7).toString());
+
+                    String maLop = tableModel.getValueAt(r, 2).toString();
+                    String hocKy = tableModel.getValueAt(r, 3).toString();
+                    String namHoc = tableModel.getValueAt(r, 4).toString();
+
+                    if (containsItem(cboMaLop, maLop)) {
+                        cboMaLop.setSelectedItem(maLop);
+                    }
+                    loadNamHocByMaLop(maLop);
+                    if (containsItem(cboNamHoc, namHoc)) {
+                        cboNamHoc.setSelectedItem(namHoc);
+                    } else {
+                        cboNamHoc.addItem(namHoc);
+                        cboNamHoc.setSelectedItem(namHoc);
+                    }
+                    cboHocKy.setSelectedItem(hocKy);
                     
                     Object trangThaiValue = tableModel.getValueAt(r, 8);
                     String trangThai = (trangThaiValue == null || trangThaiValue.toString().trim().isEmpty()) 
                                      ? "Chưa đóng" 
                                      : trangThaiValue.toString();
                     cboTrangThai.setSelectedItem(trangThai);
+                    
+                    // Cập nhật giao diện Card nếu đang là học sinh
+                    if (Model.Auth.isHocSinh()) {
+                        if (lblTongTienVal != null) {
+                            try {
+                                long tt = Long.parseLong(txtTongTien.getText().isEmpty() ? "0" : txtTongTien.getText());
+                                lblTongTienVal.setText(String.format("%,d đ", tt));
+                            } catch (Exception ex) { lblTongTienVal.setText(txtTongTien.getText() + " đ"); }
+                        }
+                        if (lblMienGiamVal != null) {
+                            try {
+                                long mg = Long.parseLong(txtMienGiam.getText().isEmpty() ? "0" : txtMienGiam.getText());
+                                lblMienGiamVal.setText(String.format("%,d đ", mg));
+                            } catch (Exception ex) { lblMienGiamVal.setText(txtMienGiam.getText() + " đ"); }
+                        }
+                        if (lblPhaiDongVal != null) {
+                            try {
+                                long pd = Long.parseLong(txtPhaiDong.getText().isEmpty() ? "0" : txtPhaiDong.getText());
+                                lblPhaiDongVal.setText(String.format("%,d đ", pd));
+                            } catch (Exception ex) { lblPhaiDongVal.setText(txtPhaiDong.getText() + " đ"); }
+                        }
+                        if (lblTrangThaiBadge != null) {
+                            lblTrangThaiBadge.setText(trangThai.toUpperCase());
+                            if (trangThai.equalsIgnoreCase("Đã đóng") || trangThai.equalsIgnoreCase("Đã thanh toán") || trangThai.equalsIgnoreCase("Bảo lưu")) {
+                                if (trangThai.equalsIgnoreCase("Bảo lưu")) {
+                                    lblTrangThaiBadge.setBackground(new Color(243, 156, 18)); // Vàng cam cho Bảo lưu
+                                } else {
+                                    lblTrangThaiBadge.setBackground(new Color(39, 174, 96)); // Xanh lá cho Đã đóng
+                                }
+                                if (btnThanhToanHocSinh != null) btnThanhToanHocSinh.setVisible(false);
+                            } else {
+                                lblTrangThaiBadge.setBackground(new Color(231, 76, 60)); // Đỏ cho Chưa đóng
+                                if (btnThanhToanHocSinh != null) btnThanhToanHocSinh.setVisible(true);
+                            }
+                        }
+                    }
                 }
             }
         });
+
+        setCrudButtonState(true, false, false, false, false);
+    }
+
+    private boolean containsItem(JComboBox<String> combo, String value) {
+        if (value == null) {
+            return false;
+        }
+        for (int i = 0; i < combo.getItemCount(); i++) {
+            String item = combo.getItemAt(i);
+            if (value.equals(item)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    // Hàm Helper tạo giao diện từng Card
+    private JPanel createInfoCard(String title, JLabel lblValue, Color bgColor) {
+        JPanel pnl = new JPanel(new BorderLayout(5, 5));
+        pnl.setBackground(bgColor);
+        pnl.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
+            BorderFactory.createEmptyBorder(15, 10, 15, 10)
+        ));
+        
+        JLabel lblTitle = new JLabel(title, JLabel.CENTER);
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        lblTitle.setForeground(new Color(100, 100, 100));
+        
+        pnl.add(lblTitle, BorderLayout.NORTH);
+        pnl.add(lblValue, BorderLayout.CENTER);
+        return pnl;
     }
 
     private JButton createStyledButton(String text, Color color) {
@@ -395,6 +568,13 @@ public class QuanLyHocPhiPanel extends JPanel {
     public JButton getBtnXoa() { return btnXoa; }
     public JButton getBtnLuu() { return btnLuu; }
     public JButton getBtnHuy() { return btnHuy; }
+    public void setCrudButtonState(boolean them, boolean sua, boolean xoa, boolean luu, boolean huy) {
+        btnThem.setEnabled(them);
+        btnSua.setEnabled(sua);
+        btnXoa.setEnabled(xoa);
+        btnLuu.setEnabled(luu);
+        btnHuy.setEnabled(huy);
+    }
     public JTable getTableHocPhi() { return tableHocPhi; }
     public JTextField getTxtMaHS() { return txtMaHS; }
     public JTextField getTxtTongTien() { return txtTongTien; }

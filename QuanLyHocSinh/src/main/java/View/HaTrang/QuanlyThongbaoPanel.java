@@ -120,6 +120,8 @@ public class QuanlyThongbaoPanel extends JPanel{
             pnlSouth.setVisible(false);
         }
 
+        setCrudButtonState(true, false, false, false, false);
+
         table.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -197,6 +199,13 @@ public class QuanlyThongbaoPanel extends JPanel{
     }
     public String getLocKeyword() { 
         return txtLocKeyword.getText(); 
+    }
+    public void setCrudButtonState(boolean them, boolean sua, boolean xoa, boolean luu, boolean huy) {
+        btnThem.setEnabled(them);
+        btnSua.setEnabled(sua);
+        btnXoa.setEnabled(xoa);
+        btnLuu.setEnabled(luu);
+        btnHuy.setEnabled(huy);
     }
     
     public void addBtnThemListener(java.awt.event.ActionListener ac) { btnThem.addActionListener(ac); }

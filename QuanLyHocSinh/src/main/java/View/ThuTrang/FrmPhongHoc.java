@@ -190,6 +190,8 @@ public class FrmPhongHoc extends JPanel {
 
         pnlSouth.add(pnlBtn, BorderLayout.SOUTH);
         add(pnlSouth, BorderLayout.SOUTH);
+
+        setCrudButtonState(true, false, false, false, false);
     }
 
     // ===== GET FILTER =====
@@ -270,6 +272,13 @@ public class FrmPhongHoc extends JPanel {
     public JButton getBtnXoa() { return btnXoa; }
     public JButton getBtnLuu() { return btnLuu; }
     public JButton getBtnHuy() { return btnHuy; }
+    public void setCrudButtonState(boolean them, boolean sua, boolean xoa, boolean luu, boolean huy) {
+        btnThem.setEnabled(them);
+        btnSua.setEnabled(sua);
+        btnXoa.setEnabled(xoa);
+        btnLuu.setEnabled(luu);
+        btnHuy.setEnabled(huy);
+    }
     
     public void addBtnXemListener(ActionListener l) {
         btnXem.addActionListener(l);

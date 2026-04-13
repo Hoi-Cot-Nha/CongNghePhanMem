@@ -27,6 +27,11 @@ public class MonHocController {
 
     private void initEvents() {
         boolean[] editMode = {false};  // Biến theo dõi chế độ chỉnh sửa
+        Runnable setIdleState = () -> view.setCrudButtonState(true, false, false, false, false);
+        Runnable setAddState = () -> view.setCrudButtonState(false, false, false, true, true);
+        Runnable setSelectedState = () -> view.setCrudButtonState(false, true, true, false, true);
+        Runnable setEditState = () -> view.setCrudButtonState(false, true, true, true, true);
+        setIdleState.run();
 
         view.addBtnXemListener(e -> loadData());
 
@@ -50,6 +55,8 @@ public class MonHocController {
             editMode[0] = false;
             view.clearForm();
             view.getTxtTimKiem().setText("");
+            view.getTable().clearSelection();
+            setAddState.run();
         });
 
         // Nút Sửa: bật chế độ chỉnh sửa từ dữ liệu chọn
@@ -61,6 +68,7 @@ public class MonHocController {
             }
             editMode[0] = true;
             view.fillForm(row);
+            setEditState.run();
         });
 
         // Nút Xóa: xóa bản ghi đã chọn
@@ -82,6 +90,7 @@ public class MonHocController {
                 loadData();
                 view.clearForm();
                 editMode[0] = false;
+                setIdleState.run();
             }
         });
 
@@ -108,19 +117,26 @@ public class MonHocController {
             loadData();
             view.clearForm();
             editMode[0] = false;
+            setIdleState.run();
         });
 
         view.addBtnHuyListener(e -> {
             view.clearForm();
             loadData();
             editMode[0] = false;
+            setIdleState.run();
         });
 
 
         view.addTableMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                view.fillForm(view.getTable().getSelectedRow());
+                int row = view.getTable().getSelectedRow();
+                if (row >= 0) {
+                    editMode[0] = true;
+                    view.fillForm(row);
+                    setSelectedState.run();
+                }
             }
         });
     }

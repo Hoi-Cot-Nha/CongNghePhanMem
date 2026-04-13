@@ -27,6 +27,11 @@ public class Thongbaocontroller {
 
     private void initEvents() {
         boolean[] editMode = {false};
+        Runnable setIdleState = () -> view.setCrudButtonState(true, false, false, false, false);
+        Runnable setAddState = () -> view.setCrudButtonState(false, false, false, true, true);
+        Runnable setSelectedState = () -> view.setCrudButtonState(false, true, true, false, true);
+        Runnable setEditState = () -> view.setCrudButtonState(false, true, true, true, true);
+        setIdleState.run();
 
         // Filter/Search button
         view.getBtnLoc().addActionListener(new ActionListener() {
@@ -48,6 +53,8 @@ public class Thongbaocontroller {
             public void actionPerformed(ActionEvent e) {
                 editMode[0] = false;
                 view.refresh();
+                view.getTable().clearSelection();
+                setAddState.run();
             }
         });
 
@@ -59,6 +66,7 @@ public class Thongbaocontroller {
                 if (row >= 0) {
                     editMode[0] = true;
                     view.fillForm(row);
+                    setSelectedState.run();
                 }
             }
         });
@@ -78,7 +86,9 @@ public class Thongbaocontroller {
                         if (dao.update(tb)) {
                             loadData();
                             JOptionPane.showMessageDialog(view, "Cập nhật thành công!");
+                            view.refresh();
                             editMode[0] = false;
+                            setIdleState.run();
                         }
                     } else {
                         JOptionPane.showMessageDialog(view, "Chọn dòng để sửa!");
@@ -96,6 +106,7 @@ public class Thongbaocontroller {
                             loadData(); 
                             view.refresh();
                             editMode[0] = false;
+                            setIdleState.run();
                         }
                     }
                 }
@@ -110,6 +121,7 @@ public class Thongbaocontroller {
                 if (row != -1) {
                     editMode[0] = true;
                     view.fillForm(row);
+                    setEditState.run();
                 } else {
                     JOptionPane.showMessageDialog(view, "Chọn dòng cần sửa!");
                 }
@@ -133,6 +145,7 @@ public class Thongbaocontroller {
                             view.refresh();
                             JOptionPane.showMessageDialog(view, "Đã xóa!");
                             editMode[0] = false;
+                            setIdleState.run();
                         }
                     }
                 } else {
@@ -148,6 +161,7 @@ public class Thongbaocontroller {
                 view.refresh(); 
                 loadData();
                 editMode[0] = false;
+                setIdleState.run();
             }
         });
     }

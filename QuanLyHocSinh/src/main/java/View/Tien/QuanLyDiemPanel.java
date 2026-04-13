@@ -218,7 +218,7 @@ public class QuanLyDiemPanel extends JPanel {
             tableModel.addRow(new Object[]{
                 d.getMaHS(), 
                 d.getTenHS(), 
-                d.getMaMH(), 
+                d.getTenMH() != null ? d.getTenMH() : d.getMaMH(), 
                 d.getHocKy(),
                 d.getDiem15p(), 
                 d.getDiem1Tiet(),   
@@ -251,10 +251,8 @@ public class QuanLyDiemPanel extends JPanel {
     public void addBtnCapNhatListener(ActionListener action) { btnCapNhat.addActionListener(action); }
     public void addTableMouseListener(MouseAdapter adapter) { tableDiem.addMouseListener(adapter); }
     public void addBtnXuatExcelListener(ActionListener ac) { btnXuatExcel.addActionListener(ac); }
-    // Cấp quyền truy cập cái Bảng cho Controller
+
     public DefaultTableModel getTableModel() {
-        // Tùy theo việc bạn đặt tên bảng là gì lúc thiết kế (ví dụ: jTable1, tblDiem, v.v.)
-        // Hãy sửa chữ "tblDiem" thành tên biến đúng của bạn.
         return (DefaultTableModel) tableDiem.getModel();
     }
     public JButton getBtnCapNhat() {

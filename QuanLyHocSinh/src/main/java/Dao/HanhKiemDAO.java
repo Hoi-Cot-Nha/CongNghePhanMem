@@ -12,7 +12,7 @@ public class HanhKiemDAO {
 
     public List<HanhKiem> getHanhKiemByFilter(String maLop, String namHoc, int hocKy) {
         List<HanhKiem> list = new ArrayList<>();
-        String sql = "SELECT hk.*, hs.HoTen FROM HanhKiem hk " +
+        String sql = "SELECT hk.*, hs.HoTen, hs.MaLop FROM HanhKiem hk " +
                      "JOIN HocSinh hs ON hk.MaHS = hs.MaHS " +
                      "WHERE hs.MaLop = ? AND hk.NamHoc = ? AND hk.HocKy = ?";
 
@@ -36,7 +36,7 @@ public class HanhKiemDAO {
 
     public List<HanhKiem> searchHanhKiem(String keyword) {
         List<HanhKiem> list = new ArrayList<>();
-        String sql = "SELECT hk.*, hs.HoTen FROM HanhKiem hk " +
+        String sql = "SELECT hk.*, hs.HoTen, hs.MaLop FROM HanhKiem hk " +
                      "JOIN HocSinh hs ON hk.MaHS = hs.MaHS " +
                      "WHERE hk.MaHS LIKE ? OR hs.HoTen LIKE ?";
         
@@ -141,6 +141,7 @@ public class HanhKiemDAO {
         HanhKiem hk = new HanhKiem();
         hk.setMaHS(rs.getString("MaHS"));
         hk.setTenHS(rs.getString("HoTen"));
+        hk.setMaLop(rs.getString("MaLop"));
         hk.setHocKy(rs.getInt("HocKy"));
         hk.setNamHoc(rs.getString("NamHoc"));
         hk.setXepLoai(rs.getString("XepLoai") != null ? rs.getString("XepLoai") : "");
@@ -151,7 +152,7 @@ public class HanhKiemDAO {
         List<HanhKiem> list = new ArrayList<>();
 
         String sql = """
-        SELECT hk.*, hs.HoTen
+        SELECT hk.*, hs.HoTen, hs.MaLop
         FROM HanhKiem hk
         JOIN HocSinh hs ON hk.MaHS = hs.MaHS
         WHERE hk.MaHS = ?
@@ -187,7 +188,7 @@ public class HanhKiemDAO {
         List<HanhKiem> list = new ArrayList<>();
 
         String sql = """
-        SELECT hk.*, hs.HoTen
+        SELECT hk.*, hs.HoTen, hs.MaLop
         FROM HanhKiem hk
         JOIN HocSinh hs ON hk.MaHS = hs.MaHS
         WHERE hk.MaHS = ?

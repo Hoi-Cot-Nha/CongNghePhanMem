@@ -27,6 +27,11 @@ public class Phuckhaocontroller {
 
     private void initEvents() {
         boolean[] editMode = {false};
+        Runnable setIdleState = () -> view.setCrudButtonState(true, false, false, false, false);
+        Runnable setAddState = () -> view.setCrudButtonState(false, false, false, true, true);
+        Runnable setSelectedState = () -> view.setCrudButtonState(false, true, true, false, true);
+        Runnable setEditState = () -> view.setCrudButtonState(false, true, true, true, true);
+        setIdleState.run();
 
         // Table click - select row and fill form
         view.getTable().addMouseListener(new MouseAdapter() {
@@ -36,6 +41,7 @@ public class Phuckhaocontroller {
                 if (row >= 0) {
                     editMode[0] = true;
                     view.fillForm(row);
+                    setSelectedState.run();
                 }
             }
         });
@@ -46,6 +52,8 @@ public class Phuckhaocontroller {
             public void actionPerformed(ActionEvent e) {
                 editMode[0] = false;
                 view.refresh();
+                view.getTable().clearSelection();
+                setAddState.run();
             }
         });
 
@@ -57,6 +65,7 @@ public class Phuckhaocontroller {
                 if (row != -1) {
                     editMode[0] = true;
                     view.fillForm(row);
+                    setEditState.run();
                 } else {
                     JOptionPane.showMessageDialog(view, "Chọn dòng cần sửa!");
                 }
@@ -76,7 +85,9 @@ public class Phuckhaocontroller {
                         if (dao.update(pk)) {
                             JOptionPane.showMessageDialog(view, "Cập nhật thành công!");
                             loadData();
+                            view.refresh();
                             editMode[0] = false;
+                            setIdleState.run();
                         }
                     } else {
                         JOptionPane.showMessageDialog(view, "Chọn dòng cần sửa!");
@@ -90,6 +101,7 @@ public class Phuckhaocontroller {
                             loadData(); 
                             view.refresh();
                             editMode[0] = false;
+                            setIdleState.run();
                         } else {
                             JOptionPane.showMessageDialog(view, "Thêm thất bại! Kiểm tra lại Mã HS/MH có tồn tại không.");
                         }
@@ -114,6 +126,7 @@ public class Phuckhaocontroller {
                             loadData();
                             view.refresh();
                             editMode[0] = false;
+                            setIdleState.run();
                         }
                     }
                 } else {
@@ -142,6 +155,7 @@ public class Phuckhaocontroller {
                 view.refresh(); 
                 loadData();
                 editMode[0] = false;
+                setIdleState.run();
             }
         });
     }

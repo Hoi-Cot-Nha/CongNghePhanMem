@@ -30,6 +30,11 @@ public class PhongHocController {
    
     private void initEvents() {
         boolean[] editMode = {false};
+        Runnable setIdleState = () -> view.setCrudButtonState(true, false, false, false, false);
+        Runnable setAddState = () -> view.setCrudButtonState(false, false, false, true, true);
+        Runnable setSelectedState = () -> view.setCrudButtonState(false, true, true, false, true);
+        Runnable setEditState = () -> view.setCrudButtonState(false, true, true, true, true);
+        setIdleState.run();
 
         view.addBtnXemListener(e -> loadAllAndUpdateStatus());
 
@@ -47,6 +52,8 @@ public class PhongHocController {
         view.addBtnThemListener(e -> {
             editMode[0] = false;
             view.clearForm();
+            view.getTable().clearSelection();
+            setAddState.run();
         });
 
         // Nút Sửa: bật chế độ chỉnh sửa từ dữ liệu chọn
@@ -58,6 +65,7 @@ public class PhongHocController {
             }
             editMode[0] = true;
             view.fillForm(row);
+            setEditState.run();
         });
 
         // Nút Xóa: xóa bản ghi đã chọn
@@ -79,6 +87,7 @@ public class PhongHocController {
                 loadAllAndUpdateStatus();
                 view.clearForm();
                 editMode[0] = false;
+                setIdleState.run();
             }
         });
 
@@ -103,6 +112,7 @@ public class PhongHocController {
                 loadAllAndUpdateStatus();
                 view.clearForm();
                 editMode[0] = false;
+                setIdleState.run();
 
             } catch (NumberFormatException ex) {
                 view.showMessage("Sức chứa phải là số");
@@ -113,6 +123,8 @@ public class PhongHocController {
         view.addBtnHuyListener(e -> {
             view.clearForm();
             editMode[0] = false;
+            view.getTable().clearSelection();
+            setIdleState.run();
         });
 
         view.addTableMouseListener(new MouseAdapter() {
@@ -120,7 +132,9 @@ public class PhongHocController {
             public void mouseClicked(MouseEvent e) {
                 int row = view.getTable().getSelectedRow();
                 if (row >= 0) {
+                    editMode[0] = true;
                     view.fillForm(row);
+                    setSelectedState.run();
                 }
             }
         });

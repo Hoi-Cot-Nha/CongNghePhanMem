@@ -10,6 +10,8 @@ import Model.Hocphi;
 import View.HaTrang.QuanLyHocPhiPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.JOptionPane;
 import java.util.List;
 
@@ -29,7 +31,12 @@ public class Hocphicontroller {
     }
 
     private void initEvents() {
-        boolean[] editMode = {false};
+        boolean[] updateMode = {false};
+        Runnable setIdleState = () -> view.setCrudButtonState(true, false, false, false, false);
+        Runnable setAddState = () -> view.setCrudButtonState(false, false, false, true, true);
+        Runnable setSelectedState = () -> view.setCrudButtonState(false, true, true, false, true);
+        Runnable setEditState = () -> view.setCrudButtonState(false, true, true, true, true);
+        setIdleState.run();
 
         // Filter button
         view.getBtnLoc().addActionListener(new ActionListener() {
@@ -43,9 +50,23 @@ public class Hocphicontroller {
         view.getBtnThem().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                editMode[0] = false;
+                updateMode[0] = false;
                 view.refreshForm();
-                xuLyLuu(true);
+                view.getTableHocPhi().clearSelection();
+                setAddState.run();
+            }
+        });
+
+        view.getBtnSua().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = view.getTableHocPhi().getSelectedRow();
+                if (selectedRow == -1) {
+                    JOptionPane.showMessageDialog(view, "Vui lòng chọn một dòng cần sửa!");
+                    return;
+                }
+                updateMode[0] = true;
+                setEditState.run();
             }
         });
 
@@ -53,8 +74,10 @@ public class Hocphicontroller {
         view.getBtnLuu().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                xuLyLuu(editMode[0]);
-                editMode[0] = false;
+                if (xuLyLuu(updateMode[0])) {
+                    updateMode[0] = false;
+                    setIdleState.run();
+                }
             }
         });
 
@@ -62,8 +85,10 @@ public class Hocphicontroller {
         view.getBtnXoa().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                xoaHocPhi();
-                editMode[0] = false;
+                if (xoaHocPhi()) {
+                    updateMode[0] = false;
+                    setIdleState.run();
+                }
             }
         });
 
@@ -72,7 +97,19 @@ public class Hocphicontroller {
             @Override
             public void actionPerformed(ActionEvent e) {
                 view.refreshForm();
-                editMode[0] = false;
+                updateMode[0] = false;
+                setIdleState.run();
+            }
+        });
+
+        view.getTableHocPhi().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int selectedRow = view.getTableHocPhi().getSelectedRow();
+                if (selectedRow >= 0) {
+                    updateMode[0] = true;
+                    setSelectedState.run();
+                }
             }
         });
 
@@ -133,25 +170,33 @@ public class Hocphicontroller {
         }
     }
 
-    private void xuLyLuu(boolean isUpdate) {
+    private boolean xuLyLuu(boolean isUpdate) {
         try {
            
             String maHS = view.getTxtMaHS().getText().trim();
             String tongTienStr = view.getTxtTongTien().getText().trim();
             String mienGiamStr = view.getTxtMienGiam().getText().trim();
-            String hocKyStr = view.getCboHocKy().getSelectedItem().toString().trim();
-            String trangThaiStr = view.getCboTrangThai().getSelectedItem().toString().trim();
+            Object hocKyObj = view.getCboHocKy().getSelectedItem();
+            Object namHocObj = view.getCboNamHoc().getSelectedItem();
+            Object trangThaiObj = view.getCboTrangThai().getSelectedItem();
+            String hocKyStr = hocKyObj == null ? "" : hocKyObj.toString().trim();
+            String namHoc = namHocObj == null ? "" : namHocObj.toString().trim();
+            String trangThaiStr = trangThaiObj == null ? "" : trangThaiObj.toString().trim();
 
-            
-            if (maHS.isEmpty() || tongTienStr.isEmpty() || hocKyStr.isEmpty()) {
-                JOptionPane.showMessageDialog(view, "Mã học sinh, Tổng tiền và Học kỳ không được để trống!");
-                return;
+            if ("(Không có dữ liệu)".equalsIgnoreCase(namHoc) || "(Lỗi tải dữ liệu)".equalsIgnoreCase(namHoc)) {
+                namHoc = "";
+            }
+
+             
+            if (maHS.isEmpty() || tongTienStr.isEmpty() || hocKyStr.isEmpty() || namHoc.isEmpty()) {
+                JOptionPane.showMessageDialog(view, "Mã học sinh, Tổng tiền, Học kỳ và Năm học không được để trống!");
+                return false;
             }
 
             Hocphi hp = new Hocphi();
             hp.setMaHS(maHS);
             hp.setHocKy(Integer.parseInt(hocKyStr));
-            hp.setNamHoc(view.getCboNamHoc().getSelectedItem().toString().trim());
+            hp.setNamHoc(namHoc);
             
             long tongTien = Long.parseLong(tongTienStr);
             long mienGiam = mienGiamStr.isEmpty() ? 0 : Long.parseLong(mienGiamStr);
@@ -168,22 +213,26 @@ public class Hocphicontroller {
                 JOptionPane.showMessageDialog(view, thongBao);
                 locDuLieu();
                 view.refreshForm(); 
+                return true;
             } else {
                 JOptionPane.showMessageDialog(view, "Lưu thất bại! Kiểm tra lại mã HS hoặc kết nối DB.");
+                return false;
             }
 
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(view, "Tiền phải nhập định dạng số!");
+            return false;
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(view, "Lỗi: " + ex.getMessage());
+            return false;
         }
     }
 
-    private void xoaHocPhi() {
+    private boolean xoaHocPhi() {
         int selectedRow = view.getTableHocPhi().getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(view, "Vui lòng chọn một dòng trên bảng để xóa!");
-            return;
+            return false;
         }
 
         int xacNhan = JOptionPane.showConfirmDialog(view, "Bạn có chắc chắn muốn xóa học phí này?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
@@ -194,9 +243,12 @@ public class Hocphicontroller {
                 JOptionPane.showMessageDialog(view, "Xóa thành công!");
                 locDuLieu();
                 view.refreshForm();
+                return true;
             } else {
                 JOptionPane.showMessageDialog(view, "Xóa thất bại!");
+                return false;
             }
         }
+        return false;
     }
 }

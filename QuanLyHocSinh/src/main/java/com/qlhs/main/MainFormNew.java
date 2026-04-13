@@ -11,9 +11,11 @@ import javax.imageio.ImageIO;
 import java.awt.AlphaComposite;
 import java.awt.RenderingHints;
 import java.awt.FontMetrics;
-
-// Gộp các Import từ cả 2 bản
 import Model.Auth;
+import Model.HocSinh;
+import Model.Giaovien;
+import Dao.HocSinhDAO;
+import Dao.GiaovienDAO;
 import View.Tien.HanhKiemPanel;
 import view.LoginView;
 import Controller.Dai.LoginController;
@@ -42,7 +44,6 @@ import View.HaTrang.QuanlyThongbaoPanel;
 
 public class MainFormNew extends JFrame {
 
-    // Giữ nguyên bộ màu và biến giao diện của bạn
     private final Color SIDEBAR_BG = new Color(34, 45, 50);
     private final Color SIDEBAR_HOVER = new Color(44, 59, 65);
     private final Color SIDEBAR_ACTIVE = new Color(52, 152, 219);
@@ -52,12 +53,12 @@ public class MainFormNew extends JFrame {
     private JPanel mainPanel;
     private JPanel sidebarContainer;
     private JButton btnToggle;
+    private JLabel lblUserGreeting;
     private boolean isCollapsed = false;
     private JButton lastActiveButton = null;
     private JPanel sidebarPanel;
 
     public MainFormNew() {
-        // Thêm dòng debug phân quyền của bạn mình
         System.out.println("QUYỀN ĐANG ĐĂNG NHẬP LÀ: [" + Auth.currentRole + "]");
         System.out.println("IS HOC SINH = " + Auth.isHocSinh());
         initUI();
@@ -71,26 +72,15 @@ public class MainFormNew extends JFrame {
         setLayout(new BorderLayout());
 
         JPanel westPanel = new JPanel(new BorderLayout());
-
-        btnToggle = new JButton("═");
-        btnToggle.setFont(new Font("Arial", Font.BOLD, 20));
-        btnToggle.setPreferredSize(new Dimension(50, 50));
-        btnToggle.setBackground(new Color(25, 35, 40));
-        btnToggle.setForeground(TEXT_COLOR);
-        btnToggle.setBorder(null);
-        btnToggle.setFocusPainted(false);
-        btnToggle.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnToggle.addActionListener(e -> toggleSidebar());
-        westPanel.add(btnToggle, BorderLayout.NORTH);
+        westPanel.add(createSidebarHeader(), BorderLayout.NORTH);
 
         sidebarContainer = new JPanel(new BorderLayout());
-        sidebarPanel = createSidebar(); // Hàm này đã được gộp logic phân quyền
+        sidebarPanel = createSidebar();
         JScrollPane scrollSidebar = new JScrollPane(sidebarPanel);
         scrollSidebar.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollSidebar.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollSidebar.setBorder(null);
 
-        // Style scrollbar xịn của bạn[cite: 1]
         scrollSidebar.getVerticalScrollBar().setBackground(SIDEBAR_BG);
         scrollSidebar.getVerticalScrollBar().setPreferredSize(new Dimension(12, 0));
         scrollSidebar.getVerticalScrollBar().setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
@@ -124,17 +114,74 @@ public class MainFormNew extends JFrame {
         add(mainPanel, BorderLayout.CENTER);
     }
 
-    // Giữ nguyên các hàm bổ trợ giao diện của bạn[cite: 1]
+    private JPanel createSidebarHeader() {
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBackground(new Color(25, 35, 40));
+        headerPanel.setBorder(new EmptyBorder(0, 0, 0, 8));
+
+        btnToggle = new JButton("═");
+        btnToggle.setFont(new Font("Arial", Font.BOLD, 20));
+        btnToggle.setPreferredSize(new Dimension(50, 50));
+        btnToggle.setBackground(new Color(25, 35, 40));
+        btnToggle.setForeground(TEXT_COLOR);
+        btnToggle.setBorder(null);
+        btnToggle.setFocusPainted(false);
+        btnToggle.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnToggle.addActionListener(e -> toggleSidebar());
+
+        lblUserGreeting = new JLabel(getGreetingText());
+        lblUserGreeting.setForeground(TEXT_COLOR);
+        lblUserGreeting.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lblUserGreeting.setBorder(new EmptyBorder(0, 6, 0, 0));
+
+        headerPanel.add(btnToggle, BorderLayout.WEST);
+        headerPanel.add(lblUserGreeting, BorderLayout.CENTER);
+        return headerPanel;
+    }
+
+    private String getGreetingText() {
+        return "Chào mừng " + resolveDisplayName();
+    }
+
+    private String resolveDisplayName() {
+        String maNguoiDung = Auth.maNguoiDung == null ? "" : Auth.maNguoiDung.trim();
+
+        if (!maNguoiDung.isEmpty()) {
+            if (Auth.isHocSinh()) {
+                HocSinh hs = new HocSinhDAO().getByMaHS(maNguoiDung);
+                if (hs != null && hs.getHoTen() != null && !hs.getHoTen().trim().isEmpty()) {
+                    return hs.getHoTen().trim();
+                }
+            } else if (Auth.isGiaoVien()) {
+                Giaovien gv = new GiaovienDAO().getByMaGV(maNguoiDung);
+                if (gv != null && gv.getHoTen() != null && !gv.getHoTen().trim().isEmpty()) {
+                    return gv.getHoTen().trim();
+                }
+            }
+        }
+
+        if (Auth.currentUser != null && !Auth.currentUser.trim().isEmpty()) {
+            return Auth.currentUser.trim();
+        }
+        return "Khách";
+    }
+
     private void toggleSidebar() {
         isCollapsed = !isCollapsed;
         if (isCollapsed) {
             btnToggle.setText(">");
             sidebarContainer.setPreferredSize(new Dimension(80, 0));
+            lblUserGreeting.setText("");
         } else {
             btnToggle.setText("═");
             sidebarContainer.setPreferredSize(new Dimension(250, 0));
+            lblUserGreeting.setText(getGreetingText());
         }
         updateAllButtonTexts();
+        if (lblUserGreeting != null) {
+            lblUserGreeting.revalidate();
+            lblUserGreeting.repaint();
+        }
         sidebarContainer.revalidate();
         sidebarContainer.repaint();
     }
@@ -199,7 +246,7 @@ public class MainFormNew extends JFrame {
         mainPanel.removeAll();
         JPanel centerPanel = new JPanel(new GridBagLayout());
         centerPanel.setBackground(Color.WHITE);
-        JLabel lblWelcome = new JLabel("<html><center>CHÀO MỪNG ĐẾN VỚI<br>HỆ THỐNG QUẢN LÝ<br>TRƯỜNG THCS CHƯƠNG MỸ A</center></html>");
+        JLabel lblWelcome = new JLabel("<html><center>CHÀO MỪNG ĐẾN VỚI<br>HỆ THỐNG QUẢN LÝ<br>TRƯỜNG THPT CHƯƠNG MỸ A</center></html>");
         lblWelcome.setFont(new Font("Segoe UI", Font.BOLD, 32));
         lblWelcome.setForeground(new Color(0, 102, 204));
         GridBagConstraints gbc = new GridBagConstraints();
@@ -212,33 +259,29 @@ public class MainFormNew extends JFrame {
         mainPanel.repaint();
     }
 
-    // ĐÂY LÀ PHẦN QUAN TRỌNG: Gộp logic phân quyền vào Sidebar của bạn
     private JPanel createSidebar() {
         JPanel sidebar = new JPanel();
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
         sidebar.setBackground(SIDEBAR_BG);
         sidebar.setBorder(new EmptyBorder(10, 0, 10, 0));
 
-        // -- HỆ THỐNG (Mọi người đều thấy)[cite: 2] --
         addSideHeader(sidebar, "Hệ thống");
         addSideButton(sidebar, "Đăng xuất", "DangXuat", "logout.png");
         sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        // -- HỒ SƠ & CƠ CẤU (Ẩn với Học sinh)[cite: 2] --
         if (!Auth.isHocSinh()) {
             addSideHeader(sidebar, "Hồ sơ & cơ cấu");
             if (Auth.isAdmin()) {
                 addSideButton(sidebar, "Quản lý lớp học", "FormLopHoc", "class.png");
                 addSideButton(sidebar, "Quản lý giáo viên", "FormGiaoVien", "teacher.png");
                 addSideButton(sidebar, "Quản lý tổ bộ môn", "FormToBoMon", "group.png");
-            } else if (Auth.isGiaoVien()) {
+            } else if (!Auth.isGiaoVien()) {
                 addSideButton(sidebar, "Quản lý lớp học", "FormLopHoc", "class.png");
                 addSideButton(sidebar, "Quản lý tổ bộ môn", "FormToBoMon", "group.png");
             }
             sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
         }
 
-        // -- ĐÀO TẠO (Phân quyền chi tiết)[cite: 2] --
         addSideHeader(sidebar, "Đào tạo");
         if (Auth.isAdmin()) {
             addSideButton(sidebar, "Quản lý môn học", "FormMonHoc", "subject.png");
@@ -251,7 +294,6 @@ public class MainFormNew extends JFrame {
         }
         sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        // -- KHẢO THÍ & KẾT QUẢ (Đổi tên nút tùy theo quyền)[cite: 2] --
         addSideHeader(sidebar, "Khảo thí & kết quả");
         if (Auth.isHocSinh()) {
             addSideButton(sidebar, "Xem điểm số", "FormDiemSo", "score.png");
@@ -264,23 +306,20 @@ public class MainFormNew extends JFrame {
         }
         sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        // -- HÀNH CHÍNH & TÀI VỤ[cite: 2] --
         addSideHeader(sidebar, "Hành chính & tài vụ");
         if (Auth.isHocSinh()) {
+            addSideButton(sidebar, "Phúc khảo", "FormPhucKhao", "review.png");
             addSideButton(sidebar, "Xem học phí", "FormHocPhi", "fee.png");
         }
         if (Auth.isHocSinh() || Auth.isGiaoVien()) {
             addSideButton(sidebar, "Thông báo", "FormThongBao", "notification.png");
         } else {
+            addSideButton(sidebar, "Quản lý Phúc khảo", "FormPhucKhao", "review.png");
             addSideButton(sidebar, "Quản lý học phí", "FormHocPhi", "fee.png");
             addSideButton(sidebar, "Quản lý thông báo", "FormThongBao", "notification.png");
         }
-        if (!Auth.isHocSinh()) {
-            addSideButton(sidebar, "Quản lý phúc khảo", "FormPhucKhao", "review.png");
-        }
         sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        // -- HỆ THỐNG & CHÍNH SÁCH[cite: 2] --
         addSideHeader(sidebar, "Hệ thống & chính sách");
         addSideButton(sidebar, "Hồ sơ học sinh (Chi tiết)", "FormHocSinh", "student.png");
         if (Auth.isAdmin()) {

@@ -1,4 +1,14 @@
-﻿
+﻿/*USE master;
+GO
+
+-- Ngắt các kết nối đang sử dụng database này (nếu có)
+ALTER DATABASE QuanLyHocSinh SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+GO
+
+-- Xóa hoàn toàn database
+DROP DATABASE QuanLyHocSinh;
+GO
+*/
 -- 1. TẠO CƠ SỞ DỮ LIỆU
 CREATE DATABASE QuanLyHocSinh;
 GO
@@ -181,8 +191,4 @@ CREATE TABLE PhucKhao (
     CONSTRAINT FK_PhucKhao_HocSinh FOREIGN KEY (MaHS) REFERENCES HocSinh(MaHS) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT FK_PhucKhao_MonHoc FOREIGN KEY (MaMH) REFERENCES MonHoc(MaMH) ON DELETE CASCADE ON UPDATE CASCADE
 );
-GO
-
--- Sửa lỗi quyền truy cập DB
-EXEC sp_changedbowner 'sa';
 GO

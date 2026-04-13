@@ -44,7 +44,10 @@ public class LopController {
         view.getBtnXoa().addActionListener(e -> xoa());
         view.getBtnLuu().addActionListener(e -> luu());
         view.getBtnHuy().addActionListener(e -> huy());
-        view.getBtnXem().addActionListener(e -> loadTable());
+        view.getBtnXem().addActionListener(e -> {
+            loadComboBox();
+            loadTable();
+        });
         view.getBtnTimKiem().addActionListener(e -> searchData());
     }
 
@@ -52,9 +55,20 @@ public class LopController {
 
     private void loadComboBox() {
         view.getCboGVCN().removeAllItems();
+        view.getCboNienKhoa().removeAllItems();
+
+        List<String> dsNienKhoa = dao.getDistinctNienKhoa();
+        if (dsNienKhoa.isEmpty()) {
+            view.getCboNienKhoa().addItem("(Chưa có dữ liệu)");
+        } else {
+            for (String nienKhoa : dsNienKhoa) {
+                view.getCboNienKhoa().addItem(nienKhoa);
+            }
+        }
+
         List<Giaovien> list = gvDao.getAll();
-      
-    
+       
+     
         for (Giaovien gv : list) {
             view.getCboGVCN().addItem(gv);
         }
@@ -75,7 +89,19 @@ public class LopController {
         if (r < 0) return;
         view.getTxtMaLop().setText(view.getTableLop().getValueAt(r, 0).toString());
         view.getTxtTenLop().setText(view.getTableLop().getValueAt(r, 1).toString());
-        view.getTxtNienKhoa().setText(view.getTableLop().getValueAt(r, 2).toString());
+        String nienKhoa = view.getTableLop().getValueAt(r, 2).toString();
+        boolean foundNienKhoa = false;
+        for (int i = 0; i < view.getCboNienKhoa().getItemCount(); i++) {
+            String item = view.getCboNienKhoa().getItemAt(i);
+            if (nienKhoa.equals(item)) {
+                foundNienKhoa = true;
+                break;
+            }
+        }
+        if (!foundNienKhoa && !nienKhoa.isEmpty()) {
+            view.getCboNienKhoa().addItem(nienKhoa);
+        }
+        view.getCboNienKhoa().setSelectedItem(nienKhoa);
 
         
         String tenGV = view.getTableLop().getValueAt(r, 3).toString();
@@ -122,6 +148,7 @@ public class LopController {
             String ma = view.getTxtMaLop().getText();
             if (dao.delete(ma)) {
                 JOptionPane.showMessageDialog(view, "Đã xóa!");
+                loadComboBox();
                 loadTable();
                 clearForm();
             } else {
@@ -139,7 +166,13 @@ public class LopController {
         Lop l = new Lop();
         l.setMaLop(view.getTxtMaLop().getText());
         l.setTenLop(view.getTxtTenLop().getText());
-        l.setNienKhoa(view.getTxtNienKhoa().getText());
+        Object nienKhoaObj = view.getCboNienKhoa().getSelectedItem();
+        String nienKhoa = nienKhoaObj == null ? "" : nienKhoaObj.toString().trim();
+        if (nienKhoa.isEmpty() || "(Chưa có dữ liệu)".equalsIgnoreCase(nienKhoa)) {
+            JOptionPane.showMessageDialog(view, "Vui lòng chọn niên khóa hợp lệ!");
+            return;
+        }
+        l.setNienKhoa(nienKhoa);
         
         Giaovien gv = (Giaovien) view.getCboGVCN().getSelectedItem();
         if (gv != null) l.setMaGVCN(gv.getMaGV());
@@ -150,6 +183,7 @@ public class LopController {
 
         if (ok) {
             JOptionPane.showMessageDialog(view, "Thành công!");
+            loadComboBox();
             loadTable();
             setButtonState(true);
             clearForm();
@@ -167,7 +201,9 @@ public class LopController {
     private void clearForm() {
         view.getTxtMaLop().setText("");
         view.getTxtTenLop().setText("");
-        view.getTxtNienKhoa().setText("");
+        if (view.getCboNienKhoa().getItemCount() > 0) {
+            view.getCboNienKhoa().setSelectedIndex(0);
+        }
         view.getTxtMaLop().setEnabled(true);
     }
 
